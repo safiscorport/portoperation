@@ -115,13 +115,6 @@ html, body {
 .panel-title { font-weight: 800; color: #38bdf8; background: var(--head); padding: 2px 4px; font-size: 8.5px; letter-spacing: 0.5px; }
 .panel-title.small { margin-top: 2px; }
 
-.big-number { font-size: 15px; font-weight: 900; margin-top: 1px; color: var(--accent); }
-.muted { color: var(--muted); font-size: 7.5px; }
-
-.stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; margin-top: 2px; }
-.stats span { background: #020617; padding: 2px; text-align: center; font-size: 6px; color: var(--muted); }
-.stats b { display: block; color: #fff; font-size: 8.5px; }
-
 .table-mini .tr { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; padding: 1px 2px; border-bottom: 1px solid #1e293b; font-size: 7.5px; }
 .table-mini .tr:first-child { color: var(--muted); font-size: 6.5px; }
 
@@ -138,8 +131,8 @@ html, body {
 .status-grid span { display: block; color: var(--muted); font-size: 6px; }
 .status-grid b { font-size: 8.5px; color: #fff; }
 
-.alpha-row { display: grid; grid-template-columns: 40px 1fr 1fr 1fr; padding: 1px 2px; background: #020617; border-bottom: 1px solid #1e293b; font-size: 7.5px; }
-.alpha-row b { font-size: 7.5px; color: #facc15; }
+.alpha-row { display: grid; grid-template-columns: 28px 1fr 28px 28px 1fr 45px 35px; padding: 1px 2px; background: #020617; border-bottom: 1px solid #1e293b; font-size: 6.5px; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.alpha-row b { font-size: 6.5px; color: #facc15; }
 
 footer { height: 20px; display: flex; align-items: center; }
 .ticker-label { background: var(--danger); padding: 3px 6px; font-weight: 900; font-size: 7.5px; color: white; }
