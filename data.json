@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-05T06:58:37.156884+00:00",
+  "updated_at": "2026-09-05T15:16:18.556970+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -14,7 +14,7 @@
       "time": "13:00",
       "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "FL 2/ FL 16",
-      "activity_time": "01:53"
+      "activity_time": "02:15"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "13:00",
       "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "CRANE4/FL1",
-      "activity_time": "01:53"
+      "activity_time": "02:15"
     },
     {
       "berth": "Berth 3",
@@ -59,7 +59,7 @@
       "time": "13:30",
       "remarks": "LOADING SLING L37",
       "equipment": "0",
-      "activity_time": "01:23"
+      "activity_time": "01:45"
     },
     {
       "berth": "Berth 5",
@@ -74,7 +74,7 @@
       "time": "13:40",
       "remarks": "LOADING TONNER APLUS",
       "equipment": "0",
-      "activity_time": "01:13"
+      "activity_time": "01:35"
     },
     {
       "berth": "Berth 6",
@@ -118,8 +118,8 @@
       "stockpile": 0,
       "time": "10:19",
       "remarks": "WAITING MATERIAL",
-      "equipment": "SANNY 2",
-      "activity_time": "04:34"
+      "equipment": "0",
+      "activity_time": "04:56"
     },
     {
       "berth": "Berth 9",
@@ -133,8 +133,8 @@
       "stockpile": 3000,
       "time": "09:00",
       "remarks": "FOR CRANE INSPECTION",
-      "equipment": "SANNY 3",
-      "activity_time": "05:53"
+      "equipment": "SANNY 2",
+      "activity_time": "06:15"
     },
     {
       "berth": "Berth 10",
@@ -149,7 +149,7 @@
       "time": "14:23",
       "remarks": "LOADING TONNER F2",
       "equipment": "0",
-      "activity_time": "00:30"
+      "activity_time": "00:52"
     },
     {
       "berth": "Jetty",
@@ -309,9 +309,9 @@
     },
     {
       "berth": "R3",
-      "vessel": "POSEIDON 47",
-      "materials": "COAL",
-      "remarks": "NO DISCHARGING / ROUGH SEAS"
+      "vessel": "VACANT",
+      "materials": "",
+      "remarks": ""
     }
   ],
   "foreign": {
