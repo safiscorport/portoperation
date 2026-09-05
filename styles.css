@@ -15,7 +15,7 @@
   --border: rgba(75, 85, 99, 0.3);
 }
 
-* { box-sizing: border-box; }
+* { box-sizing: border-box; text-align: center; }
 
 html, body {
   margin: 0;
@@ -29,6 +29,7 @@ html, body {
   font-family: 'Inter', sans-serif;
   overflow: hidden;
   font-size: 1vh;
+  text-align: center;
 }
 
 .app {
@@ -63,6 +64,7 @@ html, body {
   border-left: 3px solid #34d399;
   letter-spacing: 1px;
   color: #e5e7eb;
+  text-align: center;
 }
 
 .board-main {
@@ -74,6 +76,7 @@ html, body {
 .t-row {
   display: grid;
   align-items: center;
+  justify-items: center;
   padding: 0.4vh 0.6vw;
   background: var(--row-bg);
   font-family: 'JetBrains Mono', monospace;
@@ -98,34 +101,13 @@ html, body {
   color: #34d399;
 }
 
-.vessel { color: #fde047; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.val { text-align: right; }
+.vessel { color: #fde047; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; }
+.val { text-align: center !important; }
 .vacant { opacity: 0.35; filter: grayscale(0.5); }
 
-.bar-wrap { display: flex; align-items: center; gap: 0.5vw; }
+.bar-wrap { display: flex; align-items: center; justify-content: center; gap: 0.5vw; width: 100%; }
 .bar { height: 0.8vh; background: #374151; flex: 1; border-radius: 2px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
 .bar i { display: block; height: 100%; background: linear-gradient(90deg, #059669, #34d399); box-shadow: 0 0 8px var(--accent-glow); }
-
-/* Airport Running Remarks Ticker */
-.ticker-wrap {
-  overflow: hidden;
-  width: 100%;
-  white-space: nowrap;
-  border-radius: 2px;
-  position: relative;
-}
-.ticker-move {
-  display: inline-block;
-  animation: marquee 15s linear infinite;
-  padding-left: 100%;
-}
-.ticker-move:hover {
-  animation-play-state: paused;
-}
-@keyframes marquee {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(-100%, 0); }
-}
 
 .remark {
   display: inline-block;
@@ -134,6 +116,11 @@ html, body {
   font-size: 1.2vh;
   font-weight: 700;
   letter-spacing: 1px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 .remark.danger { background: rgba(239, 68, 68, 0.3); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); }
 .remark.warn { background: rgba(245, 158, 11, 0.3); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.5); }
@@ -156,16 +143,19 @@ html, body {
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+  text-align: center;
 }
 
 .sub-row {
   display: grid;
   align-items: center;
+  justify-items: center;
   padding: 0.35vh 0.6vw;
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.2vh;
   border-bottom: 1px solid var(--border);
   background: rgba(17, 24, 39, 0.4);
+  text-align: center;
 }
 .sub-row.header {
   background: var(--panel-solid);
@@ -174,7 +164,7 @@ html, body {
   font-family: 'Inter', sans-serif;
   letter-spacing: 0.5px;
 }
-.sub-row span:not(:first-child) { text-align: right; }
+.sub-row span, .sub-row b { text-align: center !important; width: 100%; }
 
 .footer-dashboard {
   display: grid;
@@ -194,14 +184,15 @@ html, body {
   font-size: 1.2vh;
   border: 1px solid var(--border);
   border-radius: 4px;
+  text-align: center;
 }
 
-.f-row { display: flex; justify-content: space-between; align-items: center; }
-.f-row span { color: var(--muted); }
-.f-row b { font-family: 'JetBrains Mono', monospace; color: #e5e7eb; }
+.f-row { display: flex; justify-content: space-between; align-items: center; width: 100%; text-align: center; }
+.f-row span { color: var(--muted); text-align: center; width: 100%; }
+.f-row b { font-family: 'JetBrains Mono', monospace; color: #e5e7eb; text-align: center; width: 100%; }
 
 .clock-panel { 
-  text-align: right; 
+  text-align: center; 
   font-weight: 600; 
   justify-content: center; 
   font-size: 1.4vh; 
@@ -209,4 +200,5 @@ html, body {
   background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(31,41,55,0.9));
   border-color: rgba(52, 211, 153, 0.3);
 }
-#phTime { color: #34d399; text-shadow: 0 0 8px rgba(52, 211, 153, 0.4); }
+#phTime { color: #34d399; text-shadow: 0 0 8px rgba(52, 211, 153, 0.4); text-align: center; }
+#phDate { text-align: center; }
