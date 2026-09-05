@@ -19,7 +19,7 @@ function render(d){
  $('totalProgress').textContent=((t.progress||0)*100).toFixed(0)+'%';
  $('totalStockpile').textContent=num(t.stockpile);
  
- $('trucking').innerHTML='<div class="tr"><span>HAULER</span><span>AUGUST</span><span>SEPT</span><span>DAILY</span></div>'+(d.trucking||[]).map(x=>`<div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>`).join('');
+ $('trucking').innerHTML='<div class="tr"><span>HAULER</span><span>AUGUST</span><span>SEPT</span><span>DAILY</span></div>'+(d.trucking||[]).x.map(x=>`<div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>`).join('');
  
  $('truckingStockpile').innerHTML='<div class="tr"><span>HAULER</span><span>QTY</span></div>'+(d.trucking_stockpile||[]).map(x=>`<div class="tr"><b>${x.hauler}</b><span>${x.qty===0?'-':num(x.qty)}</span></div>`).join('');
  
@@ -32,8 +32,8 @@ function render(d){
  
  const alphaRows=d.alpha||[];
  const foreignRow=d.foreign;
- $('alphaRows').innerHTML=alphaRows.map(x=>`<div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials||''}</span><span>${x.discharge_pct||''}</span><span>${x.remarks||''}</span><span>${x.equipment||''}</span></div>`).join('') +
-   (foreignRow?`<div class="alpha-row" style="border-top:1px dashed #38bdf8;"><b>${foreignRow.berth}</b><span>${foreignRow.vessel}</span><span>${foreignRow.materials||''}</span><span>${foreignRow.discharge_pct||''}</span><span>${foreignRow.remarks||''}</span><span>${foreignRow.equipment||''}</span></div>`:'');
+ $('alphaRows').innerHTML=alphaRows.map(x=>`<div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials||''}</span><span>${x.discharge_pct||''}</span><span>${x.remarks||''}</span><span>${x.equipment||''}</span><span>${x.activity_time||''}</span></div>`).join('') +
+   (foreignRow?`<div class="alpha-row" style="border-top:1px dashed #38bdf8;"><b>${foreignRow.berth}</b><span>${foreignRow.vessel}</span><span>${foreignRow.materials||''}</span><span>${foreignRow.discharge_pct||''}</span><span>${foreignRow.remarks||''}</span><span>${foreignRow.equipment||''}</span><span>${foreignRow.activity_time||''}</span></div>`:'');
 
  const alerts=rows.filter(x=>x.remarks&&x.vessel!=='VACANT').map(x=>`${x.berth}: ${x.vessel} — ${x.remarks}`); $('tickerText').textContent=alerts.length?alerts.join('   •   '):'ALL PORT OPERATIONS NORMAL';
 }
