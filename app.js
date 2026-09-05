@@ -1,136 +1,22 @@
-const REFRESH_MS = 10000;
-let lastHash = '';
-const $ = id => document.getElementById(id);
-const num = v => v == null || v === '' || isNaN(v) ? '-' : Number(v).toLocaleString('en-US');
-
-function remarkClass(s) {
-  s = (s || '').toUpperCase();
-  if (s.includes('UNSAFE') || s.includes('ROUGH')) return 'danger';
-  if (s.includes('WAITING') || s.includes('INSPECTION')) return 'warn';
-  return 'normal';
+const REFRESH_MS=10000;
+let lastHash='';
+const $=id=>document.getElementById(id);
+const num=v=>Number(v||0).toLocaleString('en-US');
+function timeFmt(v){if(!v)return '--'; if(typeof v==='string')return v; return new Date(v).toLocaleTimeString('en-PH',{hour12:false,hour:'2-digit',minute:'2-digit'});}
+function activityFmt(v){if(!v)return '00:00'; const d=new Date(v); if(isNaN(d))return v; const now=new Date(); let m=Math.max(0,Math.floor((now-d)/60000)); return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function remarkClass(s){s=(s||'').toUpperCase(); if(s.includes('UNSAFE')||s.includes('ROUGH SEA'))return 'danger'; if(s.includes('WAITING')||s.includes('INSPECTION'))return 'warn'; return '';}
+function render(d){
+ $('syncText').textContent='LIVE • UPDATED '+new Date(d.updated_at).toLocaleTimeString('en-PH',{hour12:false});
+ $('refreshSec').textContent=(REFRESH_MS/1000)+'s';
+ const rows=d.berths||[]; $('berthGrid').innerHTML=rows.map(x=>{let p=Math.max(0,Math.min(100,(x.progress||0)*100));let vacant=String(x.vessel||'').toUpperCase()==='VACANT';return `<article class="berth ${vacant?'vacant':''}"><div class="berth-head"><span>${x.berth}</span><span class="vessel">${x.vessel||'—'}</span><span>V${x.voyage||0}</span><span>${x.time||'--'}</span></div><div class="berth-body"><div class="cols"><span class="value">${num(x.booking)}</span><span class="value">${num(x.dispatch)}</span><span class="value">${num(x.loaded)}</span><span class="value">${num(x.balance)}</span><span class="value">${num(x.stockpile)}</span><span class="progress-wrap"><span class="bar"><i style="width:${p}%"></i></span><b>${p.toFixed(0)}%</b></span><span class="activity">${activityFmt(x.activity_time)}</span><span class="label">BOOKING</span><span class="label">DISPATCH</span><span class="label">LOADED</span><span class="label">BALANCE</span><span class="label">STOCKPILE</span><span class="label">PROGRESS</span><span class="label">ACTIVITY</span></div><div class="remark ${remarkClass(x.remarks)}">${x.remarks||' '}</div><div class="equip">EQUIPMENT: ${x.equipment||'—'}</div></div></article>`}).join('');
+ const t=d.total||{}; $('totalBooking').textContent=num(t.booking);$('totalDispatch').textContent=num(t.dispatch);$('totalLoaded').textContent=num(t.loaded);$('totalBalance').textContent=num(t.balance);$('totalProgress').textContent=((t.progress||0)*100).toFixed(0)+'%';$('totalStockpile').textContent=num(t.stockpile);
+ $('trucking').innerHTML='<div class="tr"><span>HAULER</span><span>AUGUST</span><span>SEPT</span><span>DAILY</span></div>'+(d.trucking||[]).map(x=>`<div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>`).join('');
+ $('dailyProduction').innerHTML=(d.daily_production||[]).map(x=>`<div><span>${x.shift}</span><b>${num(x.qty)}</b></div>`).join('');
+ const m=d.monthly||[]; $('monthly').innerHTML='<div class="mh">MONTH</div><div class="mh">2025</div><div class="mh">2026</div>'+m.map(x=>`<div>${x.month}</div><div>${num(x.y2025)}</div><div>${num(x.y2026)}</div>`).join('');
+ const s=d.status||{}; ['stevedores','cranes','forklifts','supervisor','checker','pmc'].forEach(k=>$(k).textContent=s[k]??'--');
+ $('alphaRows').innerHTML=(d.alpha||[]).map(x=>`<div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials||''}</span><span>${x.remarks||''}</span></div>`).join('');
+ const alerts=rows.filter(x=>x.remarks&&x.vessel!=='VACANT').map(x=>`${x.berth}: ${x.vessel} — ${x.remarks}`); $('tickerText').textContent=alerts.length?alerts.join('   •   '):'ALL PORT OPERATIONS NORMAL';
 }
-
-const berthCols = '7vw 16vw 6vw 8vw 8vw 8vw 8vw 10vw 8vw 7vw 14vw 8vw';
-const alphaCols = '7vw 16vw 8vw 8vw 8vw 8vw 7vw 14vw 14vw 8vw';
-
-function render(d) {
-  // 1. Berths Grid
-  const rows = d.berths || [];
-  let html = `<div class="t-row header" style="grid-template-columns:${berthCols}"><span>Berth</span><span>Vessel</span><span>Voyage #</span><span>Booking</span><span>Dispatch</span><span>Loaded</span><span>Balance</span><span>Progress</span><span>Stockpile</span><span>Time</span><span>Remarks</span><span>Activity time</span></div>`;
-  
-  rows.forEach(x => {
-    let p = Math.max(0, Math.min(100, (x.progress ?? x.Progress ?? 0) * 100));
-    let vessel = x.vessel || x.Vessel || '—';
-    let vacant = String(vessel).toUpperCase() === 'VACANT';
-    let remarks = x.remarks || x.Remarks || '';
-    let remText = remarks ? `<span class="remark ${remarkClass(remarks)}">${remarks}</span>` : '';
-    let actTime = x.activity_time || x.activityTime || x.ActivityTime || '0:00';
-    
-    html += `<div class="t-row ${vacant ? 'vacant' : ''}" style="grid-template-columns:${berthCols}">
-      <b>${x.berth || x.Berth || '-'}</b>
-      <span class="vessel">${vessel}</span>
-      <span>${x.voyage || x.Voyage || '-'}</span>
-      <span class="val">${num(x.booking ?? x.Booking)}</span>
-      <span class="val">${num(x.dispatch ?? x.Dispatch)}</span>
-      <span class="val">${num(x.loaded ?? x.Loaded)}</span>
-      <span class="val">${num(x.balance ?? x.Balance)}</span>
-      <span class="bar-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p.toFixed(0)}%</span>
-      <span class="val">${num(x.stockpile ?? x.Stockpile)}</span>
-      <span>${x.time || x.Time || '-'}</span>
-      <div>${remText}</div>
-      <span class="val" style="color:#ff8a80">${actTime}</span>
-    </div>`;
-  });
-  
-  const t = d.total || {};
-  let totalProg = ((t.progress ?? t.Progress) || 0) * 100;
-  html += `<div class="t-row total" style="grid-template-columns:${berthCols}">
-    <span>TOTAL</span><span></span><span></span>
-    <span class="val">${num(t.booking ?? t.Booking)}</span>
-    <span class="val">${num(t.dispatch ?? t.Dispatch)}</span>
-    <span class="val">${num(t.loaded ?? t.Loaded)}</span>
-    <span class="val">${num(t.balance ?? t.Balance)}</span>
-    <span>${totalProg.toFixed(0)}%</span>
-    <span class="val">${num(t.stockpile ?? t.Stockpile)}</span>
-    <span></span><span></span><span></span>
-  </div>`;
-  $('berthGrid').innerHTML = html;
-  
-  // 2. Alpha Grid
-  const alphaRows = d.alpha || [];
-  let aHtml = `<div class="t-row header" style="grid-template-columns:${alphaCols}"><span>Berth</span><span>Vessel</span><span>MATERIALS</span><span>DISCHARGE %</span><span>Balance</span><span>Progress</span><span>Time</span><span>Remarks</span><span>Deployed Equip.</span><span>Activity time</span></div>`;
-  
-  alphaRows.forEach(x => {
-    let p = Math.max(0, Math.min(100, (x.progress ?? x.Progress ?? 0) * 100));
-    let remarks = x.remarks || x.Remarks || '';
-    let remText = remarks ? `<span class="remark normal">${remarks}</span>` : '';
-    let materials = x.materials || x.Materials || x.mat || x.Mat || '';
-    let discharge = x.discharge_pct || x.dischargePct || x.DischargePct || x.discharge || x.Discharge || '';
-    let balance = x.balance || x.Balance || '';
-    let equipment = x.equipment || x.deployed_equip || x.Equipment || x.DeployedEquip || '';
-    let actTime = x.activity_time || x.activityTime || x.ActivityTime || '';
-    
-    aHtml += `<div class="t-row" style="grid-template-columns:${alphaCols}">
-      <b>${x.berth || x.Berth || '-'}</b>
-      <span class="vessel">${x.vessel || x.Vessel || '-'}</span>
-      <span>${materials}</span>
-      <span>${discharge}</span>
-      <span>${balance}</span>
-      <span class="bar-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p.toFixed(0)}%</span>
-      <span>${x.time || x.Time || ''}</span>
-      <div>${remText}</div>
-      <span>${equipment}</span>
-      <span class="val" style="color:#ff8a80">${actTime}</span>
-    </div>`;
-  });
-  $('alphaGrid').innerHTML = aHtml;
-
-  // 3. Lower Dashboards & Tables
-  const truck = d.trucking || [];
-  $('truckingTable').innerHTML = `<div class="sub-row header" style="grid-template-columns:2fr 1fr 1fr 1fr"><span>Trucking</span><span>August</span><span>September</span><span>Daily</span></div>` +
-    truck.map(x => `<div class="sub-row" style="grid-template-columns:2fr 1fr 1fr 1fr"><b>${x.hauler || x.Hauler || '-'}</b><span>${num(x.august ?? x.August)}</span><span>${num(x.september ?? x.September)}</span><span>${num(x.daily ?? x.Daily)}</span></div>`).join('') +
-    `<div class="sub-row" style="grid-template-columns:2fr 1fr 1fr 1fr; font-weight:bold;"><b>Total</b><span>${num(truck.reduce((a, c) => a + (c.august ?? c.August || 0), 0))}</span><span>${num(truck.reduce((a, c) => a + (c.september ?? c.September || 0), 0))}</span><span>${num(truck.reduce((a, c) => a + (c.daily ?? c.Daily || 0), 0))}</span></div>`;
-
-  const m = d.monthly || [];
-  $('vesselLoadingTable').innerHTML = `<div class="sub-row header" style="grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr"><span>Vessel Cement Loading</span><span>2025</span><span>2026</span><span>2025</span><span>2026</span></div>` +
-    m.map(x => `<div class="sub-row" style="grid-template-columns:2fr 1.5fr 1.5fr 1.5fr 1.5fr"><span>${x.month || x.Month || '-'}</span><span>${num(x.y2025 ?? x.Y2025)}</span><span>${num(x.y2026 ?? x.Y2026)}</span><span>-</span><span>-</span></div>`).join('');
-
-  const dp = d.daily_production || [];
-  $('dailyProdTable').innerHTML = `<div class="sub-row header" style="grid-template-columns:3fr 1fr"><span>Cement loading Daily Production</span><span></span></div>` +
-    dp.map(x => `<div class="sub-row" style="grid-template-columns:3fr 1fr"><span>${x.shift || x.Shift || '-'}</span><span class="val">${num(x.qty ?? x.Qty)}</span></div>`).join('');
-
-  const ts = d.trucking_stockpile || [];
-  $('truckingStockpileTable').innerHTML = `<div class="sub-row header" style="grid-template-columns:3fr 1fr"><span>TRUCKING (STOCKPILE)</span><span></span></div>` +
-    ts.map(x => `<div class="sub-row" style="grid-template-columns:3fr 1fr"><span>${x.hauler || x.Hauler || '-'}</span><span class="val">${num(x.qty ?? x.Qty)}</span></div>`).join('');
-
-  const s = d.status || {};
-  $('supervisor').textContent = s.supervisor || s.Supervisor || '--';
-  $('checker').textContent = s.checker || s.Checker || '--';
-  $('pmc').textContent = s.pmc || s.PMC || '--';
-  $('cranes').textContent = s.cranes ?? s.Cranes ?? '--';
-  $('forklifts').textContent = s.forklifts ?? s.Forklifts ?? '--';
-  $('stevedores').textContent = s.stevedores ?? s.Stevedores ?? '--';
-}
-
-async function load() {
-  try {
-    const r = await fetch('data.json?t=' + Date.now(), { cache: 'no-store' });
-    if (!r.ok) throw new Error(r.status);
-    const d = await r.json();
-    const h = JSON.stringify(d);
-    if (h !== lastHash) { lastHash = h; render(d); }
-  } catch (e) {
-    console.error("Failed to load data.json:", e);
-  }
-}
-
-function clock() {
-  const n = new Date();
-  $('phDate').textContent = n.toLocaleDateString('en-PH', { year: 'numeric', month: '2-digit', day: '2-digit' });
-  $('phTime').textContent = n.toLocaleTimeString('en-PH', { hour12: false });
-}
-
-clock();
-setInterval(clock, 1000);
-load();
-setInterval(load, REFRESH_MS);
+async function load(){try{const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'}); if(!r.ok)throw new Error(r.status);const d=await r.json();const h=JSON.stringify(d);if(h!==lastHash){lastHash=h;render(d)}}catch(e){$('syncText').textContent='OFFLINE / WAITING FOR DATA';}}
+function clock(){const n=new Date();$('phDate').textContent=n.toLocaleDateString('en-PH',{weekday:'short',year:'numeric',month:'short',day:'2-digit'});$('phTime').textContent=n.toLocaleTimeString('en-PH',{hour12:false});}
+clock();setInterval(clock,1000);load();setInterval(load,REFRESH_MS);
