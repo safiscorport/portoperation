@@ -47,7 +47,7 @@
     <section id="berthGrid" class="berth-grid"></section>
 
     <section class="summary-row" style="margin: 0;">
-      <div class="panel total-panel"><div class="panel-title">TOTAL CEMENT LOADING</div><div class="big-number" id="totalLoaded">0</div><div class="muted">Loaded (MT)</div><div class="stats"><span>BOOKING <b id="totalBooking">0</b></span><span>DISPATCH <b id="totalDispatch">0</b></span><span>BALANCE <b id="totalBalance">0</b></span><span>PROGRESS <b id="totalProgress">0%</b></span><span>STOCKPILE <b id="totalStockpile">0</b></span></div></div>
+      <div class="panel" style="display:none"></div>
       <div class="panel"><div class="panel-title">TRUCKING SUMMARY</div><div id="trucking" class="table-mini"></div></div>
       <div class="panel"><div class="panel-title">TRUCKING (STOCKPILE)</div><div id="truckingStockpile" class="table-mini"></div></div>
     </section>
@@ -59,7 +59,7 @@
       </div>
       <div class="panel">
         <div class="panel-title">ALPHA & FOREIGN BERTHS (R1, R2, R3, JETTY)</div>
-        <div class="alpha-header" style="display:grid; grid-template-columns: 40px 1fr 1fr 1fr; font-size:7.5px; color:#94a3b8; padding:1px 2px; background:#1e293b; font-weight:bold;"><span>BERTH</span><span>VESSEL</span><span>MAT</span><span>DISCH%</span></div>
+        <div class="alpha-header" style="display:grid; grid-template-columns: 28px 1fr 28px 28px 1fr 45px 35px; font-size:6.5px; color:#94a3b8; padding:1px 2px; background:#1e293b; font-weight:bold;"><span>BERTH</span><span>VESSEL</span><span>MAT</span><span>DIS%</span><span>REMARKS</span><span>EQUIP</span><span>ACT</span></div>
         <div id="alphaRows" style="max-height:45px; overflow-y:auto;"></div>
         <div class="panel-title small" style="margin-top:2px;">PORT STATUS & MANPOWER</div>
         <div class="status-grid"><div><span>STEVEDOR</span><b id="stevedores">--</b></div><div><span>CRANE</span><b id="cranes">--</b></div><div><span>FORKLIFT</span><b id="forklifts">--</b></div><div><span>SUPERVISOR</span><b id="supervisor">--</b></div><div><span>CHECKER</span><b id="checker">--</b></div><div><span>PMC</span><b id="pmc">--</b></div></div>
