@@ -41,13 +41,14 @@ function render(d) {
   });
   
   const t = d.total || {};
+  let totalProg = ((t.progress ?? t.Progress) || 0) * 100;
   html += `<div class="t-row total" style="grid-template-columns:${berthCols}">
     <span>TOTAL</span><span></span><span></span>
     <span class="val">${num(t.booking ?? t.Booking)}</span>
     <span class="val">${num(t.dispatch ?? t.Dispatch)}</span>
     <span class="val">${num(t.loaded ?? t.Loaded)}</span>
     <span class="val">${num(t.balance ?? t.Balance)}</span>
-    <span>${(((t.progress ?? t.Progress) || 0) * 100).toFixed(0)}%</span>
+    <span>${totalProg.toFixed(0)}%</span>
     <span class="val">${num(t.stockpile ?? t.Stockpile)}</span>
     <span></span><span></span><span></span>
   </div>`;
@@ -64,7 +65,7 @@ function render(d) {
     let discharge = x.discharge_pct || x.dischargePct || x.DischargePct || x.discharge || x.Discharge || '';
     let balance = x.balance || x.Balance || '';
     let materials = x.materials || x.Materials || '';
-    let equipment = x.equipment || x.deployed_equip || x.Equipment || '';
+    let equipment = x.equipment || x.deployed_equip || x.Equipment || x.DeployedEquip || '';
     let actTime = x.activity_time || x.activityTime || x.ActivityTime || '';
     
     aHtml += `<div class="t-row" style="grid-template-columns:${alphaCols}">
