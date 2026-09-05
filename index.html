@@ -6,33 +6,29 @@
 <title>Port Operation Dashboard — LIVE</title>
 <link rel="stylesheet" href="styles.css">
 <style>
-  /* Kiosk mode single-screen scaling overrides */
   html, body {
-    height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    height: 100vh;
+    overflow: hidden !important;
     margin: 0;
     padding: 0;
   }
   .app {
-    display: flex;
-    flex-direction: column;
     height: 100vh;
     max-height: 100vh;
-    padding: 4px;
-    box-sizing: border-box;
-    justify-content: space-between;
-  }
-  main {
     display: flex;
     flex-direction: column;
-    flex: 1;
     justify-content: space-between;
-    gap: 4px;
     overflow: hidden;
   }
-  .topbar { padding: 4px 8px; margin-bottom: 2px; }
-  footer { padding: 2px 8px; margin-top: 2px; }
+  main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    padding: 2px 4px;
+  }
 </style>
 </head>
 <body>
@@ -43,16 +39,16 @@
   </header>
 
   <main>
-    <section class="section-head" style="margin: 0; padding: 2px 0;"><h2>CEMENT LOADING</h2><div class="sync">● <span id="syncText">CONNECTING</span></div></section>
+    <section class="section-head"><h2>CEMENT LOADING</h2><div class="sync">● <span id="syncText">CONNECTING</span></div></section>
     <section id="berthGrid" class="berth-grid"></section>
 
-    <section class="summary-row" style="margin: 0;">
+    <section class="summary-row">
       <div class="panel total-panel"><div class="panel-title">TOTAL CEMENT LOADING</div><div class="big-number" id="totalLoaded">0</div><div class="muted">Loaded</div><div class="stats"><span>BOOKING <b id="totalBooking">0</b></span><span>DISPATCH <b id="totalDispatch">0</b></span><span>BALANCE <b id="totalBalance">0</b></span><span>PROGRESS <b id="totalProgress">0%</b></span><span>STOCKPILE <b id="totalStockpile">0</b></span></div></div>
       <div class="panel"><div class="panel-title">TRUCKING</div><div id="trucking" class="table-mini"></div></div>
       <div class="panel"><div class="panel-title">DAILY PRODUCTION</div><div id="dailyProduction" class="production"></div></div>
     </section>
 
-    <section class="lower-grid" style="margin: 0;">
+    <section class="lower-grid">
       <div class="panel"><div class="panel-title">VESSEL CEMENT LOADING</div><div id="monthly" class="monthly"></div></div>
       <div class="panel"><div class="panel-title">PORT STATUS</div><div class="status-grid"><div><span>STEVDOR / SHIFT</span><b id="stevedores">--</b></div><div><span>CRANE AVAILABLE</span><b id="cranes">--</b></div><div><span>FORKLIFT AVAILABLE</span><b id="forklifts">--</b></div><div><span>SUPERVISOR</span><b id="supervisor">--</b></div><div><span>CHECKER</span><b id="checker">--</b></div><div><span>PMC</span><b id="pmc">--</b></div></div><div class="alpha"><div class="panel-title small">ALPHA / FOREIGN</div><div id="alphaRows"></div></div></div>
     </section>
