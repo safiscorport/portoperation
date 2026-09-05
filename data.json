@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-05T17:29:42.224996+08:00",
+  "updated_at": "2026-09-05T06:58:37.156884+00:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -7,14 +7,14 @@
       "voyage": 1,
       "booking": 85000,
       "dispatch": 40500,
-      "loaded": 9500,
-      "balance": 75500,
-      "progress": 0.11176470588235295,
-      "stockpile": 31000,
-      "time": "14:40",
-      "remarks": "LOADING SLING GEO 4",
+      "loaded": 7500,
+      "balance": 77500,
+      "progress": 0.08823529411764706,
+      "stockpile": 33000,
+      "time": "13:00",
+      "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "FL 2/ FL 16",
-      "activity_time": "02:49"
+      "activity_time": "01:53"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "13:00",
       "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "CRANE4/FL1",
-      "activity_time": "04:29"
+      "activity_time": "01:53"
     },
     {
       "berth": "Berth 3",
@@ -52,14 +52,14 @@
       "voyage": 4,
       "booking": 45000,
       "dispatch": 4000,
-      "loaded": 3000,
-      "balance": 42000,
-      "progress": 0.06666666666666667,
-      "stockpile": 1000,
-      "time": "14:29",
-      "remarks": "LOADING SLING GEO 1",
+      "loaded": 2000,
+      "balance": 43000,
+      "progress": 0.044444444444444446,
+      "stockpile": 2000,
+      "time": "13:30",
+      "remarks": "LOADING SLING L37",
       "equipment": "0",
-      "activity_time": "03:00"
+      "activity_time": "01:23"
     },
     {
       "berth": "Berth 5",
@@ -67,14 +67,14 @@
       "voyage": 7,
       "booking": 25000,
       "dispatch": 18500,
-      "loaded": 17500,
-      "balance": 7500,
-      "progress": 0.7,
-      "stockpile": 1000,
-      "time": "14:40",
-      "remarks": "LOADING TONNER L47",
+      "loaded": 16500,
+      "balance": 8500,
+      "progress": 0.66,
+      "stockpile": 2000,
+      "time": "13:40",
+      "remarks": "LOADING TONNER APLUS",
       "equipment": "0",
-      "activity_time": "02:49"
+      "activity_time": "01:13"
     },
     {
       "berth": "Berth 6",
@@ -118,8 +118,8 @@
       "stockpile": 0,
       "time": "10:19",
       "remarks": "WAITING MATERIAL",
-      "equipment": "0",
-      "activity_time": "07:10"
+      "equipment": "SANNY 2",
+      "activity_time": "04:34"
     },
     {
       "berth": "Berth 9",
@@ -133,8 +133,8 @@
       "stockpile": 3000,
       "time": "09:00",
       "remarks": "FOR CRANE INSPECTION",
-      "equipment": "SANNY 2",
-      "activity_time": "08:29"
+      "equipment": "SANNY 3",
+      "activity_time": "05:53"
     },
     {
       "berth": "Berth 10",
@@ -149,7 +149,7 @@
       "time": "14:23",
       "remarks": "LOADING TONNER F2",
       "equipment": "0",
-      "activity_time": "03:06"
+      "activity_time": "00:30"
     },
     {
       "berth": "Jetty",
@@ -170,18 +170,12 @@
   "total": {
     "booking": 295000,
     "dispatch": 130000,
-    "loaded": 92000,
-    "balance": 203000,
-    "progress": 0.36578477544864096,
-    "stockpile": 38000
+    "loaded": 88000,
+    "balance": 207000,
+    "progress": 0.35353454202193696,
+    "stockpile": 42000
   },
   "trucking": [
-    {
-      "hauler": "Trucking",
-      "august": 0,
-      "september": 0,
-      "daily": 0
-    },
     {
       "hauler": "SAFISCOR",
       "august": 1054675,
@@ -223,14 +217,15 @@
       "august": 38000,
       "september": 6000,
       "daily": 1000
+    },
+    {
+      "hauler": "Total",
+      "august": 1545075,
+      "september": 262000,
+      "daily": 34000
     }
   ],
   "monthly": [
-    {
-      "month": "",
-      "y2025": 2025,
-      "y2026": 2026
-    },
     {
       "month": "January",
       "y2025": 1513170,
@@ -257,9 +252,9 @@
       "y2026": 1836632
     },
     {
-      "month": "September",
-      "y2025": 1333325,
-      "y2026": 224000
+      "month": "June",
+      "y2025": 1399850,
+      "y2026": 1645728
     },
     {
       "month": "October",
@@ -270,53 +265,58 @@
       "month": "November",
       "y2025": 1014250,
       "y2026": 0
+    },
+    {
+      "month": "December",
+      "y2025": 1193484,
+      "y2026": 0
     }
   ],
   "daily_production": [
     {
-      "shift": "Cement loading Daily Production",
-      "qty": 0
-    },
-    {
       "shift": "1st SHIFT",
-      "qty": 23500
+      "qty": 19500
     },
     {
       "shift": "2ND SHIFT",
       "qty": 0
+    },
+    {
+      "shift": "Total",
+      "qty": 19500
     }
   ],
   "status": {
-    "stevedores": 0,
+    "stevedores": 43,
     "cranes": 1000,
     "forklifts": 0,
-    "supervisor": "Officer on Duty",
-    "checker": "BERNABE,A",
-    "pmc": "OBIAL,R / DALUSA,E"
+    "supervisor": "BERNABE,A",
+    "checker": "OBIAL,R / DALUSA,E",
+    "pmc": "JOAN / WILLIAM"
   },
   "alpha": [
     {
-      "berth": "Berth A",
-      "vessel": "Vessel",
-      "materials": "MATERIALS",
-      "remarks": "Remarks"
-    },
-    {
       "berth": "R1",
-      "vessel": "HANNAH",
-      "materials": "CIAL",
-      "remarks": "for testing"
+      "vessel": "VACANT",
+      "materials": "",
+      "remarks": ""
     },
     {
       "berth": "R2",
-      "vessel": "LUCIA",
+      "vessel": "VACANT",
+      "materials": "",
+      "remarks": ""
+    },
+    {
+      "berth": "R3",
+      "vessel": "POSEIDON 47",
       "materials": "COAL",
-      "remarks": "for testing"
+      "remarks": "NO DISCHARGING / ROUGH SEAS"
     }
   ],
   "foreign": {
-    "berth": "Berth F",
-    "vessel": "Vessel",
-    "remarks": "Remarks"
+    "berth": "Jetty",
+    "vessel": "VACANT",
+    "remarks": ""
   }
 }
