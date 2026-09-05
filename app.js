@@ -21,7 +21,7 @@ function render(d){
  
  $('trucking').innerHTML='<div class="tr"><span>HAULER</span><span>AUGUST</span><span>SEPT</span><span>DAILY</span></div>'+(d.trucking||[]).map(x=>`<div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>`).join('');
  
- $('truckingStockpile').innerHTML='<div class="tr"><span>HAULER</span><span>QTY</span></div>'+(d.trucking_stockpile||[]).map(x=>`<div class="tr"><b>${x.hauler}</b><span>${num(x.qty)}</span></div>`).join('');
+ $('truckingStockpile').innerHTML='<div class="tr"><span>HAULER</span><span>QTY</span></div>'+(d.trucking_stockpile||[]).map(x=>`<div class="tr"><b>${x.hauler}</b><span>${x.qty===0?'-':num(x.qty)}</span></div>`).join('');
  
  $('dailyProduction').innerHTML=(d.daily_production||[]).map(x=>`<div><span>${x.shift}</span><b>${num(x.qty)}</b></div>`).join('');
  
