@@ -3,48 +3,49 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Port Operation Flight-Board</title>
+<title>Port Operation Dashboard</title>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div class="app">
-  <header class="topbar">
-    <div class="brand"><span class="live-dot"></span><span class="title">PORT OPERATION FLIGHT-BOARD</span></div>
-    <div class="clock"><span id="phDate">--</span> | <span id="phTime">--:--:--</span></div>
-  </header>
+  <div class="c-title">CEMENT LOADING</div>
+  
+  <div class="board-main" id="berthGrid"></div>
+  
+  <div class="alpha-title">Berth A</div>
+  <div class="board-main" id="alphaGrid"></div>
 
-  <main class="board-main">
-    <section class="panel main-panel">
-      <div class="panel-header">CEMENT LOADING & BERTH STATUS <span id="syncText" class="live-status">LIVE</span></div>
-      <div id="berthGrid" class="flight-table"></div>
-    </section>
-
-    <div class="bottom-split">
-      <section class="panel">
-        <div class="panel-header">ALPHA & FOREIGN BERTHS</div>
-        <div id="alphaRows" class="flight-table alpha-table"></div>
-      </section>
-      
-      <section class="panel side-panel">
-        <div class="panel-header">PORT MANPOWER & PRODUCTION</div>
-        <div class="stats-compact">
-          <div>SUP: <b id="supervisor">--</b></div>
-          <div>CHK: <b id="checker">--</b></div>
-          <div>PMC: <b id="pmc">--</b></div>
-          <div>CRANE: <b id="cranes">--</b></div>
-          <div>FORK: <b id="forklifts">--</b></div>
-          <div>STEVEDORE: <b id="stevedores">--</b></div>
-          <div>1ST SHIFT: <b id="shift1">--</b></div>
-          <div>STOCKPILE: <b id="stockTotal">--</b></div>
-        </div>
-      </section>
+  <div class="lower-dashboard">
+    <div class="panel">
+      <div id="truckingTable"></div>
     </div>
-  </main>
+    <div class="panel col-mid">
+      <div id="vesselLoadingTable"></div>
+    </div>
+    <div class="panel col-right">
+      <div id="dailyProdTable"></div>
+      <div id="truckingStockpileTable"></div>
+    </div>
+  </div>
 
-  <footer>
-    <div class="ticker-label">NOTICE</div>
-    <div class="ticker"><div id="tickerText">LOADING FLIGHT-BOARD DATA...</div></div>
-  </footer>
+  <div class="footer-dashboard">
+    <div class="panel footer-panel">
+      <div class="f-row"><span>Supervisor</span><b id="supervisor">--</b></div>
+      <div class="f-row"><span>Checker</span><b id="checker">--</b></div>
+      <div class="f-row"><span>PMC</span><b id="pmc">--</b></div>
+    </div>
+    <div class="panel footer-panel">
+      <div class="f-row"><span>Crane</span><b id="cranes">--</b></div>
+      <div class="f-row"><span>Forklift</span><b id="forklifts">--</b></div>
+    </div>
+    <div class="panel footer-panel">
+      <div class="f-row"><span># of stevedor Per Shift</span><b id="stevedores">--</b></div>
+    </div>
+    <div class="panel footer-panel clock-panel">
+      <div id="phDate">--</div>
+      <div id="phTime">--:--:--</div>
+    </div>
+  </div>
 </div>
 <script src="app.js"></script>
 </body>
