@@ -32,8 +32,8 @@ function render(d){
  
  const alphaRows=d.alpha||[];
  const foreignRow=d.foreign;
- $('alphaRows').innerHTML=alphaRows.map(x=>`<div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials||''}</span><span>${x.discharge_pct||''}</span></div>`).join('') +
-   (foreignRow?`<div class="alpha-row" style="border-top:1px dashed #38bdf8;"><b>${foreignRow.berth}</b><span>${foreignRow.vessel}</span><span>${foreignRow.materials||''}</span><span>${foreignRow.discharge_pct||''}</span></div>`:'');
+ $('alphaRows').innerHTML=alphaRows.map(x=>`<div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials||''}</span><span>${x.discharge_pct||''}</span><span>${x.remarks||''}</span><span>${x.equipment||''}</span></div>`).join('') +
+   (foreignRow?`<div class="alpha-row" style="border-top:1px dashed #38bdf8;"><b>${foreignRow.berth}</b><span>${foreignRow.vessel}</span><span>${foreignRow.materials||''}</span><span>${foreignRow.discharge_pct||''}</span><span>${foreignRow.remarks||''}</span><span>${foreignRow.equipment||''}</span></div>`:'');
 
  const alerts=rows.filter(x=>x.remarks&&x.vessel!=='VACANT').map(x=>`${x.berth}: ${x.vessel} — ${x.remarks}`); $('tickerText').textContent=alerts.length?alerts.join('   •   '):'ALL PORT OPERATIONS NORMAL';
 }
