@@ -1,61 +1,322 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Port Operation Dashboard — LIVE</title>
-<link rel="stylesheet" href="styles.css">
-<style>
-  html, body {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden !important;
-    margin: 0;
-    padding: 0;
+{
+  "updated_at": "2026-09-05T16:07:24.166348+08:00",
+  "berths": [
+    {
+      "berth": "Berth 1",
+      "vessel": "VACANT",
+      "voyage": 1,
+      "booking": 85000,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 85000,
+      "progress": 0,
+      "stockpile": 0,
+      "time": "14:40",
+      "remarks": "LOADING SLING GEO 4",
+      "equipment": "FL 2/ FL 16",
+      "activity_time": "01:27"
+    },
+    {
+      "berth": "Berth 2",
+      "vessel": "JOHANNAH 7",
+      "voyage": 5,
+      "booking": 65000,
+      "dispatch": 34000,
+      "loaded": 33000,
+      "balance": 32000,
+      "progress": 0.5076923076923077,
+      "stockpile": 1000,
+      "time": "13:00",
+      "remarks": "UNSAFE TO LOAD / ROUGH SEA",
+      "equipment": "CRANE4/FL1",
+      "activity_time": "03:07"
+    },
+    {
+      "berth": "Berth 3",
+      "vessel": "VACANT",
+      "voyage": 0,
+      "booking": 0,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 0,
+      "progress": 0,
+      "stockpile": 0,
+      "time": "00:00",
+      "remarks": "",
+      "equipment": "0",
+      "activity_time": "00:00"
+    },
+    {
+      "berth": "Berth 4",
+      "vessel": "INFINITY 8",
+      "voyage": 4,
+      "booking": 45000,
+      "dispatch": 4000,
+      "loaded": 3000,
+      "balance": 42000,
+      "progress": 0.06666666666666667,
+      "stockpile": 1000,
+      "time": "14:29",
+      "remarks": "LOADING SLING GEO 1",
+      "equipment": "0",
+      "activity_time": "01:38"
+    },
+    {
+      "berth": "Berth 5",
+      "vessel": "LADY OF COURAGE",
+      "voyage": 7,
+      "booking": 25000,
+      "dispatch": 18500,
+      "loaded": 17500,
+      "balance": 7500,
+      "progress": 0.7,
+      "stockpile": 1000,
+      "time": "14:40",
+      "remarks": "LOADING TONNER L47",
+      "equipment": "0",
+      "activity_time": "01:27"
+    },
+    {
+      "berth": "Berth 6",
+      "vessel": "VACANT",
+      "voyage": 0,
+      "booking": 0,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 0,
+      "progress": 0,
+      "stockpile": 0,
+      "time": "00:00",
+      "remarks": "",
+      "equipment": "0",
+      "activity_time": "00:00"
+    },
+    {
+      "berth": "Berth 7",
+      "vessel": "VACANT",
+      "voyage": 0,
+      "booking": 0,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 0,
+      "progress": 0,
+      "stockpile": 0,
+      "time": "00:00",
+      "remarks": "",
+      "equipment": "0",
+      "activity_time": "00:00"
+    },
+    {
+      "berth": "Berth 8",
+      "vessel": "LADY ARMOR",
+      "voyage": 5,
+      "booking": 17000,
+      "dispatch": 6000,
+      "loaded": 6000,
+      "balance": 11000,
+      "progress": 0.35294117647058826,
+      "stockpile": 0,
+      "time": "10:19",
+      "remarks": "WAITING MATERIAL",
+      "equipment": "0",
+      "activity_time": "05:48"
+    },
+    {
+      "berth": "Berth 9",
+      "vessel": "LADY OF WISDOM",
+      "voyage": 6,
+      "booking": 30000,
+      "dispatch": 3000,
+      "loaded": 0,
+      "balance": 30000,
+      "progress": 0,
+      "stockpile": 3000,
+      "time": "09:00",
+      "remarks": "FOR CRANE INSPECTION",
+      "equipment": "SANNY 2",
+      "activity_time": "07:07"
+    },
+    {
+      "berth": "Berth 10",
+      "vessel": "NIEVES",
+      "voyage": 2,
+      "booking": 28000,
+      "dispatch": 24000,
+      "loaded": 23000,
+      "balance": 5000,
+      "progress": 0.8214285714285714,
+      "stockpile": 1000,
+      "time": "14:23",
+      "remarks": "LOADING TONNER F2",
+      "equipment": "0",
+      "activity_time": "01:44"
+    },
+    {
+      "berth": "Jetty",
+      "vessel": "VACANT",
+      "voyage": 0,
+      "booking": 0,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 0,
+      "progress": 0,
+      "stockpile": 0,
+      "time": "00:00",
+      "remarks": "",
+      "equipment": "0",
+      "activity_time": "00:00"
+    }
+  ],
+  "total": {
+    "booking": 295000,
+    "dispatch": 89500,
+    "loaded": 82500,
+    "balance": 212500,
+    "progress": 0.34981838889401917,
+    "stockpile": 7000
+  },
+  "trucking": [
+    {
+      "hauler": "SAFISCOR",
+      "august": 1054675,
+      "september": 175000,
+      "daily": 21000
+    },
+    {
+      "hauler": "LAPU-LAPU",
+      "august": 220240,
+      "september": 45000,
+      "daily": 6000
+    },
+    {
+      "hauler": "BADIE",
+      "august": 53080,
+      "september": 8000,
+      "daily": 1000
+    },
+    {
+      "hauler": "GEO",
+      "august": 138080,
+      "september": 21000,
+      "daily": 3000
+    },
+    {
+      "hauler": "UCES",
+      "august": 0,
+      "september": 0,
+      "daily": 0
+    },
+    {
+      "hauler": "APLUS",
+      "august": 41000,
+      "september": 7000,
+      "daily": 2000
+    },
+    {
+      "hauler": "FULACHE",
+      "august": 38000,
+      "september": 6000,
+      "daily": 1000
+    },
+    {
+      "hauler": "Total",
+      "august": 1545075,
+      "september": 262000,
+      "daily": 34000
+    }
+  ],
+  "monthly": [
+    {
+      "month": "January",
+      "y2025": 1513170,
+      "y2026": 1219792
+    },
+    {
+      "month": "February",
+      "y2025": 1422330,
+      "y2026": 1351343
+    },
+    {
+      "month": "March",
+      "y2025": 1529850,
+      "y2026": 1778988
+    },
+    {
+      "month": "April",
+      "y2025": 1655225,
+      "y2026": 1326652
+    },
+    {
+      "month": "May",
+      "y2025": 1526425,
+      "y2026": 1836632
+    },
+    {
+      "month": "June",
+      "y2025": 1399850,
+      "y2026": 1645728
+    },
+    {
+      "month": "October",
+      "y2025": 1568249,
+      "y2026": 0
+    },
+    {
+      "month": "November",
+      "y2025": 1014250,
+      "y2026": 0
+    },
+    {
+      "month": "December",
+      "y2025": 1193484,
+      "y2026": 0
+    }
+  ],
+  "daily_production": [
+    {
+      "shift": "1st SHIFT",
+      "qty": 23500
+    },
+    {
+      "shift": "2ND SHIFT",
+      "qty": 0
+    },
+    {
+      "shift": "Total",
+      "qty": 23500
+    }
+  ],
+  "status": {
+    "stevedores": 43,
+    "cranes": 1000,
+    "forklifts": 0,
+    "supervisor": "BERNABE,A",
+    "checker": "OBIAL,R / DALUSA,E",
+    "pmc": "JOAN / WILLIAM"
+  },
+  "alpha": [
+    {
+      "berth": "R1",
+      "vessel": "VACANT",
+      "materials": "",
+      "remarks": ""
+    },
+    {
+      "berth": "R2",
+      "vessel": "VACANT",
+      "materials": "",
+      "remarks": ""
+    },
+    {
+      "berth": "R3",
+      "vessel": "MV LUNOD",
+      "materials": "COAL",
+      "remarks": "NAKA IGIT SI CAPTAIN"
+    }
+  ],
+  "foreign": {
+    "berth": "Jetty",
+    "vessel": "VACANT",
+    "remarks": ""
   }
-  .app {
-    height: 100vh;
-    max-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
-  }
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow: hidden;
-    padding: 2px 4px;
-  }
-</style>
-</head>
-<body>
-<div class="app">
-  <header class="topbar">
-    <div class="brand"><span class="live-dot"></span><div><div class="title">PORT OPERATION DASHBOARD</div><div class="subtitle">CEMENT LOADING • REAL-TIME MONITORING</div></div></div>
-    <div class="clock"><div id="phDate">--</div><div id="phTime">--:--:--</div></div>
-  </header>
-
-  <main>
-    <section class="section-head"><h2>CEMENT LOADING</h2><div class="sync">● <span id="syncText">CONNECTING</span></div></section>
-    <section id="berthGrid" class="berth-grid"></section>
-
-    <section class="summary-row">
-      <div class="panel total-panel"><div class="panel-title">TOTAL CEMENT LOADING</div><div class="big-number" id="totalLoaded">0</div><div class="muted">Loaded</div><div class="stats"><span>BOOKING <b id="totalBooking">0</b></span><span>DISPATCH <b id="totalDispatch">0</b></span><span>BALANCE <b id="totalBalance">0</b></span><span>PROGRESS <b id="totalProgress">0%</b></span><span>STOCKPILE <b id="totalStockpile">0</b></span></div></div>
-      <div class="panel"><div class="panel-title">TRUCKING</div><div id="trucking" class="table-mini"></div></div>
-      <div class="panel"><div class="panel-title">DAILY PRODUCTION</div><div id="dailyProduction" class="production"></div></div>
-    </section>
-
-    <section class="lower-grid">
-      <div class="panel"><div class="panel-title">VESSEL CEMENT LOADING</div><div id="monthly" class="monthly"></div></div>
-      <div class="panel"><div class="panel-title">PORT STATUS</div><div class="status-grid"><div><span>STEVDOR / SHIFT</span><b id="stevedores">--</b></div><div><span>CRANE AVAILABLE</span><b id="cranes">--</b></div><div><span>FORKLIFT AVAILABLE</span><b id="forklifts">--</b></div><div><span>SUPERVISOR</span><b id="supervisor">--</b></div><div><span>CHECKER</span><b id="checker">--</b></div><div><span>PMC</span><b id="pmc">--</b></div></div><div class="alpha"><div class="panel-title small">ALPHA / FOREIGN</div><div id="alphaRows"></div></div></div>
-    </section>
-  </main>
-
-  <footer><div class="ticker-label">LIVE</div><div class="ticker"><div id="tickerText">Waiting for dashboard data…</div></div><div class="footer-right">AUTO REFRESH <b id="refreshSec">10s</b></div></footer>
-</div>
-<script src="app.js"></script>
-</body>
-</html>
+}
