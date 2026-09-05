@@ -80,11 +80,6 @@ html, body {
   font-size: 1.3vh;
   border-bottom: 1px solid var(--border);
   border-radius: 2px;
-  transition: background 0.2s ease;
-}
-
-.t-row:not(.header):not(.total):hover {
-  background: rgba(55, 65, 81, 0.6);
 }
 
 .t-row.header {
@@ -111,16 +106,38 @@ html, body {
 .bar { height: 0.8vh; background: #374151; flex: 1; border-radius: 2px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
 .bar i { display: block; height: 100%; background: linear-gradient(90deg, #059669, #34d399); box-shadow: 0 0 8px var(--accent-glow); }
 
-.remark {
-  padding: 0.2vh 0.5vw;
-  border-radius: 3px;
-  white-space: nowrap;
+/* Airport Running Remarks Ticker */
+.ticker-wrap {
   overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 1.2vh;
+  width: 100%;
+  white-space: nowrap;
+  border-radius: 2px;
+  position: relative;
 }
-.remark.danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
-.remark.warn { background: rgba(245, 158, 11, 0.2); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+.ticker-move {
+  display: inline-block;
+  animation: marquee 15s linear infinite;
+  padding-left: 100%;
+}
+.ticker-move:hover {
+  animation-play-state: paused;
+}
+@keyframes marquee {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(-100%, 0); }
+}
+
+.remark {
+  display: inline-block;
+  padding: 0.2vh 0.8vw;
+  border-radius: 3px;
+  font-size: 1.2vh;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.remark.danger { background: rgba(239, 68, 68, 0.3); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.5); }
+.remark.warn { background: rgba(245, 158, 11, 0.3); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.5); }
+.remark.normal { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.4); }
 
 .lower-dashboard {
   display: grid;
