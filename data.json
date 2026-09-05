@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-05T16:29:00.000000+08:00",
+  "updated_at": "2026-09-05T16:41:32.863110+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -9,12 +9,12 @@
       "dispatch": 40500,
       "loaded": 9500,
       "balance": 75500,
-      "progress": 0.11,
+      "progress": 0.11176470588235295,
       "stockpile": 31000,
       "time": "14:40",
       "remarks": "LOADING SLING GEO 4",
       "equipment": "FL 2/ FL 16",
-      "activity_time": "01:49"
+      "activity_time": "02:01"
     },
     {
       "berth": "Berth 2",
@@ -24,12 +24,12 @@
       "dispatch": 34000,
       "loaded": 33000,
       "balance": 32000,
-      "progress": 0.51,
+      "progress": 0.5076923076923077,
       "stockpile": 1000,
       "time": "13:00",
       "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "CRANE4/FL1",
-      "activity_time": "03:29"
+      "activity_time": "03:41"
     },
     {
       "berth": "Berth 3",
@@ -54,12 +54,12 @@
       "dispatch": 4000,
       "loaded": 3000,
       "balance": 42000,
-      "progress": 0.07,
+      "progress": 0.06666666666666667,
       "stockpile": 1000,
       "time": "14:29",
       "remarks": "LOADING SLING GEO 1",
       "equipment": "0",
-      "activity_time": "02:00"
+      "activity_time": "02:12"
     },
     {
       "berth": "Berth 5",
@@ -69,12 +69,12 @@
       "dispatch": 18500,
       "loaded": 17500,
       "balance": 7500,
-      "progress": 0.70,
+      "progress": 0.7,
       "stockpile": 1000,
       "time": "14:40",
       "remarks": "LOADING TONNER L47",
       "equipment": "0",
-      "activity_time": "01:49"
+      "activity_time": "02:01"
     },
     {
       "berth": "Berth 6",
@@ -114,12 +114,12 @@
       "dispatch": 6000,
       "loaded": 6000,
       "balance": 11000,
-      "progress": 0.35,
+      "progress": 0.35294117647058826,
       "stockpile": 0,
       "time": "10:19",
       "remarks": "WAITING MATERIAL",
       "equipment": "0",
-      "activity_time": "06:10"
+      "activity_time": "06:22"
     },
     {
       "berth": "Berth 9",
@@ -134,7 +134,7 @@
       "time": "09:00",
       "remarks": "FOR CRANE INSPECTION",
       "equipment": "SANNY 2",
-      "activity_time": "07:29"
+      "activity_time": "07:41"
     },
     {
       "berth": "Berth 10",
@@ -144,12 +144,12 @@
       "dispatch": 24000,
       "loaded": 23000,
       "balance": 5000,
-      "progress": 0.82,
+      "progress": 0.8214285714285714,
       "stockpile": 1000,
       "time": "14:23",
       "remarks": "LOADING TONNER F2",
       "equipment": "0",
-      "activity_time": "02:06"
+      "activity_time": "02:18"
     },
     {
       "berth": "Jetty",
@@ -172,7 +172,7 @@
     "dispatch": 130000,
     "loaded": 92000,
     "balance": 203000,
-    "progress": 0.37,
+    "progress": 0.36578477544864096,
     "stockpile": 38000
   },
   "trucking": [
@@ -225,40 +225,6 @@
       "daily": 34000
     }
   ],
-  "trucking_stockpile": [
-    {
-      "hauler": "SAFISCOR",
-      "qty": 34000
-    },
-    {
-      "hauler": "LAPU-LAPU",
-      "qty": 3000
-    },
-    {
-      "hauler": "BADIE",
-      "qty": 0
-    },
-    {
-      "hauler": "GEO",
-      "qty": 1000
-    },
-    {
-      "hauler": "UCES",
-      "qty": 0
-    },
-    {
-      "hauler": "APLUS",
-      "qty": 0
-    },
-    {
-      "hauler": "FULACHE",
-      "qty": 0
-    },
-    {
-      "hauler": "Total",
-      "qty": 38000
-    }
-  ],
   "monthly": [
     {
       "month": "January",
@@ -291,21 +257,6 @@
       "y2026": 1645728
     },
     {
-      "month": "July",
-      "y2025": 1185200,
-      "y2026": 1137600
-    },
-    {
-      "month": "August",
-      "y2025": 1275600,
-      "y2026": 1538975
-    },
-    {
-      "month": "September",
-      "y2025": 1333325,
-      "y2026": 224000
-    },
-    {
       "month": "October",
       "y2025": 1568249,
       "y2026": 0
@@ -319,11 +270,6 @@
       "month": "December",
       "y2025": 1193484,
       "y2026": 0
-    },
-    {
-      "month": "Total",
-      "y2025": 16616958,
-      "y2026": 12059710
     }
   ],
   "daily_production": [
@@ -342,8 +288,8 @@
   ],
   "status": {
     "stevedores": 43,
-    "cranes": 3,
-    "forklifts": 6,
+    "cranes": 1000,
+    "forklifts": 0,
     "supervisor": "BERNABE,A",
     "checker": "OBIAL,R / DALUSA,E",
     "pmc": "JOAN / WILLIAM"
@@ -353,49 +299,24 @@
       "berth": "R1",
       "vessel": "HANNAH",
       "materials": "CIAL",
-      "discharge_pct": "50%",
-      "balance": "50%",
-      "progress": 0.50,
-      "time": "13:00",
-      "remarks": "nakalibang",
-      "equipment": "SDLG",
-      "activity_time": "03:36"
+      "remarks": "for testing"
     },
     {
       "berth": "R2",
       "vessel": "LUCIA",
       "materials": "COAL",
-      "discharge_pct": "50%",
-      "balance": "50%",
-      "progress": 0.50,
-      "time": "13:00",
-      "remarks": "ambot lang",
-      "equipment": "SDLG",
-      "activity_time": "03:36"
+      "remarks": "for testing"
     },
     {
       "berth": "R3",
       "vessel": "MV LUNOD",
       "materials": "COAL",
-      "discharge_pct": "50%",
-      "balance": "50%",
-      "progress": 0.50,
-      "time": "13:00",
-      "remarks": "NAKA IGIT SI CAPTAIN",
-      "equipment": "SDLG",
-      "activity_time": "03:36"
+      "remarks": "for testing"
     }
   ],
   "foreign": {
     "berth": "Jetty",
     "vessel": "MV LUNOD",
-    "materials": "coal",
-    "discharge_pct": "50%",
-    "balance": "50%",
-    "progress": 0.50,
-    "time": "",
-    "remarks": "ambot",
-    "equipment": "0",
-    "activity_time": ""
+    "remarks": "ambot"
   }
 }
