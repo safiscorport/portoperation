@@ -6,7 +6,7 @@ function remarkClass(s) {
   s = (s || '').toUpperCase();
   if (s.includes('UNSAFE') || s.includes('ROUGH')) return 'danger';
   if (s.includes('WAITING') || s.includes('INSPECTION')) return 'warn';
-  return '';
+  return 'normal';
 }
 
 const berthCols = '7vw 16vw 6vw 8vw 8vw 8vw 8vw 10vw 8vw 7vw 14vw 8vw';
@@ -19,6 +19,8 @@ function render(d) {
   rows.forEach(x => {
     let p = Math.max(0, Math.min(100, (x.progress || 0) * 100));
     let vacant = String(x.vessel || '').toUpperCase() === 'VACANT';
+    let remText = x.remarks ? `<div class="ticker-wrap"><div class="ticker-move"><span class="remark ${remarkClass(x.remarks)}">${x.remarks}</span></div></div>` : '';
+    
     html += `<div class="t-row ${vacant ? 'vacant' : ''}" style="grid-template-columns:${berthCols}">
       <b>${x.berth}</b>
       <span class="vessel">${x.vessel || '—'}</span>
@@ -30,7 +32,7 @@ function render(d) {
       <span class="bar-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p.toFixed(0)}%</span>
       <span class="val">${num(x.stockpile)}</span>
       <span>${x.time || '-'}</span>
-      <span class="remark ${remarkClass(x.remarks)}">${x.remarks || ''}</span>
+      <div>${remText}</div>
       <span class="val" style="color:#ff8a80">${x.activity_time || '0:00'}</span>
     </div>`;
   });
@@ -53,6 +55,8 @@ function render(d) {
   let aHtml = `<div class="t-row header" style="grid-template-columns:${alphaCols}"><span>Berth</span><span>Vessel</span><span>MATERIALS</span><span>DISCHARGE %</span><span>Balance</span><span>Progress</span><span>Time</span><span>Remarks</span><span>Deployed Equip.</span><span>Activity time</span></div>`;
   alphaRows.concat(foreign ? [foreign] : []).forEach(x => {
     let p = Math.max(0, Math.min(100, (x.progress || 0) * 100));
+    let remText = x.remarks ? `<div class="ticker-wrap"><div class="ticker-move"><span class="remark normal">${x.remarks}</span></div></div>` : '';
+    
     aHtml += `<div class="t-row" style="grid-template-columns:${alphaCols}">
       <b>${x.berth}</b>
       <span class="vessel">${x.vessel}</span>
@@ -61,7 +65,7 @@ function render(d) {
       <span>${x.balance || ''}</span>
       <span class="bar-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p.toFixed(0)}%</span>
       <span>${x.time || ''}</span>
-      <span class="remark">${x.remarks || ''}</span>
+      <div>${remText}</div>
       <span>${x.equipment || ''}</span>
       <span class="val" style="color:#ff8a80">${x.activity_time || ''}</span>
     </div>`;
