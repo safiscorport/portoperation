@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T22:22:40+08:00",
+  "updated_at": "2026-09-06T22:24:42+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -14,7 +14,7 @@
       "time": "21:17",
       "remarks": "LOADING SLING GEO 4",
       "equipment": "FL1",
-      "activity_time": "01:05"
+      "activity_time": "01:07"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "20:00",
       "remarks": "LOADING TONNER",
       "equipment": "0",
-      "activity_time": "02:22"
+      "activity_time": "02:24"
     },
     {
       "berth": "Berth 3",
@@ -59,7 +59,7 @@
       "time": "19:00",
       "remarks": "REFUSE TO OPEN HATCH",
       "equipment": "0",
-      "activity_time": "03:22"
+      "activity_time": "03:24"
     },
     {
       "berth": "Berth 5",
@@ -89,7 +89,7 @@
       "time": "16:12",
       "remarks": "DOCKED & SECURED",
       "equipment": "0",
-      "activity_time": "06:10"
+      "activity_time": "06:12"
     },
     {
       "berth": "Berth 7",
@@ -104,7 +104,7 @@
       "time": "21:22",
       "remarks": "LOADING SLING S44",
       "equipment": "FL 2/ FL 3",
-      "activity_time": "01:00"
+      "activity_time": "01:02"
     },
     {
       "berth": "Berth 8",
@@ -134,7 +134,7 @@
       "time": "21:34",
       "remarks": "WAITING MATERIAL",
       "equipment": "0",
-      "activity_time": "00:48"
+      "activity_time": "00:50"
     },
     {
       "berth": "Berth 10",
@@ -186,7 +186,7 @@
       "time": "11:00",
       "remarks": "TEST1",
       "equip": "SDLG",
-      "activity_time": "11:22"
+      "activity_time": "11:24"
     },
     {
       "berth": "R2",
@@ -198,7 +198,7 @@
       "time": "12:00",
       "remarks": "TEST2",
       "equip": "SDLG",
-      "activity_time": "10:22"
+      "activity_time": "10:24"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "14:00",
       "remarks": "CONTINUE DISCHARGING",
       "equip": "FEED TO JBS HOOPER",
-      "activity_time": "08:22"
+      "activity_time": "08:24"
     }
   ],
   "foreign": {
