@@ -271,30 +271,46 @@ body {
 
 
 /* =========================================================
-   PROGRESS BAR
-   PERCENTAGE IS CENTERED INSIDE THE BAR
+   PROGRESS BAR - PERCENTAGE CENTERED INSIDE BAR
+   Works with percentage as plain text
    ========================================================= */
 
 .progress-wrap {
   position: relative;
 
   width: 100%;
-
   height: clamp(16px, 1.5vh, 24px);
 
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   margin: 0;
-
   padding: 0;
 
+  color: #fff;
+
+  font-size: clamp(10px, 0.68vw, 16px);
+  font-weight: 900;
+
+  line-height: 1;
+
+  text-align: center;
+
+  white-space: nowrap;
+
   overflow: hidden;
+
+  text-shadow:
+    1px 1px 2px #000,
+    -1px -1px 2px #000,
+    0 0 3px #000;
 }
 
 
-/* Background bar */
+/* Dark background of progress bar */
 
-.bar {
+.progress-wrap .bar {
   position: absolute;
 
   top: 0;
@@ -309,15 +325,13 @@ body {
 
   overflow: hidden;
 
-  margin: 0;
-
-  padding: 0;
+  z-index: 0;
 }
 
 
-/* Green progress */
+/* Green progress amount */
 
-.bar i {
+.progress-wrap .bar i {
   position: absolute;
 
   top: 0;
@@ -327,56 +341,34 @@ body {
 
   height: 100%;
 
-  width: 0%;
-
   background: var(--accent);
 
   box-shadow:
     0 0 5px rgba(101, 184, 63, 0.5);
 
   transition: width 0.5s ease;
-
-  z-index: 1;
 }
 
 
-/* Percentage text */
+/* If your JavaScript uses a span, this also supports it */
 
 .progress-wrap span {
-  position: absolute;
+  position: relative;
 
-  top: 0;
-  left: 0;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   width: 100%;
   height: 100%;
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  z-index: 5;
-
   color: #fff;
-
-  font-size: clamp(9px, 0.68vw, 16px);
 
   font-weight: 900;
 
-  line-height: 1;
-
   text-align: center;
-
-  white-space: nowrap;
-
-  overflow: visible;
-
-  text-shadow:
-    1px 1px 2px #000,
-    -1px -1px 2px #000,
-    0 0 3px #000;
 
   pointer-events: none;
 }
