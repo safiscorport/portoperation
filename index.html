@@ -104,7 +104,7 @@
 async function loadWeather(){
     try{
         const response = await fetch(
-            "https://api.open-meteo.com/v1/forecast?latitude=10.3157&longitude=123.8854&current=temperature_2m,relative_humidity_2m,wind_speed_10m&hourly=precipitation_probability&timezone=Asia%2FManila"
+            "https://api.open-meteo.com/v1/forecast?latitude=10.153982505904777&longitude=123.70842886072104&current=temperature_2m,relative_humidity_2m,wind_speed_10m&hourly=precipitation_probability&timezone=Asia%2FManila"
         );
         const data = await response.json();
 
