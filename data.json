@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T15:21:38.593343+08:00",
+  "updated_at": "2026-09-06T15:21:44.638676+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -219,7 +219,58 @@
       "daily": 2000
     }
   ],
-  "monthly": [],
+  "monthly": [
+    {
+      "month": 2026,
+      "y2025": 0,
+      "y2026": 2025
+    },
+    {
+      "month": 1219792,
+      "y2025": 0,
+      "y2026": 1513170
+    },
+    {
+      "month": 1351343,
+      "y2025": 0,
+      "y2026": 1422330
+    },
+    {
+      "month": 1778988,
+      "y2025": 0,
+      "y2026": 1529850
+    },
+    {
+      "month": 1326652,
+      "y2025": 0,
+      "y2026": 1655225
+    },
+    {
+      "month": 1836632,
+      "y2025": 0,
+      "y2026": 1526425
+    },
+    {
+      "month": 1645728,
+      "y2025": 0,
+      "y2026": 1399850
+    },
+    {
+      "month": 1137600,
+      "y2025": 0,
+      "y2026": 1185200
+    },
+    {
+      "month": 1538975,
+      "y2025": 0,
+      "y2026": 1275600
+    },
+    {
+      "month": 228000,
+      "y2025": 0,
+      "y2026": 1333325
+    }
+  ],
   "monthly_total": {
     "y2025": 0,
     "y2026": 1014250
@@ -237,31 +288,31 @@
   "trucking_stockpile": [
     {
       "client": "Trucking",
-      "volume": "-"
+      "volume": "Daily"
     },
     {
       "client": "SAFISCOR",
-      "volume": "-"
+      "volume": 2000
     },
     {
       "client": "LAPU-LAPU",
-      "volume": "-"
+      "volume": 1000
     },
     {
       "client": "BADIE",
-      "volume": "-"
+      "volume": 0
     },
     {
       "client": "GEO",
-      "volume": "-"
+      "volume": 0
     },
     {
       "client": "UCES",
-      "volume": "-"
+      "volume": 0
     },
     {
       "client": "APLUS",
-      "volume": "-"
+      "volume": 2000
     }
   ],
   "status": {
