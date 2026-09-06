@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T18:25:41+08:00",
+  "updated_at": "2026-09-06T18:27:43+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -14,7 +14,7 @@
       "time": "13:35",
       "remarks": "LOADING SLING S45",
       "equipment": "FL1",
-      "activity_time": "04:50"
+      "activity_time": "04:52"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "08:00",
       "remarks": "WAITING AVAILABLE SC",
       "equipment": "0",
-      "activity_time": "10:25"
+      "activity_time": "10:27"
     },
     {
       "berth": "Berth 3",
@@ -59,7 +59,7 @@
       "time": "14:27",
       "remarks": "WAITING SC TO ONBOARD FL",
       "equipment": "0",
-      "activity_time": "03:58"
+      "activity_time": "04:00"
     },
     {
       "berth": "Berth 5",
@@ -89,7 +89,7 @@
       "time": "16:12",
       "remarks": "DOCKED & SECURED",
       "equipment": "0",
-      "activity_time": "02:13"
+      "activity_time": "02:15"
     },
     {
       "berth": "Berth 7",
@@ -104,7 +104,7 @@
       "time": "14:38",
       "remarks": "LOADING SLING L47",
       "equipment": "FL 2/ FL 3",
-      "activity_time": "03:47"
+      "activity_time": "03:49"
     },
     {
       "berth": "Berth 8",
@@ -119,7 +119,7 @@
       "time": "15:56",
       "remarks": "WAITING MATERIAL",
       "equipment": "CRANE 2",
-      "activity_time": "02:29"
+      "activity_time": "02:31"
     },
     {
       "berth": "Berth 9",
@@ -134,18 +134,18 @@
       "time": "15:26",
       "remarks": "LOADING SLING GEO 5",
       "equipment": "0",
-      "activity_time": "02:59"
+      "activity_time": "03:01"
     },
     {
       "berth": "Berth 10",
-      "vessel": "LADY OF REMEDY",
-      "voyage": 1,
+      "vessel": "VACANT",
+      "voyage": "-",
       "booking": 0,
-      "dispatch": 28050,
-      "loaded": 25150,
-      "balance": -25150,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 0,
       "progress": 0,
-      "stockpile": 2900,
+      "stockpile": 0,
       "time": "00:00",
       "remarks": "-",
       "equipment": "0",
@@ -169,11 +169,11 @@
   ],
   "total": {
     "booking": 269000,
-    "dispatch": 169050,
-    "loaded": 134150,
-    "balance": 134850,
+    "dispatch": 141000,
+    "loaded": 109000,
+    "balance": 160000,
     "progress": 0.40164515948829677,
-    "stockpile": 34900
+    "stockpile": 32000
   },
   "alpha": [
     {
@@ -186,7 +186,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "18:25"
+      "activity_time": "18:27"
     },
     {
       "berth": "R2",
@@ -198,7 +198,7 @@
       "time": "14:00",
       "remarks": "CONTINUE DISCHARGING",
       "equip": "FEED TO JBS HOOPER",
-      "activity_time": "04:25"
+      "activity_time": "04:27"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "18:25"
+      "activity_time": "18:27"
     }
   ],
   "foreign": {
@@ -348,7 +348,7 @@
   "trucking_stockpile": [
     {
       "client": "SAFISCOR",
-      "volume": 27000
+      "volume": 26000
     },
     {
       "client": "LAPU-LAPU",
