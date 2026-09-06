@@ -1,20 +1,20 @@
 {
-  "updated_at": "2026-09-06T19:38:59+08:00",
+  "updated_at": "2026-09-06T19:41:02+08:00",
   "berths": [
     {
       "berth": "Berth 1",
       "vessel": "BARGE JB 5",
       "voyage": 1,
       "booking": 85000,
-      "dispatch": 45500,
+      "dispatch": 44500,
       "loaded": 39500,
       "balance": 45500,
       "progress": 0.4647058823529412,
-      "stockpile": 6000,
+      "stockpile": 5000,
       "time": "19:30",
       "remarks": "PRE LOADING PREP",
       "equipment": "FL1",
-      "activity_time": "00:08"
+      "activity_time": "00:10"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "19:30",
       "remarks": "SHORECRANE TRAVEL",
       "equipment": "0",
-      "activity_time": "00:08"
+      "activity_time": "00:10"
     },
     {
       "berth": "Berth 3",
@@ -59,7 +59,7 @@
       "time": "14:27",
       "remarks": "WAITING SC TO ONBOARD FL",
       "equipment": "0",
-      "activity_time": "05:11"
+      "activity_time": "05:13"
     },
     {
       "berth": "Berth 5",
@@ -89,7 +89,7 @@
       "time": "16:12",
       "remarks": "DOCKED & SECURED",
       "equipment": "0",
-      "activity_time": "03:26"
+      "activity_time": "03:28"
     },
     {
       "berth": "Berth 7",
@@ -104,7 +104,7 @@
       "time": "19:30",
       "remarks": "PRE LOADING PREP",
       "equipment": "FL 2/ FL 3",
-      "activity_time": "00:08"
+      "activity_time": "00:10"
     },
     {
       "berth": "Berth 8",
@@ -134,7 +134,7 @@
       "time": "19:30",
       "remarks": "PRE LOADING PREP",
       "equipment": "0",
-      "activity_time": "00:08"
+      "activity_time": "00:10"
     },
     {
       "berth": "Berth 10",
@@ -169,11 +169,11 @@
   ],
   "total": {
     "booking": 269000,
-    "dispatch": 141000,
+    "dispatch": 140000,
     "loaded": 116000,
     "balance": 153000,
     "progress": 0.43160158650354735,
-    "stockpile": 25000
+    "stockpile": 24000
   },
   "alpha": [
     {
@@ -198,7 +198,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "19:38"
+      "activity_time": "19:40"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "14:00",
       "remarks": "CONTINUE DISCHARGING",
       "equip": "FEED TO JBS HOOPER",
-      "activity_time": "05:38"
+      "activity_time": "05:40"
     }
   ],
   "foreign": {
@@ -235,7 +235,7 @@
     {
       "hauler": "LAPU-LAPU",
       "august": 220240,
-      "september": 52000,
+      "september": 51000,
       "daily": 4000
     },
     {
@@ -352,7 +352,7 @@
     },
     {
       "client": "LAPU-LAPU",
-      "volume": 2000
+      "volume": 1000
     },
     {
       "client": "BADIE",
