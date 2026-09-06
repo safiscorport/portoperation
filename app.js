@@ -49,14 +49,36 @@ function render(d) {
   $('totalStockpile').textContent = num(t.stockpile);
 
   // Alpha Berths
-  $('alphaRows').innerHTML = (d.alpha || []).map(x => `
-    <div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials || '-'}</span><span>${x.discharge || '0%'}</span><span>${x.balance || '0%'}</span><span><div class="progress-wrap"><div class="bar"><i style="width:${parseFloat(x.progress)}%"></i></div>${x.progress}</div></span><span>${x.time || '0:00'}</span><span>${x.remarks || '-'}</span><span>${x.equip || '0'}</span><span class="activity">${formatActivityTime(x.activity_time)}</span></div>
-  `).join('');
+  $('alphaRows').innerHTML = (d.alpha || []).map(x => {
+    let pVal = parseFloat(String(x.progress).replace('%', '')) || 0;
+    return `<div class="alpha-row">
+      <span><b>${x.berth}</b></span>
+      <span class="vessel">${x.vessel}</span>
+      <span>${x.materials || '-'}</span>
+      <span>${x.discharge || '0%'}</span>
+      <span>${x.balance || '0%'}</span>
+      <span><div class="progress-wrap"><div class="bar"><i style="width:${pVal}%"></i></div>${x.progress}</div></span>
+      <span>${x.time || '0:00'}</span>
+      <span class="remark">${x.remarks || '-'}</span>
+      <span>${x.equip || '0'}</span>
+      <span class="activity">${formatActivityTime(x.activity_time)}</span>
+    </div>`;
+  }).join('');
 
   // Foreign Berth
   const f = d.foreign || {};
+  let fPVal = parseFloat(String(f.progress || '0').replace('%', '')) || 0;
   $('foreignRow').innerHTML = `
-    <span><b>${f.berth}</b></span><span>${f.vessel}</span><span>${f.materials || '-'}</span><span>${f.discharge || '-'}</span><span>${f.balance || '-'}</span><span><div class="progress-wrap"><div class="bar"><i style="width:${parseFloat(f.progress || 0)}%"></i></div>${f.progress || '-'}</div></span><span>${f.time || '-'}</span><span>${f.remarks || '-'}</span><span>${f.equip || '0'}</span><span class="activity">${formatActivityTime(f.activity_time)}</span>
+    <span><b>${f.berth}</b></span>
+    <span class="vessel">${f.vessel}</span>
+    <span>${f.materials || '-'}</span>
+    <span>${f.discharge || '-'}</span>
+    <span>${f.balance || '-'}</span>
+    <span><div class="progress-wrap"><div class="bar"><i style="width:${fPVal}%"></i></div>${f.progress || '-'}</div></span>
+    <span>${f.time || '-'}</span>
+    <span class="remark">${f.remarks || '-'}</span>
+    <span>${f.equip || '0'}</span>
+    <span class="activity">${formatActivityTime(f.activity_time)}</span>
   `;
 
   // Trucking
