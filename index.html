@@ -1,321 +1,38 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cement Loading Operations Dashboard</title>
-    <style>
-        body {
-            background-color: #0b0e14;
-            color: #f0f2f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 6px;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .dashboard-title {
-            text-align: center; color: #ffffff; font-weight: 800; letter-spacing: 1px;
-            font-size: 15px; text-transform: uppercase;
-            background: linear-gradient(90deg, #1f2937, #374151, #1f2937);
-            padding: 4px; border-radius: 4px; border-bottom: 2px solid #f59e0b; margin-bottom: 4px;
-        }
-        .section-header {
-            background-color: #1f2937; color: #f3f4f6; padding: 3px 8px; font-weight: 700;
-            font-size: 11px; letter-spacing: 0.5px; border-left: 3px solid #f59e0b;
-            border-radius: 2px; margin-top: 3px; margin-bottom: 3px; text-transform: uppercase;
-        }
-        table {
-            width: 100% !important;
-            font-size: 10px !important;
-            background-color: #111827 !important;
-            color: #e5e7eb !important;
-            border-collapse: collapse !important;
-            margin-bottom: 4px;
-        }
-        th {
-            background-color: #1f2937 !important;
-            color: #ffffff !important;
-            padding: 3px 6px !important;
-            font-size: 10px !important;
-            border: 1px solid #374151 !important;
-            text-align: left;
-        }
-        td {
-            padding: 3px 6px !important;
-            border: 1px solid #1f2937 !important;
-        }
-        .progress-container {
-            width: 100%; background-color: #374151; border-radius: 2px; overflow: hidden; height: 10px; display: inline-block;
-        }
-        .progress-bar-fill {
-            height: 100%; border-radius: 2px;
-            background: linear-gradient(90deg, #d97706, #f59e0b, #fbbf24);
-        }
-        @keyframes blinkStoppage {
-            0% { opacity: 1; }
-            50% { opacity: 0.15; }
-            100% { opacity: 1; }
-        }
-        .stoppage-badge {
-            background-color: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444;
-            padding: 1px 4px; border-radius: 2px; font-weight: 700; font-size: 10px; display: inline-block;
-            animation: blinkStoppage 2.5s infinite ease-in-out;
-        }
-        .normal-remark { color: #34d399; font-weight: 600; font-size: 10px; }
-        .main-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 8px;
-            flex-grow: 1;
-            overflow: hidden;
-        }
-        .column {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            overflow: hidden;
-        }
-        .footer-container {
-            display: flex; gap: 6px; border-top: 1px solid #30363d; padding-top: 4px;
-        }
-        .footer-card {
-            background-color: #161b22; border: 1px solid #30363d; padding: 3px 6px;
-            border-radius: 3px; text-align: center; font-size: 10px; color: #c9d1d9; flex: 1;
-        }
-        .totals-bar {
-            background: #1f2937; padding: 4px 8px; border-radius: 2px; font-size: 11px; font-weight: 600; text-align: right; margin-bottom: 4px;
-        }
-        .row-vacant { background-color: #05070a; color: #374151; }
-        .vacant-text { color: #4b5563; font-style: italic; }
-        .grid-sub { display: flex; gap: 6px; }
-        .grid-sub > div { flex: 1; }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cement Loading Operations Dashboard</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-
-    <div class="dashboard-title">🚢 Cement Loading Operations Dashboard</div>
-
-    <div class="main-layout">
-        <!-- LEFT COLUMN: Main Operations & Berths -->
-        <div class="column">
-            <div class="section-header">Cement Loading Operations</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Berth</th>
-                        <th>Vessel</th>
-                        <th>Voy</th>
-                        <th>Booking</th>
-                        <th>Dispatch</th>
-                        <th>Loaded</th>
-                        <th>Balance</th>
-                        <th>Progress</th>
-                        <th>Stockpile</th>
-                        <th>Time</th>
-                        <th>Remarks</th>
-                        <th>Equip</th>
-                        <th>Act Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Berth 1</td>
-                        <td>BARGE JB 5</td>
-                        <td>1</td>
-                        <td>85k</td>
-                        <td>41.5k</td>
-                        <td>14.5k</td>
-                        <td>70.5k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">17%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 17%;"></div></div></div></td>
-                        <td>27k</td>
-                        <td>17:12</td>
-                        <td><span class="normal-remark">✔ SLING S39</span></td>
-                        <td>CRANE 4</td>
-                        <td>8:17</td>
-                    </tr>
-                    <tr>
-                        <td>Berth 2</td>
-                        <td>JOHANNAH 7</td>
-                        <td>5</td>
-                        <td>65k</td>
-                        <td>34k</td>
-                        <td>33k</td>
-                        <td>32k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">51%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 51%;"></div></div></div></td>
-                        <td>1k</td>
-                        <td>13:00</td>
-                        <td><span class="stoppage-badge">⚠️ ROUGH SEA</span></td>
-                        <td>0</td>
-                        <td>7:29</td>
-                    </tr>
-                    <tr class="row-vacant">
-                        <td>Berth 3</td>
-                        <td><span class="vacant-text">VACANT</span></td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td><td>0:00</td>
-                    </tr>
-                    <tr>
-                        <td>Berth 4</td>
-                        <td>INFINITY 8</td>
-                        <td>4</td>
-                        <td>45k</td>
-                        <td>6k</td>
-                        <td>5k</td>
-                        <td>40k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">11%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 11%;"></div></div></div></td>
-                        <td>1k</td>
-                        <td>16:33</td>
-                        <td><span class="normal-remark">✔ SLING S17</span></td>
-                        <td>0</td>
-                        <td>3:56</td>
-                    </tr>
-                    <tr>
-                        <td>Berth 5</td>
-                        <td>LADY OF COURAGE</td>
-                        <td>7</td>
-                        <td>25k</td>
-                        <td>19.5k</td>
-                        <td>18.5k</td>
-                        <td>6.5k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">74%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 74%;"></div></div></div></td>
-                        <td>1k</td>
-                        <td>16:31</td>
-                        <td><span class="stoppage-badge">⚠️ WAITING GEO</span></td>
-                        <td>0</td>
-                        <td>3:58</td>
-                    </tr>
-                    <tr class="row-vacant">
-                        <td>Berth 6-7</td>
-                        <td><span class="vacant-text">VACANT</span></td>
-                        <td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td><td>0</td><td>0:00</td>
-                    </tr>
-                    <tr>
-                        <td>Berth 8</td>
-                        <td>LADY ARMOR</td>
-                        <td>5</td>
-                        <td>17k</td>
-                        <td>8k</td>
-                        <td>6k</td>
-                        <td>11k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">35%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 35%;"></div></div></div></td>
-                        <td>2k</td>
-                        <td>15:00</td>
-                        <td><span class="stoppage-badge">⚠️ WAITING CRANE</span></td>
-                        <td>0</td>
-                        <td>5:29</td>
-                    </tr>
-                    <tr>
-                        <td>Berth 9</td>
-                        <td>LADY OF WISDOM</td>
-                        <td>6</td>
-                        <td>30k</td>
-                        <td>6k</td>
-                        <td>4k</td>
-                        <td>26k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">13%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 13%;"></div></div></div></td>
-                        <td>2k</td>
-                        <td>17:15</td>
-                        <td><span class="normal-remark">✔ SLING B5</span></td>
-                        <td>SANNY 2</td>
-                        <td>3:14</td>
-                    </tr>
-                    <tr>
-                        <td>Berth 10</td>
-                        <td>NIEVES</td>
-                        <td>2</td>
-                        <td>28k</td>
-                        <td>24k</td>
-                        <td>24k</td>
-                        <td>4k</td>
-                        <td><div style="display: flex; align-items: center; gap: 4px;"><span style="font-size:9px;">86%</span><div class="progress-container"><div class="progress-bar-fill" style="width: 86%;"></div></div></div></td>
-                        <td>-</td>
-                        <td>16:16</td>
-                        <td><span class="stoppage-badge">⚠️ WAITING Mat.</span></td>
-                        <td>0</td>
-                        <td>4:13</td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <div class="totals-bar">
-                TOTALS &nbsp;|&nbsp; Booking: 295k &nbsp;|&nbsp; Dispatch: 139k &nbsp;|&nbsp; Loaded: 105k &nbsp;|&nbsp; Balance: 190k (41%) &nbsp;|&nbsp; Stockpile: 34k
-            </div>
-
-            <div class="grid-sub">
-                <div>
-                    <div class="section-header">Alpha Berths</div>
-                    <table>
-                        <thead><tr><th>Berth</th><th>Vessel</th><th>Mat</th><th>Disch %</th><th>Bal</th><th>Remarks</th></tr></thead>
-                        <tbody>
-                            <tr><td>R1-R2</td><td>VESSEL 1-2</td><td>COAL</td><td>50%</td><td>50%</td><td><span class="stoppage-badge">⚠️ STOP</span></td></tr>
-                            <tr><td>R3</td><td>VESSEL 3</td><td>COAL</td><td>5%</td><td>95%</td><td><span class="stoppage-badge">⚠️ STOP</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div>
-                    <div class="section-header">Foreign Berths</div>
-                    <table>
-                        <thead><tr><th>Jetty</th><th>Vessel</th><th>Mat</th><th>Disch %</th><th>Bal</th><th>Remarks</th></tr></thead>
-                        <tbody>
-                            <tr><td>Jetty</td><td>VESSEL 4</td><td>COAL</td><td>5%</td><td>95%</td><td><span class="normal-remark">✔ 0</span></td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT COLUMN: Logistics & Analytics -->
-        <div class="column">
-            <div class="section-header">Trucking Distribution</div>
-            <table>
-                <thead><tr><th>Trucking</th><th>August</th><th>Daily</th></tr></thead>
-                <tbody>
-                    <tr><td>SAFISCOR</td><td>1,054,675</td><td>25,000</td></tr>
-                    <tr><td>LAPU-LAPU</td><td>220,240</td><td>8,000</td></tr>
-                    <tr><td>BADIE</td><td>53,080</td><td>2,000</td></tr>
-                    <tr><td>GEO</td><td>138,080</td><td>5,000</td></tr>
-                    <tr><td><b>Total</b></td><td><b>1,545,075</b></td><td><b>43,000</b></td></tr>
-                </tbody>
-            </table>
-
-            <div class="section-header">Daily Production & Stockpile</div>
-            <table>
-                <thead><tr><th>Shift / Client</th><th>Volume</th></tr></thead>
-                <tbody>
-                    <tr><td>1st Shift Production</td><td>36,500</td></tr>
-                    <tr><td>Stockpile (SAFISCOR)</td><td>30,000</td></tr>
-                    <tr><td>Stockpile (LAPU / GEO)</td><td>4,000</td></tr>
-                    <tr><td><b>Total Stockpile</b></td><td><b>34,000</b></td></tr>
-                </tbody>
-            </table>
-
-            <div class="section-header">Vessel Loading History (2026)</div>
-            <table>
-                <thead><tr><th>Month</th><th>2025</th><th>2026</th></tr></thead>
-                <tbody>
-                    <tr><td>Jan-Mar</td><td>4,465,350</td><td>3,794,125</td></tr>
-                    <tr><td>Apr-Jun</td><td>4,581,500</td><td>3,775,983</td></tr>
-                    <tr><td>Jul-Sep</td><td>-</td><td>-</td></tr>
-                    <tr><td>Oct-Dec</td><td>-</td><td>-</td></tr>
-                    <tr><td><b>Total</b></td><td><b>16,616,958</b></td><td><b>12,072,710</b></td></tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Common Footer -->
-    <div class="footer-container">
-        <div class="footer-card"><b>Supervisor:</b> BERNABE, A</div>
-        <div class="footer-card"><b>Checker:</b> OBIAL / DALUSA</div>
-        <div class="footer-card"><b>PMC:</b> JOAN / WILLIAM</div>
-        <div class="footer-card"><b>Equip:</b> Crane: 3 | FL: 6</div>
-        <div class="footer-card"><b>Stevedores:</b> 43</div>
-    </div>
-
+<div class="app">
+<header class="topbar">
+<div class="brand"><span class="live-dot"></span><div><div class="title">CEMENT LOADING</div><div class="subtitle">PORT OPERATIONS REAL-TIME MONITORING</div></div></div>
+<div class="clock"><div id="phDate">--</div><div id="phTime">--:--:--</div></div>
+</header>
+<main class="main-content">
+<section class="table-container">
+<div class="table-header-bar"><span>Berth</span><span>Vessel</span><span>Voyage #</span><span>Booking</span><span>Dispatch</span><span>Loaded</span><span>Balance</span><span>Progress</span><span>Stockpile</span><span>Time</span><span>Remarks</span><span>Deployed Equip.</span><span>Activity time</span></div>
+<div id="berthGrid" class="berth-grid-table"></div>
+<div class="table-footer-bar"><span>TOTAL</span><span id="totalBooking">0</span><span id="totalDispatch">0</span><span id="totalLoaded">0</span><span id="totalBalance">0</span><span id="totalProgress">0%</span><span id="totalStockpile">0</span></div>
+</section>
+<section class="table-container"><div class="sub-section-title">ALPHA</div><div id="alphaRows"></div></section>
+<section class="table-container"><div class="sub-section-title">FOREIGN</div><div id="foreignRow" class="alpha-row"></div></section>
+<section class="analytics-grid">
+<div class="panel"><div class="panel-title">Trucking</div><div class="table-mini header-row"><span>Hauler</span><span>August</span><span>September</span><span>Daily</span></div><div id="trucking" class="table-mini"></div></div>
+<div class="panel"><div class="panel-title">Vessel Cement Loading</div><div class="monthly-grid-head"><span></span><span>2025</span><span>2026</span><span></span><span>2025</span><span>2026</span></div><div id="monthly" class="monthly"></div></div>
+<div class="stack-panel"><div class="panel"><div class="panel-title">Cement loading Daily Production</div><div id="dailyProduction" class="production"></div></div><div class="panel"><div class="panel-title">TRUCKING (STOCKPILE)</div><div id="truckingStockpile" class="production"></div></div></div>
+</section>
+</main>
+<footer class="footer-bar">
+<div class="footer-group"><div class="f-item"><span>Supervisor</span><b id="supervisor">--</b></div><div class="f-item"><span>Checker</span><b id="checker">--</b></div><div class="f-item"><span>PMC</span><b id="pmc">--</b></div></div>
+<div class="footer-group"><div class="f-item"><span>Equipment Available</span><div>Crane: <b id="cranes">--</b> &nbsp;|&nbsp; Forklift: <b id="forklifts">--</b></div></div><div class="f-item"><span># of stevedor Per Shift</span><b id="stevedores">--</b></div></div>
+<div class="ticker-wrap"><div class="ticker-label">LIVE</div><div class="ticker"><div id="tickerText">Loading dashboard data...</div></div></div>
+<div class="footer-right"><span id="syncText">CONNECTING</span> &bull; <b id="refreshSec">10s</b></div>
+</footer>
+</div>
+<script src="app.js"></script>
 </body>
 </html>
-```[cite: 14]
