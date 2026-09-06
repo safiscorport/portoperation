@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T20:16:55+08:00",
+  "updated_at": "2026-09-06T20:18:58+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -11,10 +11,10 @@
       "balance": 45500,
       "progress": 0.4647058823529412,
       "stockpile": 5000,
-      "time": "19:30",
-      "remarks": "PRE LOADING PREP",
+      "time": "20:00",
+      "remarks": "LOADING SLING",
       "equipment": "FL1",
-      "activity_time": "00:46"
+      "activity_time": "00:18"
     },
     {
       "berth": "Berth 2",
@@ -26,10 +26,10 @@
       "balance": 32000,
       "progress": 0.5076923076923077,
       "stockpile": 5000,
-      "time": "19:30",
-      "remarks": "SHORECRANE TRAVEL",
+      "time": "20:00",
+      "remarks": "LOADING TONNER",
       "equipment": "0",
-      "activity_time": "00:46"
+      "activity_time": "00:18"
     },
     {
       "berth": "Berth 3",
@@ -56,10 +56,10 @@
       "balance": 32000,
       "progress": 0.28888888888888886,
       "stockpile": 1000,
-      "time": "14:27",
-      "remarks": "WAITING SC TO ONBOARD FL",
+      "time": "19:00",
+      "remarks": "REFUSE TO OPEN HATCH",
       "equipment": "0",
-      "activity_time": "05:49"
+      "activity_time": "01:18"
     },
     {
       "berth": "Berth 5",
@@ -89,7 +89,7 @@
       "time": "16:12",
       "remarks": "DOCKED & SECURED",
       "equipment": "0",
-      "activity_time": "04:04"
+      "activity_time": "04:06"
     },
     {
       "berth": "Berth 7",
@@ -104,7 +104,7 @@
       "time": "19:30",
       "remarks": "PRE LOADING PREP",
       "equipment": "FL 2/ FL 3",
-      "activity_time": "00:46"
+      "activity_time": "00:48"
     },
     {
       "berth": "Berth 8",
@@ -134,7 +134,7 @@
       "time": "19:30",
       "remarks": "PRE LOADING PREP",
       "equipment": "0",
-      "activity_time": "00:46"
+      "activity_time": "00:48"
     },
     {
       "berth": "Berth 10",
@@ -198,7 +198,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "20:16"
+      "activity_time": "20:18"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "14:00",
       "remarks": "CONTINUE DISCHARGING",
       "equip": "FEED TO JBS HOOPER",
-      "activity_time": "06:16"
+      "activity_time": "06:18"
     }
   ],
   "foreign": {
