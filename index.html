@@ -9,28 +9,28 @@
 <body>
 <div class="app">
 <header class="topbar">
-<div class="brand"><span class="live-dot"></span><div><div class="title">CEMENT LOADING</div><div class="subtitle">PORT OPERATIONS REAL-TIME MONITORING</div></div></div>
-<div class="clock"><div id="phDate">--</div><div id="phTime">--:--:--</div></div>
+  <div class="brand"><span class="live-dot"></span><div><div class="title">CEMENT LOADING</div><div class="subtitle">PORT OPERATIONS REAL-TIME MONITORING</div></div></div>
+  <div class="clock"><div id="phDate">--</div><div id="phTime">--:--:--</div></div>
 </header>
 <main class="main-content">
 <section class="table-container">
-<div class="table-header-bar"><span>Berth</span><span>Vessel</span><span>Voyage #</span><span>Booking</span><span>Dispatch</span><span>Loaded</span><span>Balance</span><span>Progress</span><span>Stockpile</span><span>Time</span><span>Remarks</span><span>Deployed Equip.</span><span>Activity time</span></div>
-<div id="berthGrid" class="berth-grid-table"></div>
-<div class="table-footer-bar"><span>TOTAL</span><span id="totalBooking">0</span><span id="totalDispatch">0</span><span id="totalLoaded">0</span><span id="totalBalance">0</span><span id="totalProgress">0%</span><span id="totalStockpile">0</span></div>
+  <div class="table-header-bar"><span>Berth</span><span>Vessel</span><span>Voyage #</span><span>Booking</span><span>Dispatch</span><span>Loaded</span><span>Balance</span><span>Progress</span><span>Stockpile</span><span>Time</span><span>Remarks</span><span>Deployed Equip.</span><span>Activity time</span></div>
+  <div id="berthGrid" class="berth-grid-table"></div>
+  <div class="table-footer-bar"><span>TOTAL</span><span id="totalBooking">0</span><span id="totalDispatch">0</span><span id="totalLoaded">0</span><span id="totalBalance">0</span><span id="totalProgress">0%</span><span id="totalStockpile">0</span></div>
 </section>
 <section class="table-container"><div class="sub-section-title">ALPHA</div><div id="alphaRows"></div></section>
 <section class="table-container"><div class="sub-section-title">FOREIGN</div><div id="foreignRow" class="alpha-row"></div></section>
 <section class="analytics-grid">
-<div class="panel"><div class="panel-title">Trucking</div><div class="table-mini header-row"><span>Hauler</span><span>August</span><span>September</span><span>Daily</span></div><div id="trucking" class="table-mini"></div></div>
-<div class="panel"><div class="panel-title">Vessel Cement Loading</div><div class="monthly-grid-head"><span></span><span>2025</span><span>2026</span><span></span><span>2025</span><span>2026</span></div><div id="monthly" class="monthly"></div></div>
-<div class="stack-panel"><div class="panel"><div class="panel-title">Cement loading Daily Production</div><div id="dailyProduction" class="production"></div></div><div class="panel"><div class="panel-title">TRUCKING (STOCKPILE)</div><div id="truckingStockpile" class="production"></div></div></div>
+  <div class="panel"><div class="panel-title">Trucking</div><div class="table-mini header-row"><span>Hauler</span><span>August</span><span>September</span><span>Daily</span></div><div id="trucking" class="table-mini"></div></div>
+  <div class="panel"><div class="panel-title">Vessel Cement Loading</div><div class="monthly-grid-head"><span></span><span>2025</span><span>2026</span><span></span><span>2025</span><span>2026</span></div><div id="monthly" class="monthly"></div></div>
+  <div class="stack-panel"><div class="panel"><div class="panel-title">Cement loading Daily Production</div><div id="dailyProduction" class="production"></div></div><div class="panel"><div class="panel-title">TRUCKING (STOCKPILE)</div><div id="truckingStockpile" class="production"></div></div></div>
 </section>
 </main>
 <footer class="footer-bar">
-<div class="footer-group"><div class="f-item"><span>Supervisor</span><b id="supervisor">--</b></div><div class="f-item"><span>Checker</span><b id="checker">--</b></div><div class="f-item"><span>PMC</span><b id="pmc">--</b></div></div>
-<div class="footer-group"><div class="f-item"><span>Equipment Available</span><div>Crane: <b id="cranes">--</b> &nbsp;|&nbsp; Forklift: <b id="forklifts">--</b></div></div><div class="f-item"><span># of stevedor Per Shift</span><b id="stevedores">--</b></div></div>
-<div class="ticker-wrap"><div class="ticker-label">LIVE</div><div class="ticker"><div id="tickerText">Loading dashboard data...</div></div></div>
-<div class="footer-right"><span id="syncText">CONNECTING</span> &bull; <b id="refreshSec">10s</b></div>
+  <div class="footer-group"><div class="f-item"><span>Supervisor</span><b id="supervisor">--</b></div><div class="f-item"><span>Checker</span><b id="checker">--</b></div><div class="f-item"><span>PMC</span><b id="pmc">--</b></div></div>
+  <div class="footer-group"><div class="f-item"><span>Equipment Available</span><div>Crane: <b id="cranes">--</b> &nbsp;|&nbsp; Forklift: <b id="forklifts">--</b></div></div><div class="f-item"><span># of stevedor Per Shift</span><b id="stevedores">--</b></div></div>
+  <div class="ticker-wrap"><div class="ticker-label">LIVE</div><div class="ticker"><div id="tickerText">Loading dashboard data...</div></div></div>
+  <div class="footer-right"><span id="syncText">CONNECTING</span> &bull; <b id="refreshSec">10s</b></div>
 </footer>
 </div>
 <script src="app.js"></script>
