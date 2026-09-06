@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T15:05:25.313338+08:00",
+  "updated_at": "2026-09-06T15:08:33.928504+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -219,58 +219,12 @@
       "daily": 2000
     }
   ],
-  "monthly": [
-    {
-      "month": "",
-      "y2025": 0,
-      "y2026": 0
-    },
-    {
-      "month": 2026,
-      "y2025": 0,
-      "y2026": 2025
-    },
-    {
-      "month": 1219792,
-      "y2025": 0,
-      "y2026": 1513170
-    },
-    {
-      "month": 1351343,
-      "y2025": 0,
-      "y2026": 1422330
-    },
-    {
-      "month": 1778988,
-      "y2025": 0,
-      "y2026": 1529850
-    },
-    {
-      "month": 1326652,
-      "y2025": 0,
-      "y2026": 1655225
-    },
-    {
-      "month": 1351343,
-      "y2025": 0,
-      "y2026": 0
-    },
-    {
-      "month": 1778988,
-      "y2025": 0,
-      "y2026": 0
-    },
-    {
-      "month": 1326652,
-      "y2025": 0,
-      "y2026": 0
-    }
-  ],
+  "monthly": [],
+  "monthly_total": {
+    "y2025": 0,
+    "y2026": 1014250
+  },
   "daily_production": [
-    {
-      "shift": "",
-      "qty": 0
-    },
     {
       "shift": "Cement loading Daily Production",
       "qty": 0
@@ -278,6 +232,36 @@
     {
       "shift": "1st SHIFT",
       "qty": 3000
+    }
+  ],
+  "trucking_stockpile": [
+    {
+      "client": "Trucking",
+      "volume": "-"
+    },
+    {
+      "client": "SAFISCOR",
+      "volume": "-"
+    },
+    {
+      "client": "LAPU-LAPU",
+      "volume": "-"
+    },
+    {
+      "client": "BADIE",
+      "volume": "-"
+    },
+    {
+      "client": "GEO",
+      "volume": "-"
+    },
+    {
+      "client": "UCES",
+      "volume": "-"
+    },
+    {
+      "client": "APLUS",
+      "volume": "-"
     }
   ],
   "status": {
@@ -293,24 +277,61 @@
       "berth": "Berth A",
       "vessel": "Vessel",
       "materials": "MATERIALS",
-      "remarks": "Remarks"
+      "discharge": "DISCHARGE %",
+      "balance": "0%",
+      "progress": "Balance",
+      "time": "Progress",
+      "remarks": "Remarks",
+      "equip": "Deployed Equip.",
+      "activity_time": "Activity time"
     },
     {
       "berth": "R1",
       "vessel": "HANNAH",
       "materials": "CIAL",
-      "remarks": "for testing"
+      "discharge": 0.5,
+      "balance": "0%",
+      "progress": 0.5,
+      "time": "12:00",
+      "remarks": "for testing",
+      "equip": "SDLG",
+      "activity_time": "02:05"
     },
     {
       "berth": "R2",
       "vessel": "LUCIA",
       "materials": "COAL",
-      "remarks": "for testing"
+      "discharge": 0.5,
+      "balance": "0%",
+      "progress": 0.5,
+      "time": "12:00",
+      "remarks": "for testing",
+      "equip": "SDLG",
+      "activity_time": "02:05"
+    },
+    {
+      "berth": "R3",
+      "vessel": "MV LUNOD",
+      "materials": "COAL",
+      "discharge": 0.5,
+      "balance": "0%",
+      "progress": 0.5,
+      "time": "12:00",
+      "remarks": "for testing",
+      "equip": "SDLG",
+      "activity_time": "02:05"
     }
   ],
   "foreign": {
     "berth": "Berth F",
     "vessel": "Vessel",
-    "remarks": ""
+    "materials": "MATERIALS",
+    "discharge": "DISCHARGE %",
+    "balance": "-",
+    "progress": "Balance",
+    "time": "Progress",
+    "remarks": "",
+    "equip": "Deployed Equip.",
+    "activity_time": "Activity time"
   }
 }
