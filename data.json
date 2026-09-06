@@ -1,16 +1,16 @@
 {
-  "updated_at": "2026-09-06T15:27:19.365300+08:00",
+  "updated_at": "2026-09-06T15:27:32.789651+08:00",
   "berths": [
     {
       "berth": "Berth 1",
-      "vessel": "VACANT",
+      "vessel": "BARGE JB 5",
       "voyage": 1,
       "booking": 85000,
-      "dispatch": 0,
-      "loaded": 0,
-      "balance": 85000,
-      "progress": 0,
-      "stockpile": 0,
+      "dispatch": 40500,
+      "loaded": 9500,
+      "balance": 75500,
+      "progress": 0.11176470588235295,
+      "stockpile": 31000,
       "time": "14:40",
       "remarks": "LOADING SLING GEO 4",
       "equipment": "FL 2/ FL 16",
@@ -169,11 +169,11 @@
   ],
   "total": {
     "booking": 295000,
-    "dispatch": 89500,
-    "loaded": 86500,
-    "balance": 208500,
-    "progress": 0.36823108730671755,
-    "stockpile": 3000
+    "dispatch": 130000,
+    "loaded": 96000,
+    "balance": 199000,
+    "progress": 0.3841974738613394,
+    "stockpile": 34000
   },
   "trucking": [
     {
