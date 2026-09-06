@@ -11,7 +11,7 @@ function formatActivityTime(val) {
 function isStoppageRemark(text) {
   if (!text || text === '-') return false;
   const lower = text.toLowerCase();
-  return lower.includes('waiting') || lower.includes('stopped') || lower.includes('delay') || lower.includes('breakdown');
+  return lower.includes('waiting') || lower.includes('stopped') || lower.includes('delay') || lower.includes('breakdown') || lower.includes('refuse');
 }
 
 function render(d) {
