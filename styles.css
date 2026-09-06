@@ -35,7 +35,6 @@ html, body { margin: 0; width: 100%; height: 100%; background: var(--bg); color:
   font-size: 12px;
 }
 
-/* Unified 10-column layout for Berth A and Berth F */
 .alpha-header-bar, .alpha-row {
   display: grid;
   grid-template-columns: 65px 1.4fr 1.2fr 85px 75px 95px 65px 1.5fr 85px 65px;
