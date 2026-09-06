@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T14:03:05.785974+08:00",
+  "updated_at": "2026-09-06T14:06:58.606644+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -14,7 +14,7 @@
       "time": "14:40",
       "remarks": "LOADING SLING GEO 4",
       "equipment": "FL 2/ FL 16",
-      "activity_time": "23:07"
+      "activity_time": "23:26"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "13:00",
       "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "CRANE4/FL1",
-      "activity_time": "00:47"
+      "activity_time": "01:06"
     },
     {
       "berth": "Berth 3",
@@ -52,14 +52,14 @@
       "voyage": 4,
       "booking": 45000,
       "dispatch": 4000,
-      "loaded": 3000,
-      "balance": 42000,
-      "progress": 0.06666666666666667,
-      "stockpile": 1000,
+      "loaded": 4000,
+      "balance": 41000,
+      "progress": 0.08888888888888889,
+      "stockpile": 0,
       "time": "14:29",
       "remarks": "LOADING SLING GEO 1",
       "equipment": "0",
-      "activity_time": "23:18"
+      "activity_time": "23:37"
     },
     {
       "berth": "Berth 5",
@@ -67,14 +67,14 @@
       "voyage": 7,
       "booking": 25000,
       "dispatch": 18500,
-      "loaded": 17500,
-      "balance": 7500,
-      "progress": 0.7,
-      "stockpile": 1000,
+      "loaded": 18500,
+      "balance": 6500,
+      "progress": 0.74,
+      "stockpile": 0,
       "time": "14:40",
       "remarks": "LOADING TONNER L47",
       "equipment": "0",
-      "activity_time": "23:07"
+      "activity_time": "23:26"
     },
     {
       "berth": "Berth 6",
@@ -119,7 +119,7 @@
       "time": "10:19",
       "remarks": "WAITING MATERIAL",
       "equipment": "0",
-      "activity_time": "03:28"
+      "activity_time": "03:47"
     },
     {
       "berth": "Berth 9",
@@ -127,14 +127,14 @@
       "voyage": 6,
       "booking": 30000,
       "dispatch": 3000,
-      "loaded": 0,
-      "balance": 30000,
-      "progress": 0,
-      "stockpile": 3000,
+      "loaded": 2000,
+      "balance": 28000,
+      "progress": 0.06666666666666667,
+      "stockpile": 1000,
       "time": "09:00",
       "remarks": "FOR CRANE INSPECTION",
       "equipment": "SANNY 2",
-      "activity_time": "04:47"
+      "activity_time": "05:06"
     },
     {
       "berth": "Berth 10",
@@ -149,7 +149,7 @@
       "time": "14:23",
       "remarks": "LOADING TONNER F2",
       "equipment": "0",
-      "activity_time": "23:24"
+      "activity_time": "23:43"
     },
     {
       "berth": "Jetty",
@@ -170,10 +170,10 @@
   "total": {
     "booking": 295000,
     "dispatch": 89500,
-    "loaded": 82500,
-    "balance": 212500,
-    "progress": 0.34981838889401917,
-    "stockpile": 7000
+    "loaded": 86500,
+    "balance": 208500,
+    "progress": 0.36823108730671755,
+    "stockpile": 3000
   },
   "trucking": [
     {
@@ -186,13 +186,13 @@
       "hauler": "SAFISCOR",
       "august": 1054675,
       "september": 175000,
-      "daily": 0
+      "daily": 2000
     },
     {
       "hauler": "LAPU-LAPU",
       "august": 220240,
       "september": 45000,
-      "daily": 0
+      "daily": 1000
     },
     {
       "hauler": "BADIE",
@@ -216,83 +216,77 @@
       "hauler": "APLUS",
       "august": 41000,
       "september": 7000,
-      "daily": 0
-    },
-    {
-      "hauler": "FULACHE",
-      "august": 38000,
-      "september": 6000,
-      "daily": 0
+      "daily": 2000
     }
   ],
   "monthly": [
     {
       "month": "",
-      "y2025": 2025,
-      "y2026": 2026
-    },
-    {
-      "month": "January",
-      "y2025": 1513170,
-      "y2026": 1219792
-    },
-    {
-      "month": "February",
-      "y2025": 1422330,
-      "y2026": 1351343
-    },
-    {
-      "month": "March",
-      "y2025": 1529850,
-      "y2026": 1778988
-    },
-    {
-      "month": "April",
-      "y2025": 1655225,
-      "y2026": 1326652
-    },
-    {
-      "month": "May",
-      "y2025": 1526425,
-      "y2026": 1836632
-    },
-    {
-      "month": "September",
-      "y2025": 1333325,
-      "y2026": 224000
-    },
-    {
-      "month": "October",
-      "y2025": 1568249,
+      "y2025": 0,
       "y2026": 0
     },
     {
-      "month": "November",
-      "y2025": 1014250,
+      "month": 2026,
+      "y2025": 0,
+      "y2026": 2025
+    },
+    {
+      "month": 1219792,
+      "y2025": 0,
+      "y2026": 1513170
+    },
+    {
+      "month": 1351343,
+      "y2025": 0,
+      "y2026": 1422330
+    },
+    {
+      "month": 1778988,
+      "y2025": 0,
+      "y2026": 1529850
+    },
+    {
+      "month": 1326652,
+      "y2025": 0,
+      "y2026": 1655225
+    },
+    {
+      "month": 1351343,
+      "y2025": 0,
+      "y2026": 0
+    },
+    {
+      "month": 1778988,
+      "y2025": 0,
+      "y2026": 0
+    },
+    {
+      "month": 1326652,
+      "y2025": 0,
       "y2026": 0
     }
   ],
   "daily_production": [
+    {
+      "shift": "",
+      "qty": 0
+    },
     {
       "shift": "Cement loading Daily Production",
       "qty": 0
     },
     {
       "shift": "1st SHIFT",
-      "qty": 0
-    },
-    {
-      "shift": "2ND SHIFT",
-      "qty": 0
+      "qty": 3000
     }
   ],
   "status": {
     "stevedores": 0,
     "cranes": 1000,
     "forklifts": 0,
-    "supervisor": "Officer on Duty",
-    "checker": "BERNABE,A",
-    "pmc": "OBIAL,R / DALUSA,E"
+    "supervisor": 262000,
+    "checker": "",
+    "pmc": ""
   },
   "alpha": [
     {
