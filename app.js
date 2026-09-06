@@ -4,12 +4,7 @@ const $ = id => document.getElementById(id);
 const num = v => (v === undefined || v === null || v === 0 || v === '-') ? (v === 0 ? '0' : (v || '—')) : Number(v).toLocaleString('en-US');
 
 function formatActivityTime(val) {
-  if (!val || val === '0:00' || val === '-') return '0:00';
-  if (/^\d{1,2}:\d{2}$/.test(val)) return val;
-  const d = new Date(val);
-  if (!isNaN(d.getTime())) {
-    return d.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit', hour12: false });
-  }
+  if (!val || val === '0:00' || val === '00:00' || val === '-') return '00:00';
   return val;
 }
 
@@ -65,7 +60,7 @@ function render(d) {
     </div>`;
   }).join('');
 
-  // Foreign Berth (Jetty)
+  // Foreign Berth (Berth F)
   const f = d.foreign || {};
   let fPVal = parseFloat(String(f.progress || '0').replace('%', '')) || 0;
   $('foreignRow').innerHTML = `
@@ -110,9 +105,9 @@ function render(d) {
   // Trucking Stockpile
   const stockData = d.trucking_stockpile || [];
   const stockTotal = stockData.reduce((sum, curr) => sum + (typeof curr.volume === 'number' ? curr.volume : 0), 0);
-  $('truckingStockpile').innerHTML = stockData.map(x => `
+  $('truckingStockpile').innerHTML = stockData.length ? stockData.map(x => `
     <div class="prod-row"><span>${x.client}</span><b>${num(x.volume)}</b></div>
-  `).join('') + `<div class="prod-row total-row"><span>Total</span><b>${num(stockTotal)}</b></div>`;
+  `).join('') + `<div class="prod-row total-row"><span>Total</span><b>${num(stockTotal)}</b></div>` : `<div class="prod-row total-row"><span>Total</span><b>0</b></div>`;
 
   // Status & Personnel
   const s = d.status || {};
