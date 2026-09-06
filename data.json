@@ -1,20 +1,20 @@
 {
-  "updated_at": "2026-09-06T15:21:44.638676+08:00",
+  "updated_at": "2026-09-06T15:22:09.331616+08:00",
   "berths": [
     {
       "berth": "Berth 1",
-      "vessel": "BARGE JB 5",
+      "vessel": "VACANT",
       "voyage": 1,
       "booking": 85000,
-      "dispatch": 40500,
-      "loaded": 9500,
-      "balance": 75500,
-      "progress": 0.11176470588235295,
-      "stockpile": 31000,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 85000,
+      "progress": 0,
+      "stockpile": 0,
       "time": "14:40",
       "remarks": "LOADING SLING GEO 4",
       "equipment": "FL 2/ FL 16",
-      "activity_time": "00:35"
+      "activity_time": "00:41"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "13:00",
       "remarks": "UNSAFE TO LOAD / ROUGH SEA",
       "equipment": "CRANE4/FL1",
-      "activity_time": "02:15"
+      "activity_time": "02:21"
     },
     {
       "berth": "Berth 3",
@@ -59,7 +59,7 @@
       "time": "14:29",
       "remarks": "LOADING SLING GEO 1",
       "equipment": "0",
-      "activity_time": "00:46"
+      "activity_time": "00:52"
     },
     {
       "berth": "Berth 5",
@@ -74,7 +74,7 @@
       "time": "14:40",
       "remarks": "LOADING TONNER L47",
       "equipment": "0",
-      "activity_time": "00:35"
+      "activity_time": "00:41"
     },
     {
       "berth": "Berth 6",
@@ -119,7 +119,7 @@
       "time": "10:19",
       "remarks": "WAITING MATERIAL",
       "equipment": "0",
-      "activity_time": "04:56"
+      "activity_time": "05:02"
     },
     {
       "berth": "Berth 9",
@@ -134,7 +134,7 @@
       "time": "09:00",
       "remarks": "FOR CRANE INSPECTION",
       "equipment": "SANNY 2",
-      "activity_time": "06:15"
+      "activity_time": "06:21"
     },
     {
       "berth": "Berth 10",
@@ -149,7 +149,7 @@
       "time": "14:23",
       "remarks": "LOADING TONNER F2",
       "equipment": "0",
-      "activity_time": "00:52"
+      "activity_time": "00:58"
     },
     {
       "berth": "Jetty",
@@ -169,11 +169,11 @@
   ],
   "total": {
     "booking": 295000,
-    "dispatch": 130000,
-    "loaded": 96000,
-    "balance": 199000,
-    "progress": 0.3841974738613394,
-    "stockpile": 34000
+    "dispatch": 89500,
+    "loaded": 86500,
+    "balance": 208500,
+    "progress": 0.36823108730671755,
+    "stockpile": 3000
   },
   "trucking": [
     {
@@ -346,7 +346,7 @@
       "time": "12:00",
       "remarks": "for testing",
       "equip": "SDLG",
-      "activity_time": "02:15"
+      "activity_time": "02:21"
     },
     {
       "berth": "R2",
@@ -358,7 +358,7 @@
       "time": "12:00",
       "remarks": "for testing",
       "equip": "SDLG",
-      "activity_time": "02:15"
+      "activity_time": "02:21"
     },
     {
       "berth": "R3",
@@ -370,7 +370,7 @@
       "time": "12:00",
       "remarks": "for testing",
       "equip": "SDLG",
-      "activity_time": "02:15"
+      "activity_time": "02:21"
     }
   ],
   "foreign": {
