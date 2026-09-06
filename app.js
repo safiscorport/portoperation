@@ -48,7 +48,7 @@ function render(d) {
   $('totalProgress').textContent = ((t.progress || 0) * 100).toFixed(0) + '%';
   $('totalStockpile').textContent = num(t.stockpile);
 
-  // Alpha Berths
+  // Alpha Berths (R1, R2, R3)
   $('alphaRows').innerHTML = (d.alpha || []).map(x => {
     let pVal = parseFloat(String(x.progress).replace('%', '')) || 0;
     return `<div class="alpha-row">
@@ -65,7 +65,7 @@ function render(d) {
     </div>`;
   }).join('');
 
-  // Foreign Berth
+  // Foreign Berth (Jetty)
   const f = d.foreign || {};
   let fPVal = parseFloat(String(f.progress || '0').replace('%', '')) || 0;
   $('foreignRow').innerHTML = `
