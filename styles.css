@@ -272,45 +272,29 @@ body {
 
 /* =========================================================
    PROGRESS BAR
-   PERCENTAGE CENTERED ON TOP OF BAR
+   PERCENTAGE IS CENTERED INSIDE THE BAR
    ========================================================= */
 
 .progress-wrap {
   position: relative;
 
   width: 100%;
-  height: 18px;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: clamp(16px, 1.5vh, 24px);
+
+  display: block;
 
   margin: 0;
+
   padding: 0;
 
-  font-size: 11px;
-  font-weight: 900;
-
-  line-height: 18px;
-
-  text-align: center;
-
-  color: #fff;
-
-  white-space: nowrap;
-
   overflow: hidden;
-
-  text-shadow:
-    1px 1px 2px #000,
-    -1px -1px 2px #000,
-    0 0 3px #000;
 }
 
 
-/* BAR BACKGROUND */
+/* Background bar */
 
-.progress-wrap .bar {
+.bar {
   position: absolute;
 
   top: 0;
@@ -325,52 +309,41 @@ body {
 
   overflow: hidden;
 
-  z-index: 0;
+  margin: 0;
+
+  padding: 0;
 }
 
 
-/* GREEN PROGRESS */
+/* Green progress */
 
-.progress-wrap .bar i {
+.bar i {
   position: absolute;
 
   top: 0;
   left: 0;
 
+  display: block;
+
   height: 100%;
+
+  width: 0%;
 
   background: var(--accent);
 
   box-shadow:
     0 0 5px rgba(101, 184, 63, 0.5);
 
-  z-index: 1;
-
   transition: width 0.5s ease;
+
+  z-index: 1;
 }
 
 
-/* ALL TEXT INSIDE PROGRESS */
-
-.progress-wrap > *:not(.bar) {
-  position: relative;
-
-  z-index: 10;
-
-  color: #fff;
-
-  font-weight: 900;
-
-  text-align: center;
-
-  pointer-events: none;
-}
-
-
-/* If percentage is a span */
+/* Percentage text */
 
 .progress-wrap span {
-  position: absolute !important;
+  position: absolute;
 
   top: 0;
   left: 0;
@@ -378,56 +351,35 @@ body {
   width: 100%;
   height: 100%;
 
-  display: flex !important;
+  display: flex;
 
   align-items: center;
+
   justify-content: center;
 
-  z-index: 20 !important;
+  z-index: 5;
 
-  color: #fff !important;
+  color: #fff;
 
-  font-size: 11px;
+  font-size: clamp(9px, 0.68vw, 16px);
 
   font-weight: 900;
 
-  line-height: 18px;
+  line-height: 1;
 
   text-align: center;
+
+  white-space: nowrap;
+
+  overflow: visible;
 
   text-shadow:
     1px 1px 2px #000,
     -1px -1px 2px #000,
     0 0 3px #000;
+
+  pointer-events: none;
 }
-
-
-/* Responsive size */
-
-@media (min-width: 2500px) {
-  .progress-wrap {
-    height: 24px;
-    font-size: 15px;
-    line-height: 24px;
-  }
-
-  .progress-wrap span {
-    font-size: 15px;
-    line-height: 24px;
-  }
-}
-
-@media (max-width: 1400px) {
-  .progress-wrap {
-    height: 17px;
-    font-size: 10px;
-    line-height: 17px;
-  }
-
-  .progress-wrap span {
-    font-size: 10px;
-    line-height: 17px;
-  }
 
 
 /* =========================================================
