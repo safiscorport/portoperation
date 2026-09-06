@@ -1,15 +1,132 @@
-const REFRESH_MS=10000;let lastHash='';const $=id=>document.getElementById(id);const num=v=>(v===undefined||v===null||v===0||v==='-')?(v===0?'0':(v||'—')):Number(v).toLocaleString('en-US');
-function formatActivityTime(val){if(!val||val==='0:00'||val==='-')return'0:00';if(/^\d{1,2}:\d{2}$/.test(val))return val;const d=new Date(val);if(!isNaN(d.getTime()))return d.toLocaleTimeString('en-PH',{timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',hour12:false});return val}
-function render(d){$('syncText').textContent='LIVE • UPDATED '+new Date(d.updated_at).toLocaleTimeString('en-PH',{timeZone:'Asia/Manila',hour12:false});$('refreshSec').textContent=(REFRESH_MS/1000)+'s';const rows=d.berths||[];$('berthGrid').innerHTML=rows.map(x=>{let p=Math.max(0,Math.min(100,(x.progress||0)*100));let vacant=String(x.vessel||'').toUpperCase()==='VACANT';return `<div class="berth-row ${vacant?'vacant':''}"><span><b>${x.berth}</b></span><span class="vessel">${x.vessel||'—'}</span><span>${x.voyage||'-'}</span><span>${num(x.booking)}</span><span>${num(x.dispatch)}</span><span>${num(x.loaded)}</span><span>${num(x.balance)}</span><span><div class="progress-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p>0?p.toFixed(0)+'%':''}</div></span><span>${num(x.stockpile)}</span><span>${x.time||'-'}</span><span>${x.remarks||'-'}</span><span>${x.equipment||'0'}</span><span class="activity">${formatActivityTime(x.activity_time)}</span></div>`}).join('');
-const t=d.total||{};$('totalBooking').textContent=num(t.booking);$('totalDispatch').textContent=num(t.dispatch);$('totalLoaded').textContent=num(t.loaded);$('totalBalance').textContent=num(t.balance);$('totalProgress').textContent=((t.progress||0)*100).toFixed(0)+'%';$('totalStockpile').textContent=num(t.stockpile);
-const truckData=d.trucking||[];const truckTotal=truckData.reduce((a,c)=>({august:a.august+(c.august||0),september:a.september+(c.september||0),daily:a.daily+(c.daily||0)}),{august:0,september:0,daily:0});$('trucking').innerHTML=truckData.map(x=>`<div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>`).join('')+`<div class="tr total-row"><b>Total</b><span><b>${num(truckTotal.august)}</b></span><span><b>${num(truckTotal.september)}</b></span><span><b>${num(truckTotal.daily)}</b></span></div>`;
-const prodData=d.daily_production||[];const prodTotal=prodData.reduce((s,c)=>s+(c.qty||0),0);$('dailyProduction').innerHTML=prodData.map(x=>`<div class="prod-row"><span>${x.shift}</span><b>${num(x.qty)}</b></div>`).join('')+`<div class="prod-row total-row"><span>Total</span><b>${num(prodTotal)}</b></div>`;
-const stockData=d.trucking_stockpile||[];const stockTotal=stockData.reduce((s,c)=>s+(c.volume||0),0);$('truckingStockpile').innerHTML=stockData.map(x=>`<div class="prod-row"><span>${x.client}</span><b>${num(x.volume)}</b></div>`).join('')+`<div class="prod-row total-row"><span>Total</span><b>${num(stockTotal)}</b></div>`;
-const m=d.monthly||[],mt=d.monthly_total||{};$('monthly').innerHTML=m.map(x=>`<div>${x.month}</div><div>${num(x.y2025_1)}</div><div>${num(x.y2026_1)}</div><div>${x.month2}</div><div>${num(x.y2025_2)}</div><div>${num(x.y2026_2)}</div>`).join('')+`<div class="mh">Total</div><div style="grid-column:span 2;font-weight:bold;background:#1a1a1a">${num(mt.y2025)}</div><div style="grid-column:span 3;font-weight:bold;background:#1a1a1a">${num(mt.y2026)}</div>`;
-const s=d.status||{};$('supervisor').textContent=s.supervisor||'--';$('checker').textContent=s.checker||'--';$('pmc').textContent=s.pmc||'--';$('cranes').textContent=s.cranes??'--';$('forklifts').textContent=s.forklifts??'--';$('stevedores').textContent=s.stevedores??'--';
-$('alphaRows').innerHTML=(d.alpha||[]).map(x=>`<div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials||'-'}</span><span>${x.discharge||'0%'}</span><span>${x.balance||'0%'}</span><span>${x.progress||'0%'}</span><span>${x.time||'0:00'}</span><span>${x.remarks||'-'}</span><span>${x.equip||'0'}</span><span class="activity">${formatActivityTime(x.activity_time)}</span></div>`).join('');
-const f=d.foreign||{};$('foreignRow').innerHTML=`<span><b>${f.berth}</b></span><span>${f.vessel}</span><span>${f.materials||'-'}</span><span>${f.discharge||'-'}</span><span>${f.balance||'-'}</span><span>${f.progress||'-'}</span><span>${f.time||'-'}</span><span>${f.remarks||'-'}</span><span>${f.equip||'0'}</span><span class="activity">${formatActivityTime(f.activity_time)}</span>`;
-const alerts=rows.filter(x=>x.remarks&&x.remarks!=='-'&&x.vessel!=='VACANT').map(x=>`${x.berth}: ${x.vessel} — ${x.remarks}`);$('tickerText').textContent=alerts.length?alerts.join('   •   '):'ALL PORT OPERATIONS NORMAL'}
-async function load(){try{const r=await fetch('data.json?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(r.status);const d=await r.json();const h=JSON.stringify(d);if(h!==lastHash){lastHash=h;render(d)}}catch(e){$('syncText').textContent='OFFLINE / WAITING FOR DATA'}}
-function clock(){const n=new Date();$('phDate').textContent=n.toLocaleDateString('en-PH',{timeZone:'Asia/Manila',weekday:'short',year:'numeric',month:'short',day:'2-digit'});$('phTime').textContent=n.toLocaleTimeString('en-PH',{timeZone:'Asia/Manila',hour12:false})}
-clock();setInterval(clock,1000);load();setInterval(load,REFRESH_MS);
+const REFRESH_MS = 10000;
+let lastHash = '';
+const $ = id => document.getElementById(id);
+const num = v => (v === undefined || v === null || v === 0 || v === '-') ? (v === 0 ? '0' : (v || '—')) : Number(v).toLocaleString('en-US');
+
+function formatActivityTime(val) {
+  if (!val || val === '0:00' || val === '-') return '0:00';
+  if (/^\d{1,2}:\d{2}$/.test(val)) return val;
+  const d = new Date(val);
+  if (!isNaN(d.getTime())) {
+    return d.toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+  return val;
+}
+
+function render(d) {
+  $('syncText').textContent = 'LIVE • UPDATED ' + new Date(d.updated_at).toLocaleTimeString('en-PH', { hour12: false });
+  $('refreshSec').textContent = (REFRESH_MS / 1000) + 's';
+
+  // Berths
+  const rows = d.berths || [];
+  $('berthGrid').innerHTML = rows.map(x => {
+    let p = Math.max(0, Math.min(100, (x.progress || 0) * 100));
+    let vacant = String(x.vessel || '').toUpperCase() === 'VACANT';
+    return `<div class="berth-row ${vacant ? 'vacant' : ''}">
+      <span><b>${x.berth}</b></span>
+      <span class="vessel">${x.vessel || '—'}</span>
+      <span>${x.voyage || '-'}</span>
+      <span>${num(x.booking)}</span>
+      <span>${num(x.dispatch)}</span>
+      <span>${num(x.loaded)}</span>
+      <span>${num(x.balance)}</span>
+      <span><div class="progress-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p > 0 ? p.toFixed(0) + '%' : ''}</div></span>
+      <span>${num(x.stockpile)}</span>
+      <span>${x.time || '-'}</span>
+      <span class="remark ${x.remarks && x.remarks !== '-' ? 'highlight' : ''}">${x.remarks || '-'}</span>
+      <span>${x.equipment || '0'}</span>
+      <span class="activity">${formatActivityTime(x.activity_time)}</span>
+    </div>`;
+  }).join('');
+
+  // Totals
+  const t = d.total || {};
+  $('totalBooking').textContent = num(t.booking);
+  $('totalDispatch').textContent = num(t.dispatch);
+  $('totalLoaded').textContent = num(t.loaded);
+  $('totalBalance').textContent = num(t.balance);
+  $('totalProgress').textContent = ((t.progress || 0) * 100).toFixed(0) + '%';
+  $('totalStockpile').textContent = num(t.stockpile);
+
+  // Alpha Berths
+  $('alphaRows').innerHTML = (d.alpha || []).map(x => `
+    <div class="alpha-row"><b>${x.berth}</b><span>${x.vessel}</span><span>${x.materials || '-'}</span><span>${x.discharge || '0%'}</span><span>${x.balance || '0%'}</span><span><div class="progress-wrap"><div class="bar"><i style="width:${parseFloat(x.progress)}%"></i></div>${x.progress}</div></span><span>${x.time || '0:00'}</span><span>${x.remarks || '-'}</span><span>${x.equip || '0'}</span><span class="activity">${formatActivityTime(x.activity_time)}</span></div>
+  `).join('');
+
+  // Foreign Berth
+  const f = d.foreign || {};
+  $('foreignRow').innerHTML = `
+    <span><b>${f.berth}</b></span><span>${f.vessel}</span><span>${f.materials || '-'}</span><span>${f.discharge || '-'}</span><span>${f.balance || '-'}</span><span><div class="progress-wrap"><div class="bar"><i style="width:${parseFloat(f.progress || 0)}%"></i></div>${f.progress || '-'}</div></span><span>${f.time || '-'}</span><span>${f.remarks || '-'}</span><span>${f.equip || '0'}</span><span class="activity">${formatActivityTime(f.activity_time)}</span>
+  `;
+
+  // Trucking
+  const truckData = d.trucking || [];
+  const truckTotal = truckData.reduce((acc, curr) => ({
+    august: acc.august + (typeof curr.august === 'number' ? curr.august : 0),
+    september: acc.september + (typeof curr.september === 'number' ? curr.september : 0),
+    daily: acc.daily + (typeof curr.daily === 'number' ? curr.daily : 0)
+  }), { august: 0, september: 0, daily: 0 });
+
+  $('trucking').innerHTML = truckData.map(x => `
+    <div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>
+  `).join('') + `<div class="tr total-row"><b>Total</b><span><b>${num(truckTotal.august)}</b></span><span><b>${num(truckTotal.september)}</b></span><span><b>${num(truckTotal.daily)}</b></span></div>`;
+
+  // Monthly Table
+  const m = d.monthly || [];
+  const mt = d.monthly_total || {};
+  $('monthly').innerHTML = m.map(x => `
+    <div>${x.month}</div><div>${num(x.y2025)}</div><div>${num(x.y2026)}</div>
+  `).join('') + `<div class="mh">Total</div><div style="font-weight:bold;background:#1a1a1a">${num(mt.y2025)}</div><div style="font-weight:bold;background:#1a1a1a">${num(mt.y2026)}</div>`;
+
+  // Daily Production
+  const prodData = d.daily_production || [];
+  const prodTotal = prodData.reduce((sum, curr) => sum + (typeof curr.qty === 'number' ? curr.qty : 0), 0);
+  $('dailyProduction').innerHTML = prodData.map(x => `
+    <div class="prod-row"><span>${x.shift}</span><b>${num(x.qty)}</b></div>
+  `).join('') + `<div class="prod-row total-row"><span>Total</span><b>${num(prodTotal)}</b></div>`;
+
+  // Trucking Stockpile
+  const stockData = d.trucking_stockpile || [];
+  const stockTotal = stockData.reduce((sum, curr) => sum + (typeof curr.volume === 'number' ? curr.volume : 0), 0);
+  $('truckingStockpile').innerHTML = stockData.map(x => `
+    <div class="prod-row"><span>${x.client}</span><b>${num(x.volume)}</b></div>
+  `).join('') + `<div class="prod-row total-row"><span>Total</span><b>${num(stockTotal)}</b></div>`;
+
+  // Status & Personnel
+  const s = d.status || {};
+  $('supervisor').textContent = s.supervisor || '--';
+  $('checker').textContent = s.checker || '--';
+  $('pmc').textContent = s.pmc || '--';
+  $('cranes').textContent = s.cranes ?? '--';
+  $('forklifts').textContent = s.forklifts ?? '--';
+  $('stevedores').textContent = s.stevedores ?? '--';
+
+  const alerts = rows.filter(x => x.remarks && x.remarks !== '-' && x.vessel !== 'VACANT').map(x => `${x.berth}: ${x.vessel} — ${x.remarks}`);
+  $('tickerText').textContent = alerts.length ? alerts.join('   •   ') : 'ALL PORT OPERATIONS NORMAL';
+}
+
+async function load() {
+  try {
+    const r = await fetch('data.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    const h = JSON.stringify(d);
+    if (h !== lastHash) {
+      lastHash = h;
+      render(d);
+    }
+  } catch (e) {
+    $('syncText').textContent = 'OFFLINE / WAITING FOR DATA';
+  }
+}
+
+function clock() {
+  const n = new Date();
+  $('phDate').textContent = n.toLocaleDateString('en-PH', { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit' });
+  $('phTime').textContent = n.toLocaleTimeString('en-PH', { hour12: false });
+}
+
+clock();
+setInterval(clock, 1000);
+load();
+setInterval(load, REFRESH_MS);
