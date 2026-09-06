@@ -4,7 +4,7 @@ const $ = id => document.getElementById(id);
 const num = v => (v === undefined || v === null || v === 0 || v === '-') ? (v === 0 ? '0' : (v || '—')) : Number(v).toLocaleString('en-US');
 
 function formatActivityTime(val) {
-  if (!val || val === '0:00' || val === '00:00' || val === '-') return '00:00';
+  if (!val || val === '0:00' || val === '-') return '0:00';
   return val;
 }
 
@@ -105,9 +105,9 @@ function render(d) {
   // Trucking Stockpile
   const stockData = d.trucking_stockpile || [];
   const stockTotal = stockData.reduce((sum, curr) => sum + (typeof curr.volume === 'number' ? curr.volume : 0), 0);
-  $('truckingStockpile').innerHTML = stockData.length ? stockData.map(x => `
+  $('truckingStockpile').innerHTML = stockData.map(x => `
     <div class="prod-row"><span>${x.client}</span><b>${num(x.volume)}</b></div>
-  `).join('') + `<div class="prod-row total-row"><span>Total</span><b>${num(stockTotal)}</b></div>` : `<div class="prod-row total-row"><span>Total</span><b>0</b></div>`;
+  `).join('') + `<div class="prod-row total-row"><span>Total</span><b>${num(stockTotal)}</b></div>`;
 
   // Status & Personnel
   const s = d.status || {};
