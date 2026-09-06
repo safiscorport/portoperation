@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T20:18:58+08:00",
+  "updated_at": "2026-09-06T20:21:02+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -14,7 +14,7 @@
       "time": "20:00",
       "remarks": "LOADING SLING",
       "equipment": "FL1",
-      "activity_time": "00:18"
+      "activity_time": "00:20"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "20:00",
       "remarks": "LOADING TONNER",
       "equipment": "0",
-      "activity_time": "00:18"
+      "activity_time": "00:20"
     },
     {
       "berth": "Berth 3",
@@ -59,7 +59,7 @@
       "time": "19:00",
       "remarks": "REFUSE TO OPEN HATCH",
       "equipment": "0",
-      "activity_time": "01:18"
+      "activity_time": "01:20"
     },
     {
       "berth": "Berth 5",
@@ -89,7 +89,7 @@
       "time": "16:12",
       "remarks": "DOCKED & SECURED",
       "equipment": "0",
-      "activity_time": "04:06"
+      "activity_time": "04:08"
     },
     {
       "berth": "Berth 7",
@@ -101,10 +101,10 @@
       "balance": 22000,
       "progress": 0.18518518518518517,
       "stockpile": 10000,
-      "time": "19:30",
-      "remarks": "PRE LOADING PREP",
+      "time": "20:00",
+      "remarks": "LOADING SLING",
       "equipment": "FL 2/ FL 3",
-      "activity_time": "00:48"
+      "activity_time": "00:20"
     },
     {
       "berth": "Berth 8",
@@ -131,10 +131,10 @@
       "balance": 16000,
       "progress": 0.4666666666666667,
       "stockpile": 3000,
-      "time": "19:30",
-      "remarks": "PRE LOADING PREP",
+      "time": "20:00",
+      "remarks": "LOADING SLING",
       "equipment": "0",
-      "activity_time": "00:48"
+      "activity_time": "00:20"
     },
     {
       "berth": "Berth 10",
@@ -198,7 +198,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "20:18"
+      "activity_time": "20:20"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "14:00",
       "remarks": "CONTINUE DISCHARGING",
       "equip": "FEED TO JBS HOOPER",
-      "activity_time": "06:18"
+      "activity_time": "06:20"
     }
   ],
   "foreign": {
