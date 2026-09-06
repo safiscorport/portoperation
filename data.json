@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-06T15:09:36.276686+08:00",
+  "updated_at": "2026-09-06T15:14:11.425673+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -41,8 +41,8 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "",
+      "time": "0:00",
+      "remarks": "-",
       "equipment": "0",
       "activity_time": "00:00"
     },
@@ -86,8 +86,8 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "",
+      "time": "0:00",
+      "remarks": "-",
       "equipment": "0",
       "activity_time": "00:00"
     },
@@ -101,8 +101,8 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "",
+      "time": "0:00",
+      "remarks": "-",
       "equipment": "0",
       "activity_time": "00:00"
     },
@@ -161,8 +161,8 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "",
+      "time": "0:00",
+      "remarks": "-",
       "equipment": "0",
       "activity_time": "00:00"
     }
@@ -278,7 +278,7 @@
       "vessel": "Vessel",
       "materials": "MATERIALS",
       "discharge": "DISCHARGE %",
-      "balance": "0%",
+      "balance": "-",
       "progress": "Balance",
       "time": "Progress",
       "remarks": "Remarks",
@@ -290,7 +290,7 @@
       "vessel": "HANNAH",
       "materials": "CIAL",
       "discharge": 0.5,
-      "balance": "0%",
+      "balance": "-",
       "progress": 0.5,
       "time": "12:00",
       "remarks": "for testing",
@@ -302,7 +302,7 @@
       "vessel": "LUCIA",
       "materials": "COAL",
       "discharge": 0.5,
-      "balance": "0%",
+      "balance": "-",
       "progress": 0.5,
       "time": "12:00",
       "remarks": "for testing",
@@ -314,7 +314,7 @@
       "vessel": "MV LUNOD",
       "materials": "COAL",
       "discharge": 0.5,
-      "balance": "0%",
+      "balance": "-",
       "progress": 0.5,
       "time": "12:00",
       "remarks": "for testing",
@@ -330,7 +330,7 @@
     "balance": "-",
     "progress": "Balance",
     "time": "Progress",
-    "remarks": "",
+    "remarks": "-",
     "equip": "Deployed Equip.",
     "activity_time": "Activity time"
   }
