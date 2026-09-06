@@ -9,13 +9,15 @@
 <body>
 <div class="app">
   <header class="topbar" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
-    <div class="brand" style="display: flex; align-items: center; gap: 10px;">
-      <span class="live-dot"></span>
+    <div class="brand" style="display: flex; align-items: center;">
       <img src="logo.png" alt="Logo" style="height: 40px; object-fit: contain;">
     </div>
-    <div style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">
-      <div class="title" style="font-size: 1.2rem; font-weight: bold;">CEMENT LOADING</div>
-      <div class="subtitle" style="font-size: 0.75rem; opacity: 0.8;">PORT OPERATIONS REAL-TIME MONITORING</div>
+    <div style="position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; text-align: left;">
+      <span class="live-dot"></span>
+      <div>
+        <div class="title" style="font-size: 1.2rem; font-weight: bold;">CEMENT LOADING</div>
+        <div class="subtitle" style="font-size: 0.75rem; opacity: 0.8;">PORT OPERATIONS REAL-TIME MONITORING</div>
+      </div>
     </div>
     <div class="clock"><div id="phDate">--</div><div id="phTime">--:--:--</div></div>
   </header>
