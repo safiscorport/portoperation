@@ -8,6 +8,12 @@ function formatActivityTime(val) {
   return val;
 }
 
+function isStoppageRemark(text) {
+  if (!text || text === '-') return false;
+  const lower = text.toLowerCase();
+  return lower.includes('waiting') || lower.includes('stopped') || lower.includes('delay') || lower.includes('breakdown');
+}
+
 function render(d) {
   $('syncText').textContent = 'LIVE • UPDATED ' + new Date(d.updated_at).toLocaleTimeString('en-PH', { hour12: false });
   $('refreshSec').textContent = (REFRESH_MS / 1000) + 's';
@@ -17,6 +23,7 @@ function render(d) {
   $('berthGrid').innerHTML = rows.map(x => {
     let p = Math.max(0, Math.min(100, (x.progress || 0) * 100));
     let vacant = String(x.vessel || '').toUpperCase() === 'VACANT';
+    let remarkAlert = isStoppageRemark(x.remarks) ? 'stoppage-alert' : '';
     return `<div class="berth-row ${vacant ? 'vacant' : ''}">
       <span><b>${x.berth}</b></span>
       <span class="vessel">${x.vessel || '—'}</span>
@@ -28,7 +35,7 @@ function render(d) {
       <span><div class="progress-wrap"><div class="bar"><i style="width:${p}%"></i></div>${p > 0 ? p.toFixed(0) + '%' : ''}</div></span>
       <span>${num(x.stockpile)}</span>
       <span>${x.time || '-'}</span>
-      <span class="remark ${x.remarks && x.remarks !== '-' ? 'highlight' : ''}">${x.remarks || '-'}</span>
+      <span class="remark ${remarkAlert}">${x.remarks || '-'}</span>
       <span>${x.equipment || '0'}</span>
       <span class="activity">${formatActivityTime(x.activity_time)}</span>
     </div>`;
@@ -46,6 +53,7 @@ function render(d) {
   // Alpha Berths (R1, R2, R3)
   $('alphaRows').innerHTML = (d.alpha || []).map(x => {
     let pVal = parseFloat(String(x.progress).replace('%', '')) || 0;
+    let remarkAlert = isStoppageRemark(x.remarks) ? 'stoppage-alert' : '';
     return `<div class="alpha-row">
       <span><b>${x.berth}</b></span>
       <span class="vessel">${x.vessel}</span>
@@ -54,7 +62,7 @@ function render(d) {
       <span>${x.balance || '0%'}</span>
       <span><div class="progress-wrap"><div class="bar"><i style="width:${pVal}%"></i></div>${x.progress}</div></span>
       <span>${x.time || '0:00'}</span>
-      <span class="remark">${x.remarks || '-'}</span>
+      <span class="remark ${remarkAlert}">${x.remarks || '-'}</span>
       <span>${x.equip || '0'}</span>
       <span class="activity">${formatActivityTime(x.activity_time)}</span>
     </div>`;
@@ -63,6 +71,7 @@ function render(d) {
   // Foreign Berth (Berth F)
   const f = d.foreign || {};
   let fPVal = parseFloat(String(f.progress || '0').replace('%', '')) || 0;
+  let fRemarkAlert = isStoppageRemark(f.remarks) ? 'stoppage-alert' : '';
   $('foreignRow').innerHTML = `
     <span><b>${f.berth}</b></span>
     <span class="vessel">${f.vessel}</span>
@@ -71,7 +80,7 @@ function render(d) {
     <span>${f.balance || '-'}</span>
     <span><div class="progress-wrap"><div class="bar"><i style="width:${fPVal}%"></i></div>${f.progress || '-'}</div></span>
     <span>${f.time || '-'}</span>
-    <span class="remark">${f.remarks || '-'}</span>
+    <span class="remark ${fRemarkAlert}">${f.remarks || '-'}</span>
     <span>${f.equip || '0'}</span>
     <span class="activity">${formatActivityTime(f.activity_time)}</span>
   `;
@@ -119,7 +128,7 @@ function render(d) {
   $('stevedores').textContent = s.stevedores ?? '--';
 
   const alerts = rows.filter(x => x.remarks && x.remarks !== '-' && x.vessel !== 'VACANT').map(x => `${x.berth}: ${x.vessel} — ${x.remarks}`);
-  $('tickerText').textContent = alerts.length ? alerts.join('   •   ') : 'ALL PORT OPERATIONS NORMAL';
+  $('tickerText').textContent = alerts.length ? alerts.join('    •    ') : 'ALL PORT OPERATIONS NORMAL';
 }
 
 async function load() {
