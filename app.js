@@ -11,7 +11,21 @@ function formatActivityTime(val) {
 function isStoppageRemark(text) {
   if (!text || text === '-') return false;
   const lower = text.toLowerCase();
-  return lower.includes('waiting') || lower.includes('stopped') || lower.includes('delay') || lower.includes('breakdown') || lower.includes('refuse');
+  return (
+    lower.includes('waiting') || 
+    lower.includes('stopped') || 
+    lower.includes('stop') || 
+    lower.includes('delay') || 
+    lower.includes('breakdown') || 
+    lower.includes('refuse') || 
+    lower.includes('standby') || 
+    lower.includes('repair') || 
+    lower.includes('maintenance') || 
+    lower.includes('problem') || 
+    lower.includes('issue') || 
+    lower.includes('shortage') ||
+    lower.includes('no stock')
+  );
 }
 
 function render(d) {
