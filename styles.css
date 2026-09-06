@@ -1003,3 +1003,26 @@ body {
     font-size: 9px;
   }
 }
+/* ... your existing CSS code ... */
+
+/* Paste the trucking table fix at the bottom */
+.table-mini {
+    display: flex;
+    flex-direction: column;
+}
+.table-mini.header-row, 
+.table-mini .tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.table-mini.header-row span, 
+.table-mini .tr b, 
+.table-mini .tr span {
+    flex: 1;
+    text-align: right;
+}
+.table-mini.header-row span:first-child, 
+.table-mini .tr b:first-child {
+    text-align: left;
+}
