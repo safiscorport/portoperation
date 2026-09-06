@@ -801,7 +801,7 @@ body {
 
 
 /* =========================================================
-   ANIMATIONS
+   ANIMATIONS & HIGHLIGHTS
    ========================================================= */
 
 @keyframes blink {
@@ -818,6 +818,13 @@ body {
     transform: translateX(-100%);
   }
 
+}
+
+/* Stoppage / Delay Highlight Style */
+.stoppage-alert {
+  background-color: rgba(255, 48, 48, 0.3) !important;
+  color: #ffcccc !important;
+  font-weight: bold;
 }
 
 
