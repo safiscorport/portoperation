@@ -84,14 +84,7 @@ function render(d) {
     daily: acc.daily + (typeof curr.daily === 'number' ? curr.daily : 0)
   }), { august: 0, september: 0, daily: 0 });
 
-  $('trucking').innerHTML = `
-    <div class="tr header-row">
-      <span>Hauler</span>
-      <span>August</span>
-      <span>September</span>
-      <span>Daily</span>
-    </div>
-  ` + truckData.map(x => `
+  $('trucking').innerHTML = truckData.map(x => `
     <div class="tr"><b>${x.hauler}</b><span>${num(x.august)}</span><span>${num(x.september)}</span><span>${num(x.daily)}</span></div>
   `).join('') + `<div class="tr total-row"><b>Total</b><span><b>${num(truckTotal.august)}</b></span><span><b>${num(truckTotal.september)}</b></span><span><b>${num(truckTotal.daily)}</b></span></div>`;
 
@@ -154,4 +147,3 @@ clock();
 setInterval(clock, 1000);
 load();
 setInterval(load, REFRESH_MS);
-```[cite: 10]
