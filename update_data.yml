@@ -1,0 +1,28 @@
+name: Update Port Dashboard Data
+
+on:
+  push:
+    paths:
+      - 'data.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Commit and Sync Status
+        run: |
+          git config --global user.name "Port Dashboard Bot"
+          git config --global user.email "bot@users.noreply.github.com"
+          git status
