@@ -1016,13 +1016,3 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-.table-mini.header-row span, 
-.table-mini .tr b, 
-.table-mini .tr span {
-    flex: 1;
-    text-align: right;
-}
-.table-mini.header-row span:first-child, 
-.table-mini .tr b:first-child {
-    text-align: left;
-}
