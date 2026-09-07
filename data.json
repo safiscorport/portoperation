@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-07T13:24:01+08:00",
+  "updated_at": "2026-09-07T13:30:25+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -11,10 +11,10 @@
       "balance": 40500,
       "progress": 0.5235294117647059,
       "stockpile": 5000,
-      "time": "11:21",
+      "time": "13:25",
       "remarks": "VESSEL CRANE DEFECTIVE",
       "equipment": "0",
-      "activity_time": "02:02"
+      "activity_time": "00:05"
     },
     {
       "berth": "Berth 2",
@@ -26,10 +26,10 @@
       "balance": 27000,
       "progress": 0.5846153846153846,
       "stockpile": 0,
-      "time": "11:22",
-      "remarks": "WAITING MATERIAL",
+      "time": "13:26",
+      "remarks": "LOADING L47 TONNER BAGS",
       "equipment": "0",
-      "activity_time": "02:01"
+      "activity_time": "00:04"
     },
     {
       "berth": "Berth 3",
@@ -56,10 +56,10 @@
       "balance": 31000,
       "progress": 0.3111111111111111,
       "stockpile": 0,
-      "time": "11:22",
-      "remarks": "WAITING MATERIAL",
+      "time": "13:26",
+      "remarks": "LOADING G3 SLING BAGS",
       "equipment": "0",
-      "activity_time": "02:01"
+      "activity_time": "00:04"
     },
     {
       "berth": "Berth 5",
@@ -71,10 +71,10 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "EASTERN CEBU",
+      "time": "13:00",
+      "remarks": "NO BOOKING",
       "equipment": "0",
-      "activity_time": "00:00"
+      "activity_time": "00:30"
     },
     {
       "berth": "Berth 6",
@@ -86,10 +86,10 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "11:00",
+      "time": "13:00",
       "remarks": "NO BOOKING",
       "equipment": "0",
-      "activity_time": "02:23"
+      "activity_time": "00:30"
     },
     {
       "berth": "Berth 7",
@@ -101,10 +101,10 @@
       "balance": 9000,
       "progress": 0.6666666666666666,
       "stockpile": 1000,
-      "time": "11:23",
-      "remarks": "LOADING S3 SLING BAGS",
+      "time": "13:27",
+      "remarks": "LOADING L51 SLING BAGS",
       "equipment": "FL 2",
-      "activity_time": "02:00"
+      "activity_time": "00:03"
     },
     {
       "berth": "Berth 8",
@@ -116,10 +116,10 @@
       "balance": 5500,
       "progress": 0.6764705882352942,
       "stockpile": 0,
-      "time": "11:23",
-      "remarks": "WAITING MATERIAL",
+      "time": "13:27",
+      "remarks": "LOADING G4 TONNER BAGS",
       "equipment": "0",
-      "activity_time": "02:00"
+      "activity_time": "00:03"
     },
     {
       "berth": "Berth 9",
@@ -131,10 +131,10 @@
       "balance": 13000,
       "progress": 0.5666666666666667,
       "stockpile": 0,
-      "time": "11:23",
-      "remarks": "WAITING MATERIAL",
+      "time": "13:28",
+      "remarks": "LOADING L48 SLING BAGS",
       "equipment": "0",
-      "activity_time": "02:00"
+      "activity_time": "00:02"
     },
     {
       "berth": "Berth 10",
@@ -146,8 +146,8 @@
       "balance": 1000,
       "progress": 0.96,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "-",
+      "time": "13:30",
+      "remarks": "ONGBOARD FORKLIFT",
       "equipment": "0",
       "activity_time": "00:00"
     },
@@ -186,7 +186,7 @@
       "time": "22:10",
       "remarks": "COMMENCE DISCHARGE",
       "equip": "8  GEO DT",
-      "activity_time": "15:13"
+      "activity_time": "15:20"
     },
     {
       "berth": "R2",
@@ -198,7 +198,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "13:23"
+      "activity_time": "13:30"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "22:10",
       "remarks": "CONTINUE DISCHARGING",
       "equip": "FEED TO JBS HOOPER",
-      "activity_time": "15:13"
+      "activity_time": "15:20"
     }
   ],
   "foreign": {
