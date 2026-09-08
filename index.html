@@ -591,6 +591,37 @@ body.history-viewing #historyExitBtn {
 #previousDisplayBadge .replay-time { color:#ffd27a; font-size:15px; }
 #previousDisplayBadge .replay-date { color:#e7e7e7; font-size:11px; }
 </style>
+
+<style id="previous-display-final-css">
+#previousDisplayBadge {
+  display:none;
+  align-items:center;
+  gap:7px;
+  margin-left:10px;
+  padding:5px 9px;
+  border:1px solid #f0a83b;
+  border-radius:4px;
+  background:#20170b;
+  color:#ffffff;
+  font-size:11px;
+  font-weight:900;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+#previousDisplayBadge .replay-time {
+  color:#ffd36a;
+  font-size:15px;
+  font-weight:900;
+}
+#previousDisplayBadge .replay-date {
+  color:#ffffff;
+  font-size:10px;
+  font-weight:800;
+}
+#returnLiveHeaderBtn {
+  display:none;
+}
+</style>
 </head>
 
 <body>
@@ -2815,6 +2846,7 @@ async function viewSelectedHistory() {
     );
 
     render(match.data);
+    window.setPreviousDisplayIndicator(match.timestamp);
 
     const sync =
       document.getElementById(
@@ -2922,6 +2954,7 @@ function showHistoryExitButton() {
 }
 
 async function exitHistoricalDisplay() {
+  window.clearPreviousDisplayIndicator();
   const button = document.getElementById("historyExitBtn");
   if (button) {
     button.style.setProperty("display", "none", "important");
@@ -4785,6 +4818,55 @@ startRotation();
     const h = document.getElementById("historyHour");
     const m = document.getElementById("historyMinute");
     return (h ? h.value : "00") + ":" + (m ? m.value : "00");
+  };
+})();
+</script>
+
+
+<script id="previous-display-badge-final">
+(function () {
+  function parts(ts) {
+    var dt = new Date(ts);
+    return {
+      time: new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      }).format(dt),
+      date: new Intl.DateTimeFormat("en-PH", {
+        timeZone: "Asia/Manila",
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      }).format(dt).toUpperCase()
+    };
+  }
+
+  window.setPreviousDisplayIndicator = function (ts) {
+    var badge = document.getElementById("previousDisplayBadge");
+    var time = document.getElementById("previousDisplayTime");
+    var date = document.getElementById("previousDisplayDate");
+    var live = document.getElementById("returnLiveHeaderBtn");
+    var live2 = document.getElementById("historyExitBtn");
+
+    if (!badge || !time || !date) return;
+
+    var x = parts(ts);
+    time.textContent = x.time;
+    date.textContent = x.date;
+
+    badge.style.setProperty("display", "inline-flex", "important");
+
+    if (live) live.style.setProperty("display", "inline-flex", "important");
+    if (live2) live2.style.setProperty("display", "none", "important");
+  };
+
+  window.clearPreviousDisplayIndicator = function () {
+    var badge = document.getElementById("previousDisplayBadge");
+    var live = document.getElementById("returnLiveHeaderBtn");
+    if (badge) badge.style.setProperty("display", "none", "important");
+    if (live) live.style.setProperty("display", "none", "important");
   };
 })();
 </script>
