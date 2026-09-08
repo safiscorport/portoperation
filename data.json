@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-08T19:22:27+08:00",
+  "updated_at": "2026-09-08T19:24:29+08:00",
   "berths": [
     {
       "berth": "Berth 1",
@@ -13,8 +13,8 @@
       "stockpile": 1000,
       "time": "19:00",
       "remarks": "KY TOOLBOX",
-      "equipment": "CRANE2 / FL3",
-      "activity_time": "00:22"
+      "equipment": "CRANE2",
+      "activity_time": "00:24"
     },
     {
       "berth": "Berth 2",
@@ -29,7 +29,7 @@
       "time": "19:00",
       "remarks": "KY TOOLBOX",
       "equipment": "0",
-      "activity_time": "00:22"
+      "activity_time": "00:24"
     },
     {
       "berth": "Berth 3",
@@ -56,25 +56,25 @@
       "balance": 17000,
       "progress": 0.6222222222222222,
       "stockpile": 4000,
-      "time": "17:05",
-      "remarks": "LOADING A17 SLING BAGS",
-      "equipment": "FL 2",
-      "activity_time": "02:17"
+      "time": "19:00",
+      "remarks": "KY TOOLBOX",
+      "equipment": "0",
+      "activity_time": "00:24"
     },
     {
       "berth": "Berth 5",
       "vessel": "EASTERN CEBU",
       "voyage": 10,
-      "booking": 0,
+      "booking": 27000,
       "dispatch": 11000,
       "loaded": 11000,
-      "balance": -11000,
-      "progress": 0,
+      "balance": 16000,
+      "progress": 0.4074074074074074,
       "stockpile": 0,
-      "time": "17:14",
-      "remarks": "LOADING G3 TONNER BAGS",
-      "equipment": "0",
-      "activity_time": "02:08"
+      "time": "19:00",
+      "remarks": "KY TOOLBOX",
+      "equipment": "FL 2",
+      "activity_time": "00:24"
     },
     {
       "berth": "Berth 6",
@@ -86,10 +86,10 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "17:00",
+      "time": "19:00",
       "remarks": "NO BOOKING",
       "equipment": "0",
-      "activity_time": "02:22"
+      "activity_time": "00:24"
     },
     {
       "berth": "Berth 7",
@@ -101,10 +101,10 @@
       "balance": 2500,
       "progress": 0.9074074074074074,
       "stockpile": 2000,
-      "time": "17:00",
-      "remarks": "WAITING SORE CRANE",
+      "time": "19:00",
+      "remarks": "KY TOOLBOX",
       "equipment": "CRANE 3",
-      "activity_time": "02:22"
+      "activity_time": "00:24"
     },
     {
       "berth": "Berth 8",
@@ -134,7 +134,7 @@
       "time": "16:28",
       "remarks": "COMPLETE LOADING S19",
       "equipment": "0",
-      "activity_time": "02:54"
+      "activity_time": "02:56"
     },
     {
       "berth": "Berth 10",
@@ -146,10 +146,10 @@
       "balance": 23000,
       "progress": 0.08,
       "stockpile": 0,
-      "time": "17:12",
-      "remarks": "LOADING B5 SLING BAGS",
-      "equipment": "FL 1",
-      "activity_time": "02:10"
+      "time": "19:00",
+      "remarks": "KY TOOLBOX",
+      "equipment": "0",
+      "activity_time": "00:24"
     },
     {
       "berth": "Jetty",
@@ -168,11 +168,11 @@
     }
   ],
   "total": {
-    "booking": 277000,
+    "booking": 304000,
     "dispatch": 216000,
     "loaded": 209000,
-    "balance": 68000,
-    "progress": 0.6855415898553154,
+    "balance": 95000,
+    "progress": 0.6458081352198999,
     "stockpile": 7000
   },
   "alpha": [
@@ -186,7 +186,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "19:22"
+      "activity_time": "19:24"
     },
     {
       "berth": "R2",
@@ -198,7 +198,7 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "19:22"
+      "activity_time": "19:24"
     },
     {
       "berth": "R3",
@@ -210,7 +210,7 @@
       "time": "03:51",
       "remarks": "CONTINOUS DISCHARGE FEED TO JBS",
       "equip": "1 PL DEPLOYED",
-      "activity_time": "15:31"
+      "activity_time": "15:33"
     }
   ],
   "foreign": {
@@ -376,11 +376,11 @@
     }
   ],
   "status": {
-    "supervisor": "PELIMER, JOVIC",
-    "checker": "OBIAL, R/ TORRES, J",
-    "pmc": "VICKY / EBOY",
+    "supervisor": "BERNABE,A",
+    "checker": "DALUSA,E",
+    "pmc": "JOAN / WILLIAM",
     "cranes": 4,
     "forklifts": 6,
-    "stevedores": 44
+    "stevedores": 0
   }
 }
