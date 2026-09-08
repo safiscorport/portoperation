@@ -1,0 +1,5 @@
+FINAL FIX
+The prior package had its initialization constants removed while adding Google Sheets history.
+This package restores the original initialization variables (including REFRESH_MS and lastHash)
+while keeping the Google Sheets history backend.
+Replace the GitHub files with this package, especially app.js and config.js, then Ctrl+F5.
