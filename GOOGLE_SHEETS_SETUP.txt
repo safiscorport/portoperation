@@ -1,0 +1,17 @@
+GOOGLE SHEETS SETUP — QUICK GUIDE
+
+1. Create a Google Sheet.
+2. Extensions > Apps Script.
+3. Paste GoogleAppsScript_Code.gs into Code.gs.
+4. Deploy > New deployment > Web app.
+5. Execute as: Me
+6. Who has access: Anyone
+7. Copy the /exec URL.
+8. Put that URL in config.js as APPS_SCRIPT_URL.
+9. Push all files to GitHub Pages.
+10. Test PREVIOUS > DATE > TIME.
+
+The Google Sheet will automatically create the DashboardHistory tab.
+
+Retention: 7 days.
+Snapshot interval: up to every 30 seconds, only when dashboard data changes.

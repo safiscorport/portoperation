@@ -1,0 +1,5 @@
+window.SHARED_HISTORY_CONFIG = {
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
+  RETENTION_DAYS: 7,
+  SAVE_INTERVAL_MS: 30000
+};

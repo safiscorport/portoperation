@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Cement Loading Operations Dashboard</title>
 <link rel="stylesheet" href="styles.css">
+<script src="config.js"></script>
 
 <style>
 /* =========================================================
@@ -2173,6 +2174,430 @@
 
 
 <script>
+
+/* =========================================================
+   SHARED PREVIOUS DISPLAY PICKER
+   ========================================================= */
+
+let selectedHistoryDate = "";
+let selectedHistoryTime = "";
+
+function openHistoryPicker() {
+  const picker =
+    document.getElementById(
+      "historyPicker"
+    );
+
+  if (!picker) return;
+
+  const now = new Date();
+
+  selectedHistoryDate =
+    now.toLocaleDateString(
+      "en-CA"
+    );
+
+  selectedHistoryTime =
+    now.toTimeString().slice(0, 8);
+
+  const dateInput =
+    document.getElementById(
+      "historyDateInput"
+    );
+
+  const timeInput =
+    document.getElementById(
+      "historyTimeInput"
+    );
+
+  if (dateInput) {
+    dateInput.value =
+      selectedHistoryDate;
+  }
+
+  if (timeInput) {
+    timeInput.value =
+      selectedHistoryTime;
+  }
+
+  updateHistoryPickerLabels();
+  refreshHistoryAvailability();
+
+  picker.classList.add("show");
+  picker.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+}
+
+function closeHistoryPicker() {
+  const picker =
+    document.getElementById(
+      "historyPicker"
+    );
+
+  if (!picker) return;
+
+  picker.classList.remove("show");
+  picker.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+}
+
+function pickHistoryDate() {
+  const input =
+    document.getElementById(
+      "historyDateInput"
+    );
+
+  if (!input) return;
+
+  try {
+    if (input.showPicker) {
+      input.showPicker();
+    } else {
+      input.click();
+    }
+  } catch (e) {
+    input.click();
+  }
+}
+
+function pickHistoryTime() {
+  const input =
+    document.getElementById(
+      "historyTimeInput"
+    );
+
+  if (!input) return;
+
+  try {
+    if (input.showPicker) {
+      input.showPicker();
+    } else {
+      input.click();
+    }
+  } catch (e) {
+    input.click();
+  }
+}
+
+function historyDateChanged(value) {
+  if (!value) return;
+
+  selectedHistoryDate = value;
+
+  updateHistoryPickerLabels();
+  refreshHistoryAvailability();
+}
+
+function historyTimeChanged(value) {
+  if (!value) return;
+
+  selectedHistoryTime = value;
+
+  updateHistoryPickerLabels();
+  refreshHistoryAvailability();
+}
+
+function updateHistoryPickerLabels() {
+  const date =
+    document.getElementById(
+      "historyDateValue"
+    );
+
+  const time =
+    document.getElementById(
+      "historyTimeValue"
+    );
+
+  if (date) {
+    date.textContent =
+      selectedHistoryDate || "--";
+  }
+
+  if (time) {
+    time.textContent =
+      selectedHistoryTime || "--:--";
+  }
+}
+
+async function refreshHistoryAvailability() {
+  const status =
+    document.getElementById(
+      "historyAvailability"
+    );
+
+  if (!status) return;
+
+  if (
+    typeof window.sharedHistoryConfigured !==
+    "function" ||
+    !window.sharedHistoryConfigured()
+  ) {
+    status.textContent =
+      "Shared history is not configured yet. Add your Supabase URL and anon key to config.js.";
+    return;
+  }
+
+  status.textContent =
+    "Checking shared history...";
+
+  const start =
+    new Date(
+      selectedHistoryDate +
+      "T00:00:00+08:00"
+    );
+
+  const end =
+    new Date(
+      selectedHistoryDate +
+      "T23:59:59+08:00"
+    );
+
+  if (
+    !Number.isFinite(start.getTime()) ||
+    !Number.isFinite(end.getTime())
+  ) {
+    status.textContent =
+      "Choose a valid date.";
+    return;
+  }
+
+  const rows =
+    await window.loadSharedHistory(
+      start.toISOString(),
+      end.toISOString()
+    );
+
+  if (!rows.length) {
+    status.textContent =
+      "No saved display exists for this date.";
+    return;
+  }
+
+  const target =
+    new Date(
+      selectedHistoryDate +
+      "T" +
+      (selectedHistoryTime || "00:00:00") +
+      "+08:00"
+    ).getTime();
+
+  const match =
+    rows
+      .map(row => ({
+        timestamp:
+          new Date(
+            row.recorded_at
+          ).getTime(),
+        data: row.payload
+      }))
+      .filter(
+        row =>
+          Number.isFinite(row.timestamp) &&
+          row.timestamp <= target
+      )
+      .sort(
+        (a,b) =>
+          b.timestamp - a.timestamp
+      )[0];
+
+  if (!match) {
+    status.textContent =
+      "No saved display exists at or before the selected time.";
+    return;
+  }
+
+  status.textContent =
+    "Closest saved display: " +
+    new Date(
+      match.timestamp
+    ).toLocaleString(
+      "en-PH",
+      { hour12:false }
+    );
+}
+
+async function viewSelectedHistory() {
+  if (
+    typeof window.sharedHistoryConfigured !==
+    "function" ||
+    !window.sharedHistoryConfigured()
+  ) {
+    alert(
+      "Shared history is not configured. Please complete config.js first."
+    );
+    return;
+  }
+
+  const target =
+    new Date(
+      selectedHistoryDate +
+      "T" +
+      (selectedHistoryTime || "00:00:00") +
+      "+08:00"
+    ).getTime();
+
+  if (!Number.isFinite(target)) {
+    alert(
+      "Please select a valid date and time."
+    );
+    return;
+  }
+
+  const start =
+    new Date(
+      selectedHistoryDate +
+      "T00:00:00+08:00"
+    );
+
+  const end =
+    new Date(
+      selectedHistoryDate +
+      "T23:59:59+08:00"
+    );
+
+  const rows =
+    await window.loadSharedHistory(
+      start.toISOString(),
+      end.toISOString()
+    );
+
+  const match =
+    rows
+      .map(row => ({
+        timestamp:
+          new Date(
+            row.recorded_at
+          ).getTime(),
+        data: row.payload
+      }))
+      .filter(
+        row =>
+          Number.isFinite(row.timestamp) &&
+          row.timestamp <= target
+      )
+      .sort(
+        (a,b) =>
+          b.timestamp - a.timestamp
+      )[0];
+
+  if (!match) {
+    alert(
+      "No saved dashboard display was found at or before the selected time."
+    );
+    return;
+  }
+
+  closeHistoryPicker();
+
+  // Display the complete saved Dashboard 1 payload.
+  if (
+    typeof render === "function"
+  ) {
+    manualOverride = true;
+
+    clearTimeout(rotationTimer);
+    clearTimeout(historyTimer);
+    clearTimeout(
+      window.resumeAutoTimer
+    );
+
+    render(match.data);
+
+    const sync =
+      document.getElementById(
+        "syncText"
+      );
+
+    if (sync) {
+      sync.textContent =
+        "HISTORY • " +
+        new Date(
+          match.timestamp
+        ).toLocaleString(
+          "en-PH",
+          { hour12:false }
+        );
+    }
+
+    showHistoryExitButton();
+  }
+}
+
+function showHistoryExitButton() {
+  let button =
+    document.getElementById(
+      "historyExitBtn"
+    );
+
+  if (!button) {
+    button =
+      document.createElement(
+        "button"
+      );
+
+    button.id =
+      "historyExitBtn";
+
+    button.className =
+      "switcher-btn";
+
+    button.type =
+      "button";
+
+    button.textContent =
+      "↻ LIVE NOW";
+
+    button.onclick =
+      exitHistoricalDisplay;
+
+    const switcher =
+      document.querySelector(
+        ".dashboard-switcher"
+      );
+
+    if (switcher) {
+      switcher.prepend(button);
+    }
+  }
+
+  button.style.display =
+    "block";
+}
+
+async function exitHistoricalDisplay() {
+  const button =
+    document.getElementById(
+      "historyExitBtn"
+    );
+
+  if (button) {
+    button.style.display =
+      "none";
+  }
+
+  manualOverride = false;
+  lastHash = "";
+
+  await load();
+
+  startRotation();
+}
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+    if (
+      event.key === "Escape"
+    ) {
+      closeHistoryPicker();
+    }
+  }
+);
+
 
 /* =========================================================
    MONTHLY VARIANCE
