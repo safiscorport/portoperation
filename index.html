@@ -411,6 +411,186 @@ body.history-viewing #historyExitBtn {
 
 </style>
 
+
+<style>
+/* =========================================================
+   ROBUST HISTORICAL REPLAY STATUS
+   ========================================================= */
+.replay-status-bar{
+  position:fixed;
+  top:58px;
+  left:50%;
+  transform:translateX(-50%);
+  z-index:11000;
+  display:none;
+  align-items:center;
+  gap:12px;
+  padding:7px 12px;
+  border:1px solid rgba(255,190,80,.65);
+  border-radius:6px;
+  background:rgba(20,14,6,.97);
+  box-shadow:0 4px 18px rgba(0,0,0,.55);
+  color:#ffd37a;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  white-space:nowrap;
+}
+.replay-status-label{
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.12em;
+}
+.replay-status-bar strong{
+  font-size:20px;
+  font-weight:1000;
+  letter-spacing:.04em;
+}
+.replay-status-bar span:last-of-type{
+  font-size:10px;
+  font-weight:800;
+  opacity:.9;
+}
+.replay-status-bar button{
+  border:1px solid rgba(105,230,165,.7);
+  border-radius:5px;
+  padding:6px 10px;
+  background:rgba(35,115,70,.35);
+  color:#eafff2;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.06em;
+  cursor:pointer;
+}
+.replay-status-bar button:hover{
+  background:rgba(35,145,80,.55);
+}
+.history-return-btn{
+  margin-left:0 !important;
+}
+</style>
+
+
+<style id="replay-ui-final">
+.history-time-part {
+  width: 64px;
+  height: 34px;
+  padding: 4px 6px;
+  font-weight: 700;
+  text-align: center;
+}
+.history-time-colon {
+  font-weight: 800;
+  font-size: 18px;
+  margin: 0 4px;
+}
+#previousDisplayBadge {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: 8px;
+  padding: 5px 10px;
+  border: 1px solid #5bc0de;
+  border-radius: 4px;
+  background: #132633;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+#previousDisplayBadge .replay-time {
+  color: #72dcff;
+  font-size: 14px;
+}
+#previousDisplayBadge .replay-date {
+  opacity: .9;
+  font-weight: 700;
+}
+#returnLiveHeaderBtn {
+  display: none;
+  margin-left: 6px;
+}
+@media (max-width: 900px) {
+  #previousDisplayBadge { font-size: 10px; padding: 4px 7px; }
+  #previousDisplayBadge .replay-time { font-size: 12px; }
+}
+</style>
+
+
+<style id="replay-time-picker-final">
+#historyTimeInput.history-hour-select {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10002;
+  width: 155px;
+  height: 42px;
+  opacity: 0;
+  cursor: pointer;
+}
+#historyTimeInput.history-hour-select.replay-time-visible {
+  opacity: 1;
+  left: 50%;
+  top: 50%;
+}
+#previousDisplayBadge {
+  display:none;
+  align-items:center;
+  gap:7px;
+  margin-left:10px;
+  padding:6px 10px;
+  border:1px solid rgba(255,184,77,.7);
+  border-radius:5px;
+  background:#2d1905;
+  color:#fff;
+  font-weight:900;
+  white-space:nowrap;
+}
+#previousDisplayBadge .replay-time {
+  color:#ffd27a;
+  font-size:15px;
+}
+#previousDisplayBadge .replay-date {
+  color:#e7e7e7;
+  font-size:11px;
+}
+</style>
+
+<style id="hhmm-picker-final">
+#historyTimeInput.history-time-input {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+#historyTimeInput.history-time-input.picker-open {
+  position: static;
+  width: 100%;
+  height: 40px;
+  opacity: 1;
+  margin: 8px 0 0;
+  font-size: 16px;
+  font-weight: 800;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+#previousDisplayBadge {
+  display:none;
+  align-items:center;
+  gap:7px;
+  margin-left:10px;
+  padding:6px 10px;
+  border:1px solid rgba(255,184,77,.7);
+  border-radius:5px;
+  background:#2d1905;
+  color:#fff;
+  font-weight:900;
+  white-space:nowrap;
+}
+#previousDisplayBadge .replay-time { color:#ffd27a; font-size:15px; }
+#previousDisplayBadge .replay-date { color:#e7e7e7; font-size:11px; }
+</style>
 </head>
 
 <body>
@@ -440,6 +620,12 @@ body.history-viewing #historyExitBtn {
         alt="Logo"
         style="height:40px;object-fit:contain;"
       >
+<span id="previousDisplayBadge" aria-live="polite">
+  <span>PREVIOUS DISPLAY</span>
+  <span class="replay-time" id="previousDisplayTime">--:--</span>
+  <span class="replay-date" id="previousDisplayDate"></span>
+</span>
+
     </div>
 
     <div
@@ -480,12 +666,6 @@ body.history-viewing #historyExitBtn {
     </div>
 
     <div style="display:flex;align-items:center;gap:10px;">
-
-      <div id="replayTimeDisplay" class="replay-time-display" aria-live="polite" style="display:none;">
-        <span>PREVIOUS DISPLAY</span>
-        <b id="replayTimeText">--:00</b>
-      </div>
-
       <div class="dashboard-switcher">
 
         <button
@@ -515,13 +695,15 @@ body.history-viewing #historyExitBtn {
       >
         ↶ PREVIOUS
       </button>
+<button id="returnLiveHeaderBtn" type="button" onclick="exitHistoricalDisplay()">↻ RETURN TO LIVE</button>
 
       <button
         id="historyExitBtn"
-        class="history-picker-open"
+        class="history-picker-open history-return-btn"
         type="button"
         onclick="exitHistoricalDisplay()"
         title="Return to the live dashboard"
+        style="display:none;"
       >
         ↻ RETURN TO LIVE
       </button>
@@ -534,6 +716,14 @@ body.history-viewing #historyExitBtn {
     </div>
 
   </header>
+
+  <div id="replayStatusBar" class="replay-status-bar" aria-live="polite" style="display:none;">
+    <span class="replay-status-label">PREVIOUS DISPLAY</span>
+    <strong id="replayStatusTime">--:00</strong>
+    <span id="replayStatusDate"></span>
+    <button type="button" onclick="exitHistoricalDisplay()">↻ RETURN TO LIVE</button>
+  </div>
+
 
 
   <!-- =====================================================
@@ -926,37 +1116,15 @@ body.history-viewing #historyExitBtn {
       onchange="historyDateChanged(this.value)"
     >
 
-    <select
+    <input
       id="historyTimeInput"
-      class="history-hour-select"
-      aria-label="Select replay hour"
+      class="history-time-input"
+      type="time"
+      step="60"
+      value="00:00"
+      aria-label="Select replay time (hours and minutes)"
       onchange="historyTimeChanged(this.value)"
     >
-      <option value="00:00">00:00</option>
-      <option value="01:00">01:00</option>
-      <option value="02:00">02:00</option>
-      <option value="03:00">03:00</option>
-      <option value="04:00">04:00</option>
-      <option value="05:00">05:00</option>
-      <option value="06:00">06:00</option>
-      <option value="07:00">07:00</option>
-      <option value="08:00">08:00</option>
-      <option value="09:00">09:00</option>
-      <option value="10:00">10:00</option>
-      <option value="11:00">11:00</option>
-      <option value="12:00">12:00</option>
-      <option value="13:00">13:00</option>
-      <option value="14:00">14:00</option>
-      <option value="15:00">15:00</option>
-      <option value="16:00">16:00</option>
-      <option value="17:00">17:00</option>
-      <option value="18:00">18:00</option>
-      <option value="19:00">19:00</option>
-      <option value="20:00">20:00</option>
-      <option value="21:00">21:00</option>
-      <option value="22:00">22:00</option>
-      <option value="23:00">23:00</option>
-    </select>
 
     <div id="historyAvailability" class="history-availability">
       Checking saved displays…
@@ -2404,8 +2572,14 @@ function pickHistoryDate() {
 function pickHistoryTime() {
   const input = document.getElementById("historyTimeInput");
   if (!input) return;
+  input.classList.add("picker-open");
   input.focus();
-  input.click();
+  try {
+    if (input.showPicker) input.showPicker();
+    else input.click();
+  } catch (e) {
+    input.click();
+  }
 }
 
 function historyDateChanged(value) {
@@ -2421,7 +2595,7 @@ function historyTimeChanged(value) {
   if (!value) return;
 
   selectedHistoryTime =
-    String(value).slice(0, 2) + ":00";
+    String(value).slice(0, 5);
 
   const input =
     document.getElementById(
@@ -2429,15 +2603,7 @@ function historyTimeChanged(value) {
     );
 
   if (input) {
-    input.style.opacity = "0";
-    input.style.pointerEvents = "none";
-    input.style.width = "1px";
-    input.style.height = "1px";
-    input.style.position = "absolute";
-    input.style.left = "";
-    input.style.top = "";
-    input.style.transform = "";
-    input.size = 1;
+    input.classList.remove("replay-time-visible");
   }
 
   updateHistoryPickerLabels();
@@ -2462,7 +2628,7 @@ function updateHistoryPickerLabels() {
 
   if (time) {
     time.textContent =
-      selectedHistoryTime || "--:00";
+      selectedHistoryTime || "--:--";
   }
 }
 
@@ -2656,14 +2822,19 @@ async function viewSelectedHistory() {
       );
 
     if (sync) {
-      const replayHour = new Intl.DateTimeFormat("en-PH", {
+      const replayTime = new Intl.DateTimeFormat("en-PH", {
         hour: "2-digit",
+        minute: "2-digit",
         hour12: false,
         timeZone: "Asia/Manila"
       }).format(new Date(match.timestamp));
 
       sync.textContent =
-        "HISTORY • " + replayHour + ":00";
+        "HISTORY • " + replayTime;
+
+      if (typeof window.setPreviousDisplayIndicator === "function") {
+        window.setPreviousDisplayIndicator(match.timestamp);
+      }
     }
 
     setHistoricalIndicator(match.timestamp);
@@ -2672,96 +2843,100 @@ async function viewSelectedHistory() {
 }
 
 function setReplayTimeDisplay(timestamp) {
-  const box = document.getElementById("replayTimeDisplay");
-  const value = document.getElementById("replayTimeText");
-  if (!box || !value) return;
+  const bar = document.getElementById("replayStatusBar");
+  const timeEl = document.getElementById("replayStatusTime");
+  const dateEl = document.getElementById("replayStatusDate");
+
+  if (!bar || !timeEl || !dateEl) return;
 
   if (!timestamp) {
-    box.style.display = "none";
-    value.textContent = "--:00";
+    bar.style.display = "none";
     return;
   }
 
-  const hour = new Intl.DateTimeFormat("en-PH", {
+  const dt = new Date(timestamp);
+
+  const replayTime = new Intl.DateTimeFormat("en-PH", {
     hour: "2-digit",
+    minute: "2-digit",
     hour12: false,
     timeZone: "Asia/Manila"
-  }).format(new Date(timestamp));
+  }).format(dt);
 
-  value.textContent = hour + ":00";
-  box.style.display = "flex";
+  const dateText = new Intl.DateTimeFormat("en-PH", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Manila"
+  }).format(dt).toUpperCase();
+
+  timeEl.textContent = replayTime;
+  dateEl.textContent = dateText;
+  bar.style.display = "flex";
 }
 
 function setHistoricalIndicator(timestamp) {
   const indicator = document.getElementById("historicalIndicator");
   const text = document.getElementById("historicalIndicatorText");
 
-  if (!indicator || !text) return;
-
   if (!timestamp) {
-    indicator.style.display = "none";
+    if (indicator) indicator.style.display = "none";
     setReplayTimeDisplay(null);
     return;
   }
 
   const dt = new Date(timestamp);
-  const hour = new Intl.DateTimeFormat("en-PH", {
+
+  const replayTime = new Intl.DateTimeFormat("en-PH", {
     hour: "2-digit",
+    minute: "2-digit",
     hour12: false,
     timeZone: "Asia/Manila"
   }).format(dt);
 
-  const dateText = dt.toLocaleDateString("en-PH", {
+  const dateText = new Intl.DateTimeFormat("en-PH", {
     day: "2-digit",
     month: "short",
     year: "numeric",
     timeZone: "Asia/Manila"
-  }).toUpperCase();
+  }).format(dt).toUpperCase();
 
-  text.textContent =
-    "HISTORICAL DISPLAY • " + dateText + " • " + hour + ":00";
+  if (text) {
+    text.textContent =
+      "HISTORICAL DISPLAY • " + dateText + " • " + replayTime;
+  }
+
+  if (indicator) {
+    indicator.style.display = "flex";
+  }
 
   setReplayTimeDisplay(timestamp);
-  indicator.style.display = "flex";
 }
 
 function showHistoryExitButton() {
-  const button =
-    document.getElementById(
-      "historyExitBtn"
-    );
-
+  const button = document.getElementById("historyExitBtn");
   if (button) {
-    button.style.display =
-      "inline-flex";
+    button.style.setProperty("display", "inline-flex", "important");
   }
-
-  document.body.classList.add(
-    "history-viewing"
-  );
+  document.body.classList.add("history-viewing");
 }
 
 async function exitHistoricalDisplay() {
-  const button =
-    document.getElementById(
-      "historyExitBtn"
-    );
-
+  const button = document.getElementById("historyExitBtn");
   if (button) {
-    button.style.display =
-      "none";
+    button.style.setProperty("display", "none", "important");
   }
 
-  document.body.classList.remove(
-    "history-viewing"
-  );
+  const bar = document.getElementById("replayStatusBar");
+  if (bar) bar.style.display = "none";
+
+  document.body.classList.remove("history-viewing");
 
   manualOverride = false;
   lastHash = "";
   setHistoricalIndicator(null);
 
   await load();
-
   startRotation();
 }
 
@@ -4539,6 +4714,79 @@ setInterval(
 
 startRotation();
 
+</script>
+
+
+<script id="replay-ui-final-js">
+(function () {
+  function pad2(n) { return String(n).padStart(2, "0"); }
+
+  function initHistoryHourMinutePicker() {
+    const h = document.getElementById("historyHour");
+    const m = document.getElementById("historyMinute");
+    if (!h || !m) return;
+
+    if (!h.options.length) {
+      for (let i = 0; i < 24; i++) {
+        const o = document.createElement("option");
+        o.value = pad2(i);
+        o.textContent = pad2(i);
+        h.appendChild(o);
+      }
+    }
+    if (!m.options.length) {
+      for (let i = 0; i < 60; i++) {
+        const o = document.createElement("option");
+        o.value = pad2(i);
+        o.textContent = pad2(i);
+        m.appendChild(o);
+      }
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", initHistoryHourMinutePicker);
+
+  window.setPreviousDisplayIndicator = function (isoOrDate) {
+    const badge = document.getElementById("previousDisplayBadge");
+    const t = document.getElementById("previousDisplayTime");
+    const d = document.getElementById("previousDisplayDate");
+    const live = document.getElementById("returnLiveHeaderBtn");
+    if (!badge || !t || !d) return;
+
+    const dt = isoOrDate instanceof Date ? isoOrDate : new Date(isoOrDate);
+    if (Number.isNaN(dt.getTime())) return;
+
+    const parts = new Intl.DateTimeFormat("en-PH", {
+      timeZone: "Asia/Manila",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hour12: false
+    }).formatToParts(dt);
+
+    const get = key => (parts.find(x => x.type === key) || {}).value || "";
+    t.textContent = get("hour") + ":" + get("minute");
+    d.textContent = get("day") + " " +
+      new Intl.DateTimeFormat("en-PH", {timeZone:"Asia/Manila", month:"short"}).format(dt).toUpperCase() +
+      " " + get("year");
+
+    badge.style.display = "inline-flex";
+    if (live) live.style.display = "inline-block";
+  };
+
+  window.clearPreviousDisplayIndicator = function () {
+    const badge = document.getElementById("previousDisplayBadge");
+    const live = document.getElementById("returnLiveHeaderBtn");
+    if (badge) badge.style.display = "none";
+    if (live) live.style.display = "none";
+  };
+
+  // Patch history time readers so the picker uses hour + minute only.
+  window.getHistoryPickerTime = function () {
+    initHistoryHourMinutePicker();
+    const h = document.getElementById("historyHour");
+    const m = document.getElementById("historyMinute");
+    return (h ? h.value : "00") + ":" + (m ? m.value : "00");
+  };
+})();
 </script>
 
 </body>

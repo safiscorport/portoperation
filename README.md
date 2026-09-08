@@ -22,3 +22,13 @@ History is retained for about 7 days and is shared across devices.
 - Minutes and seconds are not requested.
 - Historical identification shows the selected hour only.
 - A visible **↻ RETURN TO LIVE** button appears beside PREVIOUS while replaying.
+
+
+## Replay identification
+
+Replay mode uses an hour-only selector and shows a prominent PREVIOUS DISPLAY bar with the selected hour and date, plus RETURN TO LIVE.
+
+
+## Replay picker update
+
+The previous-display picker now uses **hour + minute** (`HH:MM`) and removes seconds. The replay identification is displayed at the **top-left next to the logo**, showing the saved display date and time. A **RETURN TO LIVE** button is placed with the dashboard controls.
