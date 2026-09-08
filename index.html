@@ -1967,7 +1967,7 @@
           type="button"
           onclick="returnToLiveDisplay()"
         >
-          ↻ RETURN TO LIVE
+          ↻ LIVE NOW
         </button>
 
         <div class="dashboard-switcher">
@@ -2572,7 +2572,7 @@ function setHistoricalIndicator(timestamp) {
     "HISTORICAL DISPLAY • " +
     dt.toLocaleDateString("en-PH", {day:"2-digit", month:"short", year:"numeric"}).toUpperCase() +
     " • " +
-    dt.toLocaleTimeString("en-PH", {hour: '2-digit', minute: '2-digit', hour12:false});
+    dt.toLocaleTimeString("en-PH", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false});
   indicator.style.display = "flex";
 }
 
@@ -2598,7 +2598,7 @@ function showHistoryExitButton() {
       "button";
 
     button.textContent =
-      "↻ RETURN TO LIVE";
+      "↻ LIVE NOW";
 
     button.onclick =
       exitHistoricalDisplay;
@@ -3310,7 +3310,9 @@ function updateHistoryClock(){
     now.toLocaleTimeString(
       "en-PH",
       {
-        hour: '2-digit', minute: '2-digit'
+        hour:"2-digit",
+        minute:"2-digit",
+        second:"2-digit"
       }
     );
 

@@ -16,6 +16,9 @@ This package keeps the original live dashboard (`data.json` + full `render()` lo
 History is retained for about 7 days and is shared across devices.
 
 
-## Replay display
+## Replay controls (latest)
 
-Historical/replay mode now shows the replay time at **hour precision only** (no minutes or seconds in the replay identification), and a clear **RETURN TO LIVE** control is provided to immediately return to the live dashboard.
+- Replay selection is **hour-only**: 00:00 through 23:00.
+- Minutes and seconds are not requested.
+- Historical identification shows the selected hour only.
+- A visible **↻ RETURN TO LIVE** button appears beside PREVIOUS while replaying.
