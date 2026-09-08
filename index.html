@@ -51,6 +51,32 @@
 }
 
 
+.historical-indicator {
+  position:absolute;
+  left:50%;
+  top:calc(100% + 5px);
+  transform:translateX(-50%);
+  z-index:20;
+  align-items:center;
+  gap:7px;
+  padding:4px 11px;
+  border:1px solid rgba(255,180,70,.55);
+  border-radius:5px;
+  background:rgba(45,25,5,.94);
+  color:#ffd27a;
+  font-size:.68rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  white-space:nowrap;
+  box-shadow:0 3px 12px rgba(0,0,0,.45);
+  pointer-events:none;
+}
+.historical-indicator-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:#ffb84d;
+  box-shadow:0 0 8px rgba(255,184,77,.9);
+}
+
 /* =========================================================
    MONTHLY VESSEL CEMENT LOADING
    ONLY ADDS THE CENTER VARIANCE COLUMN
@@ -376,6 +402,11 @@
           style="font-size:0.75rem;opacity:0.8;"
         >
           PORT OPERATIONS REAL-TIME MONITORING
+        </div>
+
+        <div id="historicalIndicator" class="historical-indicator" aria-live="polite" style="display:none;">
+          <span class="historical-indicator-dot"></span>
+          <span id="historicalIndicatorText">HISTORICAL DISPLAY</span>
         </div>
       </div>
 
@@ -1936,7 +1967,7 @@
           type="button"
           onclick="returnToLiveDisplay()"
         >
-          ↻ LIVE NOW
+          ↻ RETURN TO LIVE
         </button>
 
         <div class="dashboard-switcher">
@@ -2523,8 +2554,26 @@ async function viewSelectedHistory() {
         );
     }
 
+    setHistoricalIndicator(match.timestamp);
     showHistoryExitButton();
   }
+}
+
+function setHistoricalIndicator(timestamp) {
+  const indicator = document.getElementById("historicalIndicator");
+  const text = document.getElementById("historicalIndicatorText");
+  if (!indicator || !text) return;
+  if (!timestamp) {
+    indicator.style.display = "none";
+    return;
+  }
+  const dt = new Date(timestamp);
+  text.textContent =
+    "HISTORICAL DISPLAY • " +
+    dt.toLocaleDateString("en-PH", {day:"2-digit", month:"short", year:"numeric"}).toUpperCase() +
+    " • " +
+    dt.toLocaleTimeString("en-PH", {hour: '2-digit', minute: '2-digit', hour12:false});
+  indicator.style.display = "flex";
 }
 
 function showHistoryExitButton() {
@@ -2549,7 +2598,7 @@ function showHistoryExitButton() {
       "button";
 
     button.textContent =
-      "↻ LIVE NOW";
+      "↻ RETURN TO LIVE";
 
     button.onclick =
       exitHistoricalDisplay;
@@ -2581,6 +2630,7 @@ async function exitHistoricalDisplay() {
 
   manualOverride = false;
   lastHash = "";
+  setHistoricalIndicator(null);
 
   await load();
 
@@ -3260,9 +3310,7 @@ function updateHistoryClock(){
     now.toLocaleTimeString(
       "en-PH",
       {
-        hour:"2-digit",
-        minute:"2-digit",
-        second:"2-digit"
+        hour: '2-digit', minute: '2-digit'
       }
     );
 
