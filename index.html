@@ -342,6 +342,27 @@
 
 
 
+
+
+/* Historical replay controls */
+#historyExitBtn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+body.history-viewing #historyExitBtn {
+  display: inline-flex;
+}
+
+#historicalIndicator {
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
 </style>
 
 </head>
@@ -442,6 +463,17 @@
         title="View a previous dashboard display"
       >
         ↶ PREVIOUS
+      </button>
+
+      <button
+        id="historyExitBtn"
+        class="history-picker-open"
+        type="button"
+        onclick="exitHistoricalDisplay()"
+        title="Return to the live dashboard"
+        style="display:none;"
+      >
+        ↻ RETURN TO LIVE
       </button>
 
       <div class="clock">
@@ -832,7 +864,7 @@
         onclick="pickHistoryTime()"
       >
         <span>TIME</span>
-        <b id="historyTimeValue">--:--</b>
+        <b id="historyTimeValue">--:00</b>
       </button>
 
     </div>
@@ -844,13 +876,37 @@
       onchange="historyDateChanged(this.value)"
     >
 
-    <input
+    <select
       id="historyTimeInput"
       class="history-native-input"
-      type="time"
-      step="1"
+      aria-label="Select replay hour"
       onchange="historyTimeChanged(this.value)"
     >
+      <option value="00:00">00:00</option>
+      <option value="01:00">01:00</option>
+      <option value="02:00">02:00</option>
+      <option value="03:00">03:00</option>
+      <option value="04:00">04:00</option>
+      <option value="05:00">05:00</option>
+      <option value="06:00">06:00</option>
+      <option value="07:00">07:00</option>
+      <option value="08:00">08:00</option>
+      <option value="09:00">09:00</option>
+      <option value="10:00">10:00</option>
+      <option value="11:00">11:00</option>
+      <option value="12:00">12:00</option>
+      <option value="13:00">13:00</option>
+      <option value="14:00">14:00</option>
+      <option value="15:00">15:00</option>
+      <option value="16:00">16:00</option>
+      <option value="17:00">17:00</option>
+      <option value="18:00">18:00</option>
+      <option value="19:00">19:00</option>
+      <option value="20:00">20:00</option>
+      <option value="21:00">21:00</option>
+      <option value="22:00">22:00</option>
+      <option value="23:00">23:00</option>
+    </select>
 
     <div id="historyAvailability" class="history-availability">
       Checking saved displays…
@@ -2229,7 +2285,7 @@ function openHistoryPicker() {
     );
 
   selectedHistoryTime =
-    now.toTimeString().slice(0, 8);
+    now.toTimeString().slice(0, 2) + ":00";
 
   const dateInput =
     document.getElementById(
@@ -2303,15 +2359,17 @@ function pickHistoryTime() {
 
   if (!input) return;
 
-  try {
-    if (input.showPicker) {
-      input.showPicker();
-    } else {
-      input.click();
-    }
-  } catch (e) {
-    input.click();
-  }
+  input.style.position = "fixed";
+  input.style.left = "50%";
+  input.style.top = "50%";
+  input.style.transform = "translate(-50%, -50%)";
+  input.style.width = "140px";
+  input.style.height = "300px";
+  input.style.opacity = "1";
+  input.style.pointerEvents = "auto";
+  input.style.zIndex = "10001";
+  input.size = 12;
+  input.focus();
 }
 
 function historyDateChanged(value) {
@@ -2326,7 +2384,25 @@ function historyDateChanged(value) {
 function historyTimeChanged(value) {
   if (!value) return;
 
-  selectedHistoryTime = value;
+  selectedHistoryTime =
+    String(value).slice(0, 2) + ":00";
+
+  const input =
+    document.getElementById(
+      "historyTimeInput"
+    );
+
+  if (input) {
+    input.style.opacity = "0";
+    input.style.pointerEvents = "none";
+    input.style.width = "1px";
+    input.style.height = "1px";
+    input.style.position = "absolute";
+    input.style.left = "";
+    input.style.top = "";
+    input.style.transform = "";
+    input.size = 1;
+  }
 
   updateHistoryPickerLabels();
   refreshHistoryAvailability();
@@ -2350,7 +2426,7 @@ function updateHistoryPickerLabels() {
 
   if (time) {
     time.textContent =
-      selectedHistoryTime || "--:--";
+      selectedHistoryTime || "--:00";
   }
 }
 
@@ -2412,7 +2488,7 @@ async function refreshHistoryAvailability() {
     new Date(
       selectedHistoryDate +
       "T" +
-      (selectedHistoryTime || "00:00:00") +
+      (selectedHistoryTime || "00:00") + ":00" +
       "+08:00"
     ).getTime();
 
@@ -2467,7 +2543,7 @@ async function viewSelectedHistory() {
     new Date(
       selectedHistoryDate +
       "T" +
-      (selectedHistoryTime || "00:00:00") +
+      (selectedHistoryTime || "00:00") + ":00" +
       "+08:00"
     ).getTime();
 
@@ -2572,49 +2648,24 @@ function setHistoricalIndicator(timestamp) {
     "HISTORICAL DISPLAY • " +
     dt.toLocaleDateString("en-PH", {day:"2-digit", month:"short", year:"numeric"}).toUpperCase() +
     " • " +
-    dt.toLocaleTimeString("en-PH", {hour:"2-digit", minute:"2-digit", second:"2-digit", hour12:false});
+    dt.toLocaleTimeString("en-PH", {hour:"2-digit", hour12:false});
   indicator.style.display = "flex";
 }
 
 function showHistoryExitButton() {
-  let button =
+  const button =
     document.getElementById(
       "historyExitBtn"
     );
 
-  if (!button) {
-    button =
-      document.createElement(
-        "button"
-      );
-
-    button.id =
-      "historyExitBtn";
-
-    button.className =
-      "switcher-btn";
-
-    button.type =
-      "button";
-
-    button.textContent =
-      "↻ LIVE NOW";
-
-    button.onclick =
-      exitHistoricalDisplay;
-
-    const switcher =
-      document.querySelector(
-        ".dashboard-switcher"
-      );
-
-    if (switcher) {
-      switcher.prepend(button);
-    }
+  if (button) {
+    button.style.display =
+      "inline-flex";
   }
 
-  button.style.display =
-    "block";
+  document.body.classList.add(
+    "history-viewing"
+  );
 }
 
 async function exitHistoricalDisplay() {
@@ -2627,6 +2678,10 @@ async function exitHistoricalDisplay() {
     button.style.display =
       "none";
   }
+
+  document.body.classList.remove(
+    "history-viewing"
+  );
 
   manualOverride = false;
   lastHash = "";
