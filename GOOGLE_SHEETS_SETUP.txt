@@ -15,3 +15,5 @@ The Google Sheet will automatically create the DashboardHistory tab.
 
 Retention: 7 days.
 Snapshot interval: up to every 30 seconds, only when dashboard data changes.
+
+IMPORTANT: Use the corrected app.js from this package; it contains the complete live dashboard rendering logic.

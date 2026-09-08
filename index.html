@@ -2337,7 +2337,7 @@ async function refreshHistoryAvailability() {
     !window.sharedHistoryConfigured()
   ) {
     status.textContent =
-      "Shared history is not configured yet. Add your Supabase URL and anon key to config.js.";
+      "Shared history is not configured yet. Add your Google Apps Script Web App URL to config.js.";
     return;
   }
 
@@ -2427,7 +2427,7 @@ async function viewSelectedHistory() {
     !window.sharedHistoryConfigured()
   ) {
     alert(
-      "Shared history is not configured. Please complete config.js first."
+      "Shared history is not configured. Please add your Google Apps Script Web App URL to config.js first."
     );
     return;
   }

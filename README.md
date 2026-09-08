@@ -1,6 +1,6 @@
 # Cement Loading Operations Dashboard — Google Sheets Shared History
 
-This version replaces Supabase with **Google Sheets + Google Apps Script**.
+This version uses **Google Sheets + Google Apps Script** for shared history. The full original dashboard rendering code is retained so `data.json` continues to power the live display.
 
 The GitHub Pages dashboard remains the frontend. Historical snapshots are stored in a Google Sheet, so the same history can be viewed from different computers/TVs.
 
@@ -104,3 +104,8 @@ The stored timestamps are ISO timestamps, so the dashboard can still display the
 ## Updating the dashboard
 
 Only `config.js` needs the Apps Script URL. The Google Sheet stays separate from GitHub, so your history does not accumulate in the GitHub repository.
+
+
+## IMPORTANT FIX
+
+This package restores the complete original `app.js`, including the live dashboard `render()` logic. The previous Google conversion accidentally omitted that code, which could leave the live dashboard blank. This package fixes that issue.
