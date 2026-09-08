@@ -547,8 +547,6 @@ body.history-viewing #returnLiveHeaderBtn{
         <strong id="previousDisplayTime">--:--</strong>
         <span id="previousDisplayDate">--</span>
       </span>
-</span>
-
     </div>
 
     <div
@@ -2735,6 +2733,8 @@ async function viewSelectedHistory() {
     }).format(replayDate).toUpperCase();
   }
 
+  window.setPreviousDisplayIndicator(match.timestamp);
+
   // Display the complete saved Dashboard 1 payload.
   if (
     typeof render === "function"
@@ -2748,7 +2748,6 @@ async function viewSelectedHistory() {
     );
 
     render(match.data);
-    window.setPreviousDisplayIndicator(match.timestamp);
 
     const sync =
       document.getElementById(
@@ -2767,7 +2766,6 @@ async function viewSelectedHistory() {
         "HISTORY • " + replayTime;
 
       if (typeof window.setPreviousDisplayIndicator === "function") {
-        window.setPreviousDisplayIndicator(match.timestamp);
       }
     }
 
@@ -4658,5 +4656,30 @@ startRotation();
 
 
 
+
+<script id="previous-display-indicator-script">
+(function(){
+  window.setPreviousDisplayIndicator = function(ts){
+    var badge=document.getElementById('previousDisplayBadge');
+    var time=document.getElementById('previousDisplayTime');
+    var date=document.getElementById('previousDisplayDate');
+    if(!badge || !time || !date) return;
+    var d=new Date(ts);
+    time.textContent=new Intl.DateTimeFormat('en-PH',{
+      timeZone:'Asia/Manila',hour:'2-digit',minute:'2-digit',hour12:false
+    }).format(d);
+    date.textContent=new Intl.DateTimeFormat('en-PH',{
+      timeZone:'Asia/Manila',day:'2-digit',month:'short',year:'numeric'
+    }).format(d).toUpperCase();
+    badge.style.setProperty('display','inline-flex','important');
+    document.body.classList.add('history-viewing');
+  };
+  window.clearPreviousDisplayIndicator = function(){
+    var badge=document.getElementById('previousDisplayBadge');
+    if(badge) badge.style.setProperty('display','none','important');
+    document.body.classList.remove('history-viewing');
+  };
+})();
+</script>
 </body>
 </html>
