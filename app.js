@@ -2,250 +2,27 @@ const REFRESH_MS = 10000;
 let lastHash = '';
 
 /* =========================================================
-   SHARED HISTORY / SUPABASE
+   SHARED HISTORY / GOOGLE SHEETS
    ========================================================= */
 
 const SHARED_HISTORY_CONFIG =
   window.SHARED_HISTORY_CONFIG || {};
 
-const SUPABASE_URL =
-  String(
-    SHARED_HISTORY_CONFIG.SUPABASE_URL || ""
-  ).replace(/\/+$/, "");
-
-const SUPABASE_ANON_KEY =
-  String(
-    SHARED_HISTORY_CONFIG.SUPABASE_ANON_KEY || ""
-  );
-
 const SHARED_HISTORY_RETENTION_DAYS =
-  Number(
-    SHARED_HISTORY_CONFIG.RETENTION_DAYS || 7
-  );
+  Number(SHARED_HISTORY_CONFIG.RETENTION_DAYS || 7);
 
 const SHARED_HISTORY_SAVE_INTERVAL_MS =
-  Number(
-    SHARED_HISTORY_CONFIG.SAVE_INTERVAL_MS || 30000
-  );
+  Number(SHARED_HISTORY_CONFIG.SAVE_INTERVAL_MS || 30000);
 
-let lastSharedHistoryPayload = "";
+let lastSharedHistoryPayload = '';
 let lastSharedHistorySaveAt = 0;
 
 function sharedHistoryConfigured() {
-  return (
-    SUPABASE_URL &&
-    SUPABASE_ANON_KEY &&
-    !SUPABASE_URL.includes("YOUR-PROJECT") &&
-    !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE")
-  );
-}
+  const url = String(
+    SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL || ''
+  ).trim();
 
-async function saveSharedHistorySnapshot(d) {
-  if (!sharedHistoryConfigured()) return;
-
-  const now = Date.now();
-
-  if (
-    now - lastSharedHistorySaveAt <
-    SHARED_HISTORY_SAVE_INTERVAL_MS
-  ) {
-    return;
-  }
-
-  const payload = JSON.stringify(d);
-
-  // Do not repeatedly store identical data.
-  if (payload === lastSharedHistoryPayload) return;
-
-  const recordedAt =
-    d.updated_at || new Date(now).toISOString();
-
-  try {
-    const response =
-      await fetch(
-        SUPABASE_URL +
-        "/rest/v1/dashboard_history",
-        {
-          method: "POST",
-          headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization":
-              "Bearer " + SUPABASE_ANON_KEY,
-            "Content-Type":
-              "application/json",
-            "Prefer":
-              "return=minimal"
-          },
-          body: JSON.stringify({
-            recorded_at: recordedAt,
-            payload: d
-          })
-        }
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        "HTTP " + response.status
-      );
-    }
-
-    lastSharedHistoryPayload = payload;
-    lastSharedHistorySaveAt = now;
-
-    // Opportunistic cleanup.
-    cleanupSharedHistory();
-
-  } catch (error) {
-    console.warn(
-      "[Shared History] Save failed:",
-      error
-    );
-  }
-}
-
-async function loadSharedHistory(
-  startIso,
-  endIso
-) {
-  if (!sharedHistoryConfigured()) {
-    return [];
-  }
-
-  try {
-    const url =
-      SUPABASE_URL +
-      "/rest/v1/dashboard_history" +
-      "?select=id,recorded_at,payload" +
-      "&recorded_at=gte." +
-      encodeURIComponent(startIso) +
-      "&recorded_at=lte." +
-      encodeURIComponent(endIso) +
-      "&order=recorded_at.asc" +
-      "&limit=5000";
-
-    const response =
-      await fetch(
-        url,
-        {
-          headers: {
-            "apikey": SUPABASE_ANON_KEY,
-            "Authorization":
-              "Bearer " + SUPABASE_ANON_KEY
-          },
-          cache: "no-store"
-        }
-      );
-
-    if (!response.ok) {
-      throw new Error(
-        "HTTP " + response.status
-      );
-    }
-
-    const rows =
-      await response.json();
-
-    return Array.isArray(rows)
-      ? rows
-      : [];
-
-  } catch (error) {
-    console.warn(
-      "[Shared History] Load failed:",
-      error
-    );
-
-    return [];
-  }
-}
-
-async function cleanupSharedHistory() {
-  if (!sharedHistoryConfigured()) return;
-
-  const cutoff =
-    new Date(
-      Date.now() -
-      SHARED_HISTORY_RETENTION_DAYS *
-      24 *
-      60 *
-      60 *
-      1000
-    ).toISOString();
-
-  try {
-    await fetch(
-      SUPABASE_URL +
-      "/rest/v1/dashboard_history" +
-      "?recorded_at=lt." +
-      encodeURIComponent(cutoff),
-      {
-        method: "DELETE",
-        headers: {
-          "apikey": SUPABASE_ANON_KEY,
-          "Authorization":
-            "Bearer " + SUPABASE_ANON_KEY
-        }
-      }
-    );
-  } catch (error) {
-    console.warn(
-      "[Shared History] Cleanup failed:",
-      error
-    );
-  }
-}
-
-window.loadSharedHistory =
-  loadSharedHistory;
-
-window.sharedHistoryConfigured =
-  sharedHistoryConfigured;
-
-
-
-const SHARED_HISTORY_CONFIG =
-  window.SHARED_HISTORY_CONFIG || {};
-
-const SHARED_HISTORY_RETENTION_DAYS =
-  Number(
-    SHARED_HISTORY_CONFIG.RETENTION_DAYS || 7
-  );
-
-const SHARED_HISTORY_SAVE_INTERVAL_MS =
-  Number(
-    SHARED_HISTORY_CONFIG.SAVE_INTERVAL_MS || 30000
-  );
-
-let lastSharedHistoryPayload = "";
-let lastSharedHistorySaveAt = 0;
-
-function sharedHistoryConfigured() {
-  const c = window.SHARED_HISTORY_CONFIG || {};
-  return !!c.APPS_SCRIPT_URL &&
-         !String(c.APPS_SCRIPT_URL).includes("YOUR_DEPLOYMENT_ID");
-}
-
-function sharedHistoryUrl(params = {}) {
-  const base =
-    String(
-      (window.SHARED_HISTORY_CONFIG || {}).APPS_SCRIPT_URL || ""
-    ).trim();
-
-  if (!base) return "";
-
-  const url = new URL(base);
-
-  Object.entries(params).forEach(([key, value]) => {
-    if (
-      value !== undefined &&
-      value !== null &&
-      value !== ""
-    ) {
-      url.searchParams.set(key, value);
-    }
-  });
-
-  return url.toString();
+  return !!url && !url.includes('YOUR_DEPLOYMENT_ID');
 }
 
 async function saveSharedHistorySnapshot(d) {
@@ -254,111 +31,67 @@ async function saveSharedHistorySnapshot(d) {
   const now = Date.now();
   const payload = JSON.stringify(d);
 
-  // Save only when the dashboard data changed.
   if (payload === lastSharedHistoryPayload) return;
-
-  // Avoid saving too frequently.
-  if (
-    now - lastSharedHistorySaveAt <
-    SHARED_HISTORY_SAVE_INTERVAL_MS
-  ) {
-    return;
-  }
+  if (now - lastSharedHistorySaveAt < SHARED_HISTORY_SAVE_INTERVAL_MS) return;
 
   try {
-    await fetch(
-      sharedHistoryUrl(),
-      {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({
-          action: "save",
-          recorded_at:
-            new Date().toISOString(),
-          payload: d
-        })
-      }
-    );
+    await fetch(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        action: 'save',
+        recorded_at: new Date().toISOString(),
+        payload: d
+      })
+    });
 
-    // With no-cors the response is opaque, so we treat a completed
-    // request as submitted successfully.
     lastSharedHistoryPayload = payload;
     lastSharedHistorySaveAt = now;
-
   } catch (error) {
-    console.warn(
-      "[Shared History] Google Sheets save failed:",
-      error
-    );
+    console.warn('[Shared History] Google Sheets save failed:', error);
   }
 }
 
-async function loadSharedHistory(
-  startIso,
-  endIso
-) {
-  if (!sharedHistoryConfigured()) {
-    return [];
-  }
+async function loadSharedHistory(startIso, endIso) {
+  if (!sharedHistoryConfigured()) return [];
 
   try {
-    const response =
-      await fetch(
-        sharedHistoryUrl({
-          action: "history",
-          start: startIso,
-          end: endIso
-        }),
-        {
-          cache: "no-store"
-        }
-      );
+    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
+    url.searchParams.set('action', 'history');
+    url.searchParams.set('start', startIso);
+    url.searchParams.set('end', endIso);
+
+    const response = await fetch(url.toString(), {
+      cache: 'no-store'
+    });
 
     if (!response.ok) {
-      throw new Error(
-        "HTTP " + response.status
-      );
+      throw new Error('HTTP ' + response.status);
     }
 
-    const result =
-      await response.json();
+    const result = await response.json();
 
     if (!result.ok) {
-      throw new Error(
-        result.error ||
-        "History request failed"
-      );
+      throw new Error(result.error || 'History request failed');
     }
 
-    return Array.isArray(result.rows)
-      ? result.rows
-      : [];
-
+    return Array.isArray(result.rows) ? result.rows : [];
   } catch (error) {
-    console.warn(
-      "[Shared History] Google Sheets load failed:",
-      error
-    );
-
+    console.warn('[Shared History] Google Sheets load failed:', error);
     return [];
   }
 }
 
 async function cleanupSharedHistory() {
-  // Cleanup is performed by Apps Script after each save.
+  // Old records are cleaned up by Google Apps Script after a save.
   return;
 }
 
-window.loadSharedHistory =
-  loadSharedHistory;
-
-window.sharedHistoryConfigured =
-  sharedHistoryConfigured;
-
+window.loadSharedHistory = loadSharedHistory;
+window.sharedHistoryConfigured = sharedHistoryConfigured;
 
 const $ = id => document.getElementById(id);
 
