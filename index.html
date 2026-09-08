@@ -160,6 +160,52 @@
    END MONTHLY VARIANCE
    ========================================================= */
 /* =========================================================
+   REPLAY TIME + RETURN TO LIVE
+   ========================================================= */
+
+.replay-time-display {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 104px;
+  padding: 4px 8px;
+  line-height: 1.05;
+  border: 1px solid rgba(255,184,77,.55);
+  border-radius: 5px;
+  background: rgba(45,25,5,.94);
+  color: #ffd27a;
+  box-shadow: 0 3px 12px rgba(0,0,0,.35);
+}
+
+.replay-time-display span {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.replay-time-display b {
+  margin-top: 2px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+#historyExitBtn {
+  display: inline-flex !important;
+  background: linear-gradient(135deg, rgba(70,190,105,.28), rgba(58,204,255,.20));
+  border-color: rgba(105,230,165,.55);
+  color: #eafff2;
+}
+
+.history-hour-select {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+/* =========================================================
    PREVIOUS DISPLAY PICKER
    ========================================================= */
 
@@ -433,7 +479,12 @@ body.history-viewing #historyExitBtn {
 
     </div>
 
-    <div style="display:flex;align-items:center;">
+    <div style="display:flex;align-items:center;gap:10px;">
+
+      <div id="replayTimeDisplay" class="replay-time-display" aria-live="polite" style="display:none;">
+        <span>PREVIOUS DISPLAY</span>
+        <b id="replayTimeText">--:00</b>
+      </div>
 
       <div class="dashboard-switcher">
 
@@ -471,7 +522,6 @@ body.history-viewing #historyExitBtn {
         type="button"
         onclick="exitHistoricalDisplay()"
         title="Return to the live dashboard"
-        style="display:none;"
       >
         ↻ RETURN TO LIVE
       </button>
@@ -878,7 +928,7 @@ body.history-viewing #historyExitBtn {
 
     <select
       id="historyTimeInput"
-      class="history-native-input"
+      class="history-hour-select"
       aria-label="Select replay hour"
       onchange="historyTimeChanged(this.value)"
     >
@@ -2352,24 +2402,10 @@ function pickHistoryDate() {
 }
 
 function pickHistoryTime() {
-  const input =
-    document.getElementById(
-      "historyTimeInput"
-    );
-
+  const input = document.getElementById("historyTimeInput");
   if (!input) return;
-
-  input.style.position = "fixed";
-  input.style.left = "50%";
-  input.style.top = "50%";
-  input.style.transform = "translate(-50%, -50%)";
-  input.style.width = "140px";
-  input.style.height = "300px";
-  input.style.opacity = "1";
-  input.style.pointerEvents = "auto";
-  input.style.zIndex = "10001";
-  input.size = 12;
   input.focus();
+  input.click();
 }
 
 function historyDateChanged(value) {
@@ -2620,14 +2656,14 @@ async function viewSelectedHistory() {
       );
 
     if (sync) {
+      const replayHour = new Intl.DateTimeFormat("en-PH", {
+        hour: "2-digit",
+        hour12: false,
+        timeZone: "Asia/Manila"
+      }).format(new Date(match.timestamp));
+
       sync.textContent =
-        "HISTORY • " +
-        new Date(
-          match.timestamp
-        ).toLocaleString(
-          "en-PH",
-          { hour12:false }
-        );
+        "HISTORY • " + replayHour + ":00";
     }
 
     setHistoricalIndicator(match.timestamp);
@@ -2635,20 +2671,57 @@ async function viewSelectedHistory() {
   }
 }
 
+function setReplayTimeDisplay(timestamp) {
+  const box = document.getElementById("replayTimeDisplay");
+  const value = document.getElementById("replayTimeText");
+  if (!box || !value) return;
+
+  if (!timestamp) {
+    box.style.display = "none";
+    value.textContent = "--:00";
+    return;
+  }
+
+  const hour = new Intl.DateTimeFormat("en-PH", {
+    hour: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Manila"
+  }).format(new Date(timestamp));
+
+  value.textContent = hour + ":00";
+  box.style.display = "flex";
+}
+
 function setHistoricalIndicator(timestamp) {
   const indicator = document.getElementById("historicalIndicator");
   const text = document.getElementById("historicalIndicatorText");
+
   if (!indicator || !text) return;
+
   if (!timestamp) {
     indicator.style.display = "none";
+    setReplayTimeDisplay(null);
     return;
   }
+
   const dt = new Date(timestamp);
+  const hour = new Intl.DateTimeFormat("en-PH", {
+    hour: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Manila"
+  }).format(dt);
+
+  const dateText = dt.toLocaleDateString("en-PH", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    timeZone: "Asia/Manila"
+  }).toUpperCase();
+
   text.textContent =
-    "HISTORICAL DISPLAY • " +
-    dt.toLocaleDateString("en-PH", {day:"2-digit", month:"short", year:"numeric"}).toUpperCase() +
-    " • " +
-    dt.toLocaleTimeString("en-PH", {hour:"2-digit", hour12:false});
+    "HISTORICAL DISPLAY • " + dateText + " • " + hour + ":00";
+
+  setReplayTimeDisplay(timestamp);
   indicator.style.display = "flex";
 }
 
