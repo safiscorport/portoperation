@@ -1,21 +1,7 @@
-/*
- * Shared history configuration
- *
- * Replace these two values with the values from:
- * Supabase Project -> Settings -> API
- *
- * IMPORTANT:
- * Use the anon/public key only.
- * NEVER put the service_role key in this file.
- */
 window.SHARED_HISTORY_CONFIG = {
-  SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR_SUPABASE_ANON_KEY",
+  // Paste the deployed Google Apps Script Web App /exec URL here.
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec",
 
-  // Keep 7 days of history. Old records are never kept forever.
   RETENTION_DAYS: 7,
-
-  // Save only when the dashboard data changes.
-  // This avoids unnecessary database growth.
-  SAVE_INTERVAL_MS: 30000
+  SAVE_INTERVAL_MS: 1800000
 };

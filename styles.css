@@ -1909,27 +1909,3 @@ body,
     grid-template-columns: 1fr;
   }
 }
-
-/* Replay controls: hour-only replay and clear return-to-live action */
-.history-return-live-top {
-  background: linear-gradient(135deg, rgba(35, 180, 90, .24), rgba(35, 150, 100, .16));
-  border: 1px solid rgba(110, 235, 150, .45);
-  color: #eafff0;
-  border-radius: 6px;
-  padding: 6px 11px;
-  margin-right: 10px;
-  font-size: .72rem;
-  font-weight: 900;
-  letter-spacing: .06em;
-  cursor: pointer;
-  white-space: nowrap;
-}
-.history-return-live-top:hover {
-  border-color: rgba(140, 255, 180, .85);
-}
-.history-hour-select {
-  appearance: auto;
-  min-height: 42px;
-  font-weight: 800;
-  font-size: 1rem;
-}
