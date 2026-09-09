@@ -32,3 +32,13 @@ Replay mode uses an hour-only selector and shows a prominent PREVIOUS DISPLAY ba
 ## Replay picker update
 
 The previous-display picker now uses **hour + minute** (`HH:MM`) and removes seconds. The replay identification is displayed at the **top-left next to the logo**, showing the saved display date and time. A **RETURN TO LIVE** button is placed with the dashboard controls.
+
+
+IMPORTANT REPLAY BEHAVIOR
+- Google Sheets history now saves a complete dashboard snapshot every 30 minutes.
+- Identical dashboard data is intentionally saved again each minute.
+- This allows PREVIOUS to return the display for the selected HH:MM instead of repeatedly returning the first/only saved time.
+- Existing history remains usable; new minute-by-minute snapshots start accumulating after this version is deployed.
+
+
+30-MINUTE REPLAY: a complete dashboard snapshot is saved every 30 minutes, even when the displayed data has not changed.

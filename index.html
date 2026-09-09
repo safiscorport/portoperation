@@ -2630,14 +2630,15 @@ async function refreshHistoryAvailability() {
     return;
   }
 
+  const foundTime = new Intl.DateTimeFormat("en-PH", {
+    timeZone: "Asia/Manila",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false
+  }).format(new Date(match.timestamp));
+
   status.textContent =
-    "Closest saved display: " +
-    new Date(
-      match.timestamp
-    ).toLocaleString(
-      "en-PH",
-      { hour12:false }
-    );
+    "Saved display found: " + foundTime;
 }
 
 async function viewSelectedHistory() {
