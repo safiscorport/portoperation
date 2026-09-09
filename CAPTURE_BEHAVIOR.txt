@@ -1,0 +1,36 @@
+CLOUD CAPTURE VERIFICATION
+
+This package is the complete dashboard package.
+
+Cloud capture behavior:
+- Google Apps Script captures data every 30 minutes.
+- A new row is written every trigger run.
+- It does NOT require data.json to change.
+- Identical data.json content still produces a new snapshot.
+- The dashboard/TV does not need to be open.
+- The Apps Script trigger runs independently in Google's cloud.
+
+One-time setup:
+1. Open your Google Sheet.
+2. Extensions -> Apps Script.
+3. Replace Code.gs with GoogleAppsScript_Code.gs.
+4. Check DATA_URL in GoogleAppsScript_Code.gs and make sure it is your real GitHub Pages data.json URL.
+5. Run setup30MinuteTrigger() once and authorize it.
+6. Deploy -> New deployment -> Web app.
+7. Execute as: Me.
+8. Who has access: Anyone.
+9. Copy the /exec URL into config.js as APPS_SCRIPT_URL.
+10. Upload all dashboard files to the same GitHub Pages folder.
+
+The package includes:
+- index.html
+- app.js
+- styles.css
+- data.json
+- logo.png
+- config.js
+- config.js.example
+- GoogleAppsScript_Code.gs
+- GOOGLE_SHEETS_SETUP.txt
+- README.md
+- FIX_NOTE.txt
