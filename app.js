@@ -90,33 +90,8 @@ async function cleanupSharedHistory() {
   return;
 }
 
-async function loadLatestCaptureTime() {
-  const el = document.getElementById('previousCaptureTime');
-  if (!el || !sharedHistoryConfigured()) return;
-
-  try {
-    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
-    url.searchParams.set('action', 'latest');
-    url.searchParams.set('_', Date.now());
-
-    const response = await fetch(url.toString(), { cache: 'no-store' });
-    if (!response.ok) throw new Error('HTTP ' + response.status);
-
-    const result = await response.json();
-    if (!result.ok || !result.recorded_at) return;
-
-    el.textContent = new Date(result.recorded_at).toLocaleString('en-PH', {
-      month: 'short', day: '2-digit', year: 'numeric',
-      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
-    });
-  } catch (error) {
-    console.warn('[Shared History] Latest capture load failed:', error);
-  }
-}
-
 window.loadSharedHistory = loadSharedHistory;
 window.sharedHistoryConfigured = sharedHistoryConfigured;
-window.loadLatestCaptureTime = loadLatestCaptureTime;
 
 const $ = id => document.getElementById(id);
 
@@ -956,7 +931,10 @@ async function load() {
 
       lastHash = h;
 
-      render(d);
+      // Do not overwrite a selected historical display with live data.
+      if (!document.body.classList.contains('history-viewing')) {
+        render(d);
+      }
 
     }
 
@@ -1017,14 +995,8 @@ setInterval(
 );
 
 load();
-loadLatestCaptureTime();
 
 setInterval(
   load,
   REFRESH_MS
-);
-
-setInterval(
-  loadLatestCaptureTime,
-  60000
 );

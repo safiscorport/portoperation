@@ -347,11 +347,6 @@
         alt="Logo"
         style="height:40px;object-fit:contain;"
       >
-
-      <div class="previous-capture" title="Latest dashboard snapshot saved in the cloud">
-        <span class="previous-capture-label">PREV CAPTURE</span>
-        <span id="previousCaptureTime">--</span>
-      </div>
     </div>
 
     <div
@@ -416,6 +411,21 @@
         title="View a previous dashboard display"
       >
         ↶ PREVIOUS
+      </button>
+
+      <div id="reviewInfo" class="review-info" aria-live="polite">
+        <span class="review-label">REVIEW TIME</span>
+        <span id="reviewTimeText">--</span>
+      </div>
+
+      <button
+        id="headerReturnLiveBtn"
+        class="header-return-live"
+        type="button"
+        onclick="returnToLiveDisplay()"
+        title="Return to the current live dashboard"
+      >
+        ↻ RETURN TO LIVE
       </button>
 
       <div class="clock">
@@ -1940,9 +1950,8 @@
           class="history-return-live"
           type="button"
           onclick="returnToLiveDisplay()"
-          title="Return immediately to the live dashboard"
         >
-          ↻ RETURN TO LIVE
+          ↻ LIVE NOW
         </button>
 
         <div class="dashboard-switcher">
@@ -2187,6 +2196,46 @@
 
 let selectedHistoryDate = "";
 let selectedHistoryTime = "";
+let historicalMode = false;
+let historicalRecordedAt = null;
+
+function setHistoricalHeader(recordedAt) {
+  historicalMode = true;
+  historicalRecordedAt = recordedAt || null;
+  document.body.classList.add("history-viewing");
+
+  const info = document.getElementById("reviewInfo");
+  const text = document.getElementById("reviewTimeText");
+  const returnBtn = document.getElementById("headerReturnLiveBtn");
+
+  if (info) info.classList.add("show");
+  if (returnBtn) returnBtn.classList.add("show");
+
+  if (text) {
+    const dt = new Date(recordedAt);
+    text.textContent = Number.isFinite(dt.getTime())
+      ? dt.toLocaleString("en-PH", {
+          year: "numeric", month: "short", day: "2-digit",
+          hour: "2-digit", minute: "2-digit", second: "2-digit",
+          hour12: false
+        })
+      : "--";
+  }
+}
+
+function clearHistoricalHeader() {
+  historicalMode = false;
+  historicalRecordedAt = null;
+
+  const info = document.getElementById("reviewInfo");
+  const text = document.getElementById("reviewTimeText");
+  const returnBtn = document.getElementById("headerReturnLiveBtn");
+
+  if (info) info.classList.remove("show");
+  if (returnBtn) returnBtn.classList.remove("show");
+  if (text) text.textContent = "--";
+}
+
 
 function openHistoryPicker() {
   const picker =
@@ -2512,6 +2561,7 @@ async function viewSelectedHistory() {
     );
 
     render(match.data);
+    setHistoricalHeader(match.timestamp);
 
     const sync =
       document.getElementById(
@@ -2534,6 +2584,9 @@ async function viewSelectedHistory() {
 }
 
 function showHistoryExitButton() {
+  const headerButton = document.getElementById("headerReturnLiveBtn");
+  if (headerButton) headerButton.classList.add("show");
+
   let button =
     document.getElementById(
       "historyExitBtn"
@@ -2585,6 +2638,8 @@ async function exitHistoricalDisplay() {
       "none";
   }
 
+  clearHistoricalHeader();
+  document.body.classList.remove("history-viewing");
   manualOverride = false;
   lastHash = "";
 
@@ -2592,6 +2647,11 @@ async function exitHistoricalDisplay() {
 
   startRotation();
 }
+
+function returnToLiveDisplay() {
+  exitHistoricalDisplay();
+}
+
 
 document.addEventListener(
   "keydown",
@@ -4149,33 +4209,6 @@ function hideHistoryScreen(){
 
 
 /* =========================================================
-   RETURN TO LIVE DASHBOARD
-   ========================================================= */
-
-function returnToLiveDisplay(){
-
-  manualOverride = false;
-
-  clearTimeout(rotationTimer);
-  clearTimeout(historyTimer);
-  clearTimeout(window.resumeAutoTimer);
-
-  historicalMode = false;
-  document.body.classList.remove("history-viewing");
-
-  hideHistoryScreen();
-
-  lastHash = "";
-
-  // Immediately reload the newest live data.
-  load();
-
-  // Restart the normal 3-minute live -> graph rotation.
-  startRotation();
-}
-
-
-/* =========================================================
    MANUAL DASHBOARD SWITCH
    ========================================================= */
 
@@ -4201,7 +4234,7 @@ function manualSwitchDashboard(
     target === 1
   ){
 
-    historicalMode = false;
+    clearHistoricalHeader();
     document.body.classList.remove("history-viewing");
     hideHistoryScreen();
 

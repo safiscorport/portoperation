@@ -135,7 +135,7 @@ Then deploy/update the Apps Script Web App and put its `/exec` URL in
 
 DATA SOURCE:
 The Apps Script currently fetches:
-https://safiscorport.github.io/portoperation/data.json
+https://safisccport.github.io/portoperation/data.json
 
 If your live `data.json` is hosted at a different public address, change
 `DATA_URL` in `GoogleAppsScript_Code.gs`.

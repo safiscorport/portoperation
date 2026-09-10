@@ -21,7 +21,7 @@
  */
 
 const DATA_URL =
-  "https://safiscorport.github.io/portoperation/data.json";
+  "https://raw.githubusercontent.com/safiscorport/portoperation/main/data.json";
 
 const SHEET_NAME = "DashboardHistory";
 const RETENTION_DAYS = 7;
@@ -46,17 +46,16 @@ function doGet(e) {
       });
     }
 
-    if (action === "latest") {
-      const latest = getLatestHistory_();
-      return jsonOutput({
-        ok: true,
-        recorded_at: latest ? latest.recorded_at : null
-      });
-    }
-
     if (action === "capture") {
       const result = captureDashboardSnapshot_();
       return jsonOutput(result);
+    }
+
+    if (action === "latest") {
+      return jsonOutput({
+        ok: true,
+        row: getLatestHistory_()
+      });
     }
 
     return jsonOutput({
@@ -115,24 +114,22 @@ function doPost(e) {
  * RUN THIS ONCE manually from Apps Script.
  *
  * It creates a single time-driven trigger which runs approximately
- * every 5 minutes. Apps Script controls the exact execution minute.
+ * every 30 minutes. Apps Script controls the exact execution minute.
  */
 function setup5MinuteTrigger() {
-  const triggers =
-    ScriptApp.getProjectTriggers();
+  const triggers = ScriptApp.getProjectTriggers();
 
   triggers.forEach(function(trigger) {
+    const handler = trigger.getHandlerFunction();
     if (
-      trigger.getHandlerFunction() ===
-      "captureDashboardSnapshot"
+      handler === "captureDashboardSnapshot" ||
+      handler === "setup30MinuteTrigger"
     ) {
       ScriptApp.deleteTrigger(trigger);
     }
   });
 
-  ScriptApp.newTrigger(
-    "captureDashboardSnapshot"
-  )
+  ScriptApp.newTrigger("captureDashboardSnapshot")
     .timeBased()
     .everyMinutes(5)
     .create();
@@ -140,9 +137,12 @@ function setup5MinuteTrigger() {
   // Take one snapshot immediately so history starts now.
   captureDashboardSnapshot();
 
-  Logger.log(
-    "5-minute cloud capture trigger installed."
-  );
+  Logger.log("5-minute cloud capture trigger installed.");
+}
+
+// Backward-compatible alias for older instructions.
+function setup30MinuteTrigger() {
+  setup5MinuteTrigger();
 }
 
 /**
@@ -252,20 +252,6 @@ function saveHistory_(
   ]);
 }
 
-function getLatestHistory_() {
-  const sheet = getSheet_();
-  const lastRow = sheet.getLastRow();
-
-  if (lastRow < 2) return null;
-
-  const value = sheet.getRange(lastRow, 1).getValue();
-  return {
-    recorded_at: value instanceof Date
-      ? value.toISOString()
-      : new Date(value).toISOString()
-  };
-}
-
 function getHistory_(
   startIso,
   endIso
@@ -337,6 +323,28 @@ function getHistory_(
         new Date(b.recorded_at)
       );
     });
+}
+
+function getLatestHistory_() {
+  const sheet = getSheet_();
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 2) return null;
+
+  const row = sheet.getRange(lastRow, 1, 1, 2).getValues()[0];
+  const dt = row[0] instanceof Date ? row[0] : new Date(row[0]);
+
+  let payload = null;
+  try {
+    payload = JSON.parse(row[1]);
+  } catch (_) {}
+
+  if (!payload || !Number.isFinite(dt.getTime())) return null;
+
+  return {
+    recorded_at: dt.toISOString(),
+    payload: payload
+  };
 }
 
 function cleanupOldRows_() {

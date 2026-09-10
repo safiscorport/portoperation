@@ -135,6 +135,77 @@ body {
 
 
 /* =========================================================
+   HISTORICAL REVIEW HEADER
+   ========================================================= */
+
+.review-info {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  margin-right: 8px;
+  border: 1px solid rgba(255, 177, 71, .45);
+  border-radius: 6px;
+  background: rgba(75, 42, 8, .28);
+  color: #ffd59a;
+  white-space: nowrap;
+  box-shadow: inset 0 0 12px rgba(255, 160, 40, .05);
+}
+
+.review-info.show {
+  display: flex;
+}
+
+.review-label {
+  color: #ffb14a;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+#reviewTimeText {
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.header-return-live {
+  display: none;
+  border: 1px solid #ff9f35;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #9d4e08, #5b2d06);
+  color: #fff;
+  padding: 7px 11px;
+  margin-right: 8px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 0 14px rgba(255, 159, 53, .14);
+}
+
+.header-return-live.show {
+  display: inline-flex;
+  align-items: center;
+}
+
+.header-return-live:hover {
+  filter: brightness(1.18);
+}
+
+.history-return-live {
+  border: 1px solid #ff9f35;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #9d4e08, #5b2d06);
+  color: #fff;
+  padding: 7px 11px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+/* =========================================================
    CLOCK
    ========================================================= */
 
@@ -1908,64 +1979,4 @@ body,
   .shared-history-controls {
     grid-template-columns: 1fr;
   }
-}
-
-/* =========================================================
-   PREVIOUS CLOUD CAPTURE INDICATOR
-   ========================================================= */
-.previous-capture {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 2px;
-  margin-left: 10px;
-  padding-left: 10px;
-  border-left: 1px solid rgba(123,214,255,.25);
-  min-width: 145px;
-  line-height: 1.05;
-}
-
-.previous-capture-label {
-  color: #65d8ff;
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: .16em;
-}
-
-#previousCaptureTime {
-  color: #d9edf5;
-  font-size: 10px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-/* =========================================================
-   ALWAYS-VISIBLE RETURN TO LIVE BUTTON
-   ========================================================= */
-.history-return-live {
-  appearance: none;
-  border: 1px solid rgba(112,221,255,.7);
-  background: linear-gradient(135deg, rgba(38,170,214,.28), rgba(20,80,110,.45));
-  color: #e9fbff;
-  border-radius: 9px;
-  padding: 9px 14px;
-  font-size: 10px;
-  font-weight: 1000;
-  letter-spacing: .1em;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: 0 0 18px rgba(58,204,255,.12), inset 0 1px 0 rgba(255,255,255,.1);
-  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-}
-
-.history-return-live:hover {
-  transform: translateY(-1px);
-  background: linear-gradient(135deg, rgba(58,204,255,.45), rgba(20,123,168,.55));
-  box-shadow: 0 0 25px rgba(58,204,255,.25), inset 0 1px 0 rgba(255,255,255,.14);
-}
-
-@media(max-width:900px) {
-  .previous-capture { min-width: 110px; }
-  #previousCaptureTime { font-size: 8px; }
-  .history-return-live { padding: 7px 9px; font-size: 8px; }
 }
