@@ -134,109 +134,6 @@ body {
 }
 
 
-
-/* Review status is intentionally positioned beside the logo. */
-.logo-review-group {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-}
-
-.logo-review-group .review-info {
-  margin-right: 0;
-}
-
-.logo-review-group .header-return-live {
-  margin-right: 0;
-}
-
-@media (max-width: 900px) {
-  .logo-review-group {
-    gap: 4px;
-  }
-  .logo-review-group .review-info {
-    padding: 5px 7px;
-  }
-  .logo-review-group .header-return-live {
-    padding: 6px 8px;
-  }
-}
-
-/* =========================================================
-   HISTORICAL REVIEW HEADER
-   ========================================================= */
-
-.review-info {
-  display: none;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 10px;
-  margin-right: 8px;
-  border: 1px solid rgba(255, 177, 71, .45);
-  border-radius: 6px;
-  background: rgba(75, 42, 8, .28);
-  color: #ffd59a;
-  white-space: nowrap;
-  box-shadow: inset 0 0 12px rgba(255, 160, 40, .05);
-}
-
-.review-info.show {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
-
-.review-label {
-  color: #ffb14a;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .12em;
-}
-
-#reviewTimeText {
-  font-size: 11px;
-  font-weight: 900;
-}
-
-.header-return-live {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid #ff9f35;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #9d4e08, #5b2d06);
-  color: #fff;
-  padding: 7px 11px;
-  margin-right: 8px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: 0 0 14px rgba(255, 159, 53, .14);
-}
-
-.header-return-live.show {
-  display: inline-flex;
-  align-items: center;
-}
-
-.header-return-live:hover {
-  filter: brightness(1.18);
-}
-
-.history-return-live {
-  border: 1px solid #ff9f35;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #9d4e08, #5b2d06);
-  color: #fff;
-  padding: 7px 11px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  cursor: pointer;
-}
-
 /* =========================================================
    CLOCK
    ========================================================= */
@@ -2013,60 +1910,26 @@ body,
   }
 }
 
-
-/* =========================================================
-   PREVIOUS DISPLAY REVIEW TIMESTAMP
-   Exact saved snapshot time, positioned immediately left of
-   the CEMENT LOADING title.
-   ========================================================= */
-
-#previousReviewStamp {
-  display: none;
-  visibility: hidden;
-  opacity: 0;
-
-  position: fixed !important;
-  top: 7px !important;
-  left: 375px !important;
-
-  z-index: 2147483647 !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  width: max-content !important;
-  min-width: 0 !important;
-  max-width: none !important;
-  height: auto !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-
-  color: #ffffff !important;
-
-  font-family: "Segoe UI", Arial, sans-serif !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  line-height: 1.2 !important;
-
-  white-space: nowrap !important;
-  overflow: visible !important;
-  pointer-events: none !important;
+/* Replay controls: hour-only replay and clear return-to-live action */
+.history-return-live-top {
+  background: linear-gradient(135deg, rgba(35, 180, 90, .24), rgba(35, 150, 100, .16));
+  border: 1px solid rgba(110, 235, 150, .45);
+  color: #eafff0;
+  border-radius: 6px;
+  padding: 6px 11px;
+  margin-right: 10px;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  cursor: pointer;
+  white-space: nowrap;
 }
-
-#previousReviewStamp.show,
-body.history-viewing #previousReviewStamp {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+.history-return-live-top:hover {
+  border-color: rgba(140, 255, 180, .85);
 }
-
-@media screen and (max-width: 1199px) {
-  #previousReviewStamp,
-  body.history-viewing #previousReviewStamp {
-    left: 250px !important;
-    top: 6px !important;
-    font-size: 11px !important;
-  }
+.history-hour-select {
+  appearance: auto;
+  min-height: 42px;
+  font-weight: 800;
+  font-size: 1rem;
 }

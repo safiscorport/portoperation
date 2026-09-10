@@ -93,10 +93,6 @@ async function cleanupSharedHistory() {
 window.loadSharedHistory = loadSharedHistory;
 window.sharedHistoryConfigured = sharedHistoryConfigured;
 
-/* =========================================================
-   LAST CLOUD CAPTURE DISPLAY
-   ========================================================= */
-
 const $ = id => document.getElementById(id);
 
 const num = v =>
@@ -935,10 +931,7 @@ async function load() {
 
       lastHash = h;
 
-      // Do not overwrite a selected historical display with live data.
-      if (!document.body.classList.contains('history-viewing')) {
-        render(d);
-      }
+      render(d);
 
     }
 
@@ -952,7 +945,6 @@ async function load() {
   }
 
 }
-
 
 
 /* =========================================================
@@ -1005,48 +997,3 @@ setInterval(
   load,
   REFRESH_MS
 );
-
-
-/* =========================================================
-   PREVIOUS DISPLAY REVIEW TIME
-   ========================================================= */
-
-window.setPreviousReviewTime = function(recordedAt) {
-  let stamp = document.getElementById('previousReviewStamp');
-
-  if (!stamp) {
-    stamp = document.createElement('div');
-    stamp.id = 'previousReviewStamp';
-    document.body.appendChild(stamp);
-  }
-
-  const dt = new Date(recordedAt);
-
-  stamp.textContent = Number.isFinite(dt.getTime())
-    ? 'REVIEW TIME: ' + dt.toLocaleString('en-PH', {
-        month: 'long',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      })
-    : 'REVIEW TIME: --';
-
-  stamp.classList.add('show');
-  stamp.style.display = 'block';
-  stamp.style.visibility = 'visible';
-  stamp.style.opacity = '1';
-};
-
-window.clearPreviousReviewTime = function() {
-  const stamp = document.getElementById('previousReviewStamp');
-
-  if (stamp) {
-    stamp.textContent = '';
-    stamp.classList.remove('show');
-    stamp.style.display = 'none';
-    stamp.style.visibility = 'hidden';
-    stamp.style.opacity = '0';
-  }
-};
-
