@@ -88,6 +88,52 @@ body {
 
 
 /* =========================================================
+   PREVIOUS CLOUD CAPTURE
+   ========================================================= */
+
+.previous-capture {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 118px;
+  padding-left: 10px;
+  margin-left: 2px;
+  border-left: 1px solid rgba(123,214,255,.25);
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.previous-capture-label {
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  color: #70ddff;
+}
+
+.previous-capture-time {
+  margin-top: 3px;
+  font-size: clamp(14px, 1vw, 20px);
+  font-weight: 900;
+  letter-spacing: .04em;
+  color: #f2fbff;
+}
+
+.previous-capture-date {
+  margin-top: 2px;
+  font-size: 8px;
+  font-weight: 800;
+  color: rgba(225,242,250,.55);
+}
+
+.previous-capture-state {
+  margin-top: 2px;
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  color: rgba(105,230,165,.75);
+}
+
+/* =========================================================
    LIVE DOT
    ========================================================= */
 
@@ -1908,4 +1954,35 @@ body,
   .shared-history-controls {
     grid-template-columns: 1fr;
   }
+}
+
+
+/* =========================================================
+   RETURN TO LIVE BUTTON
+   ========================================================= */
+
+.history-return-live {
+  border: 1px solid rgba(105,230,165,.42);
+  background: linear-gradient(135deg, rgba(105,230,165,.18), rgba(58,204,255,.14));
+  color: #dffff0;
+  border-radius: 10px;
+  padding: 10px 15px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  cursor: pointer;
+  box-shadow: 0 0 18px rgba(105,230,165,.08);
+  transition: .2s ease;
+  white-space: nowrap;
+}
+
+.history-return-live:hover {
+  color: #fff;
+  border-color: rgba(105,230,165,.85);
+  transform: translateY(-1px);
+  box-shadow: 0 0 24px rgba(105,230,165,.18);
+}
+
+.history-return-live:active {
+  transform: translateY(0);
 }

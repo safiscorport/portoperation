@@ -347,6 +347,13 @@
         alt="Logo"
         style="height:40px;object-fit:contain;"
       >
+
+      <div class="previous-capture" title="Time of the most recent cloud dashboard snapshot">
+        <div class="previous-capture-label">PREV CAPTURE</div>
+        <div id="previousCaptureTime" class="previous-capture-time">--:--:--</div>
+        <div id="previousCaptureDate" class="previous-capture-date">NO CLOUD SNAPSHOT</div>
+        <div id="previousCaptureState" class="previous-capture-state">CLOUD CAPTURE OFFLINE</div>
+      </div>
     </div>
 
     <div
@@ -4141,6 +4148,32 @@ function hideHistoryScreen(){
 
 }
 
+
+/* =========================================================
+   RETURN TO LIVE DASHBOARD
+   ========================================================= */
+
+async function returnToLiveDisplay(){
+  manualOverride = false;
+
+  clearTimeout(rotationTimer);
+  clearTimeout(historyTimer);
+  clearTimeout(window.resumeAutoTimer);
+
+  const exitButton = document.getElementById("historyExitBtn");
+  if (exitButton) exitButton.style.display = "none";
+
+  historicalMode = false;
+  document.body.classList.remove("history-viewing");
+
+  hideHistoryScreen();
+  lastHash = "";
+
+  await load();
+  await refreshPreviousCaptureDisplay();
+
+  startRotation();
+}
 
 /* =========================================================
    MANUAL DASHBOARD SWITCH

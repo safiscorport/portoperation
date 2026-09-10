@@ -51,6 +51,14 @@ function doGet(e) {
       return jsonOutput(result);
     }
 
+    if (action === "latest") {
+      const row = getLatestHistory_();
+      return jsonOutput({
+        ok: true,
+        row: row
+      });
+    }
+
     return jsonOutput({
       ok: true,
       service: "cement-dashboard-history",
@@ -242,6 +250,28 @@ function saveHistory_(
       : new Date(recordedAt),
     JSON.stringify(payload)
   ]);
+}
+
+function getLatestHistory_() {
+  const sheet = getSheet_();
+  const lastRow = sheet.getLastRow();
+
+  if (lastRow < 2) return null;
+
+  const row = sheet.getRange(lastRow, 1, 1, 2).getValues()[0];
+  const dt = row[0] instanceof Date ? row[0] : new Date(row[0]);
+
+  let payload = null;
+  try {
+    payload = JSON.parse(row[1]);
+  } catch (_) {}
+
+  if (!Number.isFinite(dt.getTime()) || payload === null) return null;
+
+  return {
+    recorded_at: dt.toISOString(),
+    payload: payload
+  };
 }
 
 function getHistory_(

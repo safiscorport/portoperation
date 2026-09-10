@@ -93,6 +93,79 @@ async function cleanupSharedHistory() {
 window.loadSharedHistory = loadSharedHistory;
 window.sharedHistoryConfigured = sharedHistoryConfigured;
 
+/* =========================================================
+   LAST CLOUD CAPTURE / PREVIOUS DISPLAY TIME
+   ========================================================= */
+
+async function loadLatestSharedHistory() {
+  if (!sharedHistoryConfigured()) return null;
+
+  try {
+    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
+    url.searchParams.set('action', 'latest');
+    url.searchParams.set('_', Date.now());
+
+    const response = await fetch(url.toString(), {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+    const result = await response.json();
+    if (!result.ok || !result.row) return null;
+
+    return result.row;
+  } catch (error) {
+    console.warn('[Shared History] Latest capture load failed:', error);
+    return null;
+  }
+}
+
+function formatPreviousCaptureTime(iso) {
+  if (!iso) return '--:--:--';
+
+  const d = new Date(iso);
+  if (!Number.isFinite(d.getTime())) return '--:--:--';
+
+  return d.toLocaleTimeString('en-PH', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
+  });
+}
+
+function updatePreviousCaptureDisplay(row) {
+  const timeEl = $('previousCaptureTime');
+  const dateEl = $('previousCaptureDate');
+  const stateEl = $('previousCaptureState');
+
+  if (!timeEl) return;
+
+  if (!row || !row.recorded_at) {
+    timeEl.textContent = '--:--:--';
+    if (dateEl) dateEl.textContent = 'NO CLOUD SNAPSHOT';
+    if (stateEl) stateEl.textContent = 'CLOUD CAPTURE OFFLINE';
+    return;
+  }
+
+  const d = new Date(row.recorded_at);
+  timeEl.textContent = formatPreviousCaptureTime(row.recorded_at);
+  if (dateEl) {
+    dateEl.textContent = d.toLocaleDateString('en-PH', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+  }
+  if (stateEl) stateEl.textContent = 'LAST CLOUD CAPTURE';
+}
+
+async function refreshPreviousCaptureDisplay() {
+  const row = await loadLatestSharedHistory();
+  updatePreviousCaptureDisplay(row);
+}
+
+window.refreshPreviousCaptureDisplay = refreshPreviousCaptureDisplay;
+
 const $ = id => document.getElementById(id);
 
 const num = v =>
@@ -992,8 +1065,14 @@ setInterval(
 );
 
 load();
+refreshPreviousCaptureDisplay();
 
 setInterval(
   load,
   REFRESH_MS
+);
+
+setInterval(
+  refreshPreviousCaptureDisplay,
+  30000
 );
