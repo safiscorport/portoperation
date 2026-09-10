@@ -182,7 +182,9 @@ body {
 }
 
 .review-info.show {
-  display: flex;
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .review-label {

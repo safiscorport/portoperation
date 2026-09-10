@@ -2213,9 +2213,9 @@ function setHistoricalHeader(recordedAt) {
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
-  if (info) info.classList.add("show");
+  if (info) { info.classList.add("show"); info.style.display = "flex"; info.style.visibility = "visible"; }
   if (label) label.textContent = "REVIEW TIME";
-  if (returnBtn) returnBtn.classList.add("show");
+  if (returnBtn) { returnBtn.classList.add("show"); returnBtn.style.display = "inline-flex"; returnBtn.style.visibility = "visible"; }
 
   if (text) {
     const dt = new Date(recordedAt);
@@ -2239,9 +2239,9 @@ function clearHistoricalHeader() {
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
-  if (info) info.classList.remove("show");
+  if (info) { info.classList.remove("show"); info.style.display = "none"; }
   if (label) label.textContent = "REVIEW TIME";
-  if (returnBtn) returnBtn.classList.remove("show");
+  if (returnBtn) { returnBtn.classList.remove("show"); returnBtn.style.display = "none"; }
   if (text) text.textContent = "--";
 }
 
@@ -2579,7 +2579,11 @@ async function viewSelectedHistory() {
     const reviewLabelNow = document.getElementById("reviewLabel");
     const reviewInfoNow = document.getElementById("reviewInfo");
     if (reviewLabelNow) reviewLabelNow.textContent = "REVIEW TIME";
-    if (reviewInfoNow) reviewInfoNow.classList.add("show");
+    if (reviewInfoNow) {
+      reviewInfoNow.classList.add("show");
+      reviewInfoNow.style.display = "flex";
+      reviewInfoNow.style.visibility = "visible";
+    }
 
     const sync =
       document.getElementById(
