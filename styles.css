@@ -2015,78 +2015,101 @@ body,
 
 
 /* =========================================================
-   REVIEW TIME — RELIABLE DISPLAY FIX
-   Uses the visible RETURN TO LIVE button as the review-mode
-   trigger. This avoids relying only on body.history-viewing.
+   PREVIOUS DISPLAY — REVIEW TIME
+   Position: immediately LEFT of the CEMENT LOADING header.
+   Format is supplied by JavaScript, e.g.:
+   September 10, 20:00
    ========================================================= */
 
-body:has(#headerReturnLiveBtn.show) #reviewInfo,
-body:has(#headerReturnLiveBtn[style*="display: inline-flex"]) #reviewInfo,
-body.history-viewing #reviewInfo {
+body.history-viewing #reviewInfo,
+body:has(#headerReturnLiveBtn.show) #reviewInfo {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
+
   position: fixed !important;
-  top: 6px !important;
-  left: 240px !important;
+  top: 8px !important;
+  left: 375px !important;
+
   z-index: 999999 !important;
+
   align-items: center !important;
-  gap: 7px !important;
-  width: max-content !important;
+  justify-content: center !important;
+  gap: 5px !important;
+
+  width: auto !important;
+  min-width: 0 !important;
   max-width: none !important;
-  min-width: max-content !important;
+
   margin: 0 !important;
-  padding: 5px 10px !important;
-  background: #111 !important;
-  border: 1px solid #ffb14a !important;
-  border-radius: 5px !important;
-  color: #fff !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  color: #ffffff !important;
   white-space: nowrap !important;
   overflow: visible !important;
+
   font-size: 12px !important;
-  font-weight: 900 !important;
-  box-shadow: 0 0 10px rgba(255,177,74,.25) !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+
   pointer-events: none !important;
 }
 
-body:has(#headerReturnLiveBtn.show) #reviewLabel,
-body:has(#headerReturnLiveBtn[style*="display: inline-flex"]) #reviewLabel,
-body.history-viewing #reviewLabel {
-  display: inline-block !important;
+body.history-viewing #reviewLabel,
+body:has(#headerReturnLiveBtn.show) #reviewLabel {
+  display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
-  color: #ffb14a !important;
+
+  color: #70ddff !important;
   font-size: 10px !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   white-space: nowrap !important;
 }
 
-body:has(#headerReturnLiveBtn.show) #reviewTimeText,
-body:has(#headerReturnLiveBtn[style*="display: inline-flex"]) #reviewTimeText,
-body.history-viewing #reviewTimeText {
-  display: inline-block !important;
+body.history-viewing #reviewTimeText,
+body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+  display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
-  color: #fff !important;
+
+  color: #ffffff !important;
   font-size: 12px !important;
   font-weight: 900 !important;
   white-space: nowrap !important;
-  min-width: max-content !important;
 }
 
-@media screen and (max-width: 1400px) {
-  body:has(#headerReturnLiveBtn.show) #reviewInfo,
-  body:has(#headerReturnLiveBtn[style*="display: inline-flex"]) #reviewInfo,
-  body.history-viewing #reviewInfo {
-    top: 6px !important;
-    left: 240px !important;
+/* Hide it during live display */
+body:not(.history-viewing) #reviewInfo {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* 1366px TV layout */
+@media screen and (min-width: 1200px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 375px !important;
+    top: 8px !important;
+  }
+}
+
+/* Smaller screens */
+@media screen and (max-width: 1199px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 250px !important;
+    top: 7px !important;
     font-size: 11px !important;
-    padding: 4px 8px !important;
   }
 
-  body:has(#headerReturnLiveBtn.show) #reviewTimeText,
-  body:has(#headerReturnLiveBtn[style*="display: inline-flex"]) #reviewTimeText,
-  body.history-viewing #reviewTimeText {
+  body.history-viewing #reviewTimeText,
+  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
     font-size: 11px !important;
   }
 }
