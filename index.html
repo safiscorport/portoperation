@@ -413,19 +413,19 @@
         ↶ PREVIOUS
       </button>
 
-      <div id="reviewInfo" class="review-info" aria-live="polite">
-        <span class="review-label">REVIEW TIME</span>
-        <span id="reviewTimeText">--</span>
+      <div id="reviewInfo" class="review-info show" aria-live="polite">
+        <span id="reviewLabel" class="review-label">LAST CAPTURE</span>
+        <span id="reviewTimeText">CHECKING...</span>
       </div>
 
       <button
         id="headerReturnLiveBtn"
-        class="header-return-live"
+        class="header-return-live show"
         type="button"
         onclick="returnToLiveDisplay()"
         title="Return to the current live dashboard"
       >
-        ↻ RETURN TO LIVE
+        ↻ LIVE NOW
       </button>
 
       <div class="clock">
@@ -2199,28 +2199,42 @@ let selectedHistoryTime = "";
 let historicalMode = false;
 let historicalRecordedAt = null;
 
+function formatCaptureTime(recordedAt) {
+  if (!recordedAt) return "--";
+  const dt = new Date(recordedAt);
+  return Number.isFinite(dt.getTime())
+    ? dt.toLocaleString("en-PH", {
+        year: "numeric", month: "short", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", second: "2-digit",
+        hour12: false
+      })
+    : "--";
+}
+
+window.updateLiveCaptureDisplay = function(recordedAt) {
+  const info = document.getElementById("reviewInfo");
+  const label = document.getElementById("reviewLabel");
+  const text = document.getElementById("reviewTimeText");
+  if (!info || !label || !text || historicalMode) return;
+  info.classList.add("show");
+  label.textContent = "LAST CAPTURE";
+  text.textContent = formatCaptureTime(recordedAt);
+};
+
 function setHistoricalHeader(recordedAt) {
   historicalMode = true;
   historicalRecordedAt = recordedAt || null;
   document.body.classList.add("history-viewing");
 
   const info = document.getElementById("reviewInfo");
+  const label = document.getElementById("reviewLabel");
   const text = document.getElementById("reviewTimeText");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
   if (info) info.classList.add("show");
+  if (label) label.textContent = "REVIEW TIME";
   if (returnBtn) returnBtn.classList.add("show");
-
-  if (text) {
-    const dt = new Date(recordedAt);
-    text.textContent = Number.isFinite(dt.getTime())
-      ? dt.toLocaleString("en-PH", {
-          year: "numeric", month: "short", day: "2-digit",
-          hour: "2-digit", minute: "2-digit", second: "2-digit",
-          hour12: false
-        })
-      : "--";
-  }
+  if (text) text.textContent = formatCaptureTime(recordedAt);
 }
 
 function clearHistoricalHeader() {
@@ -2228,12 +2242,14 @@ function clearHistoricalHeader() {
   historicalRecordedAt = null;
 
   const info = document.getElementById("reviewInfo");
+  const label = document.getElementById("reviewLabel");
   const text = document.getElementById("reviewTimeText");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
-  if (info) info.classList.remove("show");
-  if (returnBtn) returnBtn.classList.remove("show");
-  if (text) text.textContent = "--";
+  if (info) info.classList.add("show");
+  if (label) label.textContent = "LAST CAPTURE";
+  if (returnBtn) returnBtn.classList.add("show");
+  if (text) text.textContent = formatCaptureTime(window.latestCloudCaptureAt);
 }
 
 

@@ -93,6 +93,43 @@ async function cleanupSharedHistory() {
 window.loadSharedHistory = loadSharedHistory;
 window.sharedHistoryConfigured = sharedHistoryConfigured;
 
+/* =========================================================
+   LATEST CLOUD CAPTURE TIME
+   ========================================================= */
+
+let latestCloudCaptureAt = null;
+
+async function loadLatestCloudCapture() {
+  if (!sharedHistoryConfigured()) return null;
+
+  try {
+    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
+    url.searchParams.set('action', 'latest');
+    url.searchParams.set('_', Date.now().toString());
+
+    const response = await fetch(url.toString(), { cache: 'no-store' });
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+
+    const result = await response.json();
+    if (!result.ok || !result.row || !result.row.recorded_at) return null;
+
+    latestCloudCaptureAt = result.row.recorded_at;
+    window.latestCloudCaptureAt = latestCloudCaptureAt;
+
+    if (typeof window.updateLiveCaptureDisplay === 'function') {
+      window.updateLiveCaptureDisplay(latestCloudCaptureAt);
+    }
+
+    return latestCloudCaptureAt;
+  } catch (error) {
+    console.warn('[Shared History] Latest capture lookup failed:', error);
+    return null;
+  }
+}
+
+window.loadLatestCloudCapture = loadLatestCloudCapture;
+window.latestCloudCaptureAt = null;
+
 const $ = id => document.getElementById(id);
 
 const num = v =>
@@ -1000,3 +1037,7 @@ setInterval(
   load,
   REFRESH_MS
 );
+
+// Refresh the displayed cloud capture timestamp once per minute.
+setTimeout(loadLatestCloudCapture, 1500);
+setInterval(loadLatestCloudCapture, 60000);
