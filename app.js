@@ -954,8 +954,6 @@ async function load() {
 }
 
 
-updateLastCaptureDisplay();
-
 
 /* =========================================================
    CLOCK
