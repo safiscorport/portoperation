@@ -98,7 +98,7 @@ window.sharedHistoryConfigured = sharedHistoryConfigured;
    ========================================================= */
 
 async function updateLastCaptureDisplay() {
-  if (document.body.classList.contains('history-viewing')) return;
+  if (document.body.classList.contains('history-viewing') || window.isHistoricalReview === true) return;
   if (!sharedHistoryConfigured()) return;
 
   try {

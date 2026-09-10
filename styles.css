@@ -134,6 +134,35 @@ body {
 }
 
 
+
+/* Review status is intentionally positioned beside the logo. */
+.logo-review-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.logo-review-group .review-info {
+  margin-right: 0;
+}
+
+.logo-review-group .header-return-live {
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .logo-review-group {
+    gap: 4px;
+  }
+  .logo-review-group .review-info {
+    padding: 5px 7px;
+  }
+  .logo-review-group .header-return-live {
+    padding: 6px 8px;
+  }
+}
+
 /* =========================================================
    HISTORICAL REVIEW HEADER
    ========================================================= */

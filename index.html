@@ -339,14 +339,31 @@
   >
 
     <div
-      class="brand"
-      style="display:flex;align-items:center;"
+      class="brand brand-with-review"
+      style="display:flex;align-items:center;gap:10px;min-width:0;"
     >
       <img
         src="logo.png"
         alt="Logo"
-        style="height:40px;object-fit:contain;"
+        style="height:40px;object-fit:contain;flex:0 0 auto;"
       >
+
+      <div id="logoReviewGroup" class="logo-review-group">
+        <div id="reviewInfo" class="review-info" aria-live="polite">
+          <span id="reviewLabel" class="review-label">LAST CAPTURE</span>
+          <span id="reviewTimeText">--</span>
+        </div>
+
+        <button
+          id="headerReturnLiveBtn"
+          class="header-return-live show"
+          type="button"
+          onclick="returnToLiveDisplay()"
+          title="Return to the current live dashboard"
+        >
+          ↻ RETURN TO LIVE
+        </button>
+      </div>
     </div>
 
     <div
@@ -411,21 +428,6 @@
         title="View a previous dashboard display"
       >
         ↶ PREVIOUS
-      </button>
-
-      <div id="reviewInfo" class="review-info" aria-live="polite">
-        <span id="reviewLabel" class="review-label">LAST CAPTURE</span>
-        <span id="reviewTimeText">--</span>
-      </div>
-
-      <button
-        id="headerReturnLiveBtn"
-        class="header-return-live show"
-        type="button"
-        onclick="returnToLiveDisplay()"
-        title="Return to the current live dashboard"
-      >
-        ↻ RETURN TO LIVE
       </button>
 
       <div class="clock">
@@ -2198,10 +2200,12 @@ let selectedHistoryDate = "";
 let selectedHistoryTime = "";
 let historicalMode = false;
 let historicalRecordedAt = null;
+window.isHistoricalReview = false;
 
 function setHistoricalHeader(recordedAt) {
   historicalMode = true;
   historicalRecordedAt = recordedAt || null;
+  window.isHistoricalReview = true;
   document.body.classList.add("history-viewing");
 
   const info = document.getElementById("reviewInfo");
@@ -2228,6 +2232,7 @@ function setHistoricalHeader(recordedAt) {
 function clearHistoricalHeader() {
   historicalMode = false;
   historicalRecordedAt = null;
+  window.isHistoricalReview = false;
 
   const info = document.getElementById("reviewInfo");
   const text = document.getElementById("reviewTimeText");
@@ -2565,7 +2570,16 @@ async function viewSelectedHistory() {
     );
 
     render(match.data);
+
+    // IMPORTANT: set the review header AFTER rendering so no render/live update
+    // can leave the header showing LAST CAPTURE.
     setHistoricalHeader(match.timestamp);
+    window.isHistoricalReview = true;
+    document.body.classList.add("history-viewing");
+    const reviewLabelNow = document.getElementById("reviewLabel");
+    const reviewInfoNow = document.getElementById("reviewInfo");
+    if (reviewLabelNow) reviewLabelNow.textContent = "REVIEW TIME";
+    if (reviewInfoNow) reviewInfoNow.classList.add("show");
 
     const sync =
       document.getElementById(
