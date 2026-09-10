@@ -2014,31 +2014,52 @@ body,
 }
 
 
+/* FINAL REVIEW TIME FIX */
+#reviewInfo.show,
+body.history-viewing #reviewInfo {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+#reviewInfo:not(.show) {
+  display: none !important;
+}
+#reviewLabel,
+#reviewTimeText {
+  white-space: nowrap !important;
+}
+
+
 /* =========================================================
-   PREVIOUS DISPLAY — FIXED REVIEW TIME + RETURN TO LIVE
+   PREVIOUS REVIEW TIME
+   Exact saved snapshot time, beside CEMENT LOADING heading.
    ========================================================= */
 
 #previousReviewStamp {
   display: none !important;
-  position: fixed !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 
-  /* 1366px TV: just LEFT of the centered CEMENT LOADING title */
+  position: fixed !important;
   left: 375px !important;
   top: 9px !important;
 
-  z-index: 2147483646 !important;
+  z-index: 2147483647 !important;
+
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
 
   margin: 0 !important;
   padding: 0 !important;
 
-  width: max-content !important;
-  height: auto !important;
-
-  color: #ffffff !important;
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
 
+  color: #ffffff !important;
   font-family: Arial, "Segoe UI", sans-serif !important;
   font-size: 12px !important;
   font-weight: 900 !important;
@@ -2055,6 +2076,7 @@ body.history-viewing #previousReviewStamp {
   opacity: 1 !important;
 }
 
+/* RETURN TO LIVE must remain visible in Previous mode. */
 .header-return-live {
   display: none !important;
 }
@@ -2064,12 +2086,9 @@ body.history-viewing #headerReturnLiveBtn {
   display: inline-flex !important;
   visibility: visible !important;
   opacity: 1 !important;
-
-  position: relative !important;
   z-index: 2147483647 !important;
 }
 
-/* Keep the timestamp away from the title on smaller screens */
 @media screen and (max-width: 1199px) {
   #previousReviewStamp {
     left: 250px !important;

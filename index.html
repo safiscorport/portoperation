@@ -337,7 +337,7 @@
       position:relative;
     "
   >
-    <div id="previousReviewStamp" aria-live="polite"></div>
+<span id="previousReviewStamp"></span>
 
     <div
       class="brand brand-with-review"
@@ -2211,31 +2211,39 @@ function setHistoricalHeader(recordedAt) {
   document.body.classList.add("history-viewing");
 
   const dt = new Date(recordedAt);
-  const stamp = document.getElementById("previousReviewStamp");
-
-  if (stamp) {
-    stamp.textContent = Number.isFinite(dt.getTime())
-      ? "REVIEW TIME: " + dt.toLocaleString("en-PH", {
+  const reviewText =
+    Number.isFinite(dt.getTime())
+      ? dt.toLocaleString("en-PH", {
           month: "long",
           day: "2-digit",
           hour: "2-digit",
           minute: "2-digit",
           hour12: false
         })
-      : "REVIEW TIME: --";
+      : "--";
 
+  // Put the exact saved snapshot time beside the CEMENT LOADING heading.
+  const stamp = document.getElementById("previousReviewStamp");
+  if (stamp) {
+    stamp.textContent = reviewText;
     stamp.classList.add("show");
   }
 
-  // Existing header button: ALWAYS restore it when entering Previous.
+  // Keep RETURN TO LIVE visible during Previous review.
   const returnBtn = document.getElementById("headerReturnLiveBtn");
-
   if (returnBtn) {
     returnBtn.classList.add("show");
-    returnBtn.removeAttribute("hidden");
+    returnBtn.hidden = false;
     returnBtn.style.setProperty("display", "inline-flex", "important");
     returnBtn.style.setProperty("visibility", "visible", "important");
     returnBtn.style.setProperty("opacity", "1", "important");
+  }
+
+  // Existing reviewInfo is no longer used for the visual timestamp.
+  const info = document.getElementById("reviewInfo");
+  if (info) {
+    info.classList.remove("show");
+    info.style.display = "none";
   }
 }
 
@@ -2254,6 +2262,7 @@ function clearHistoricalHeader() {
   const returnBtn = document.getElementById("headerReturnLiveBtn");
   if (returnBtn) {
     returnBtn.classList.remove("show");
+    returnBtn.hidden = false;
     returnBtn.style.removeProperty("display");
     returnBtn.style.removeProperty("visibility");
     returnBtn.style.removeProperty("opacity");
@@ -2599,33 +2608,11 @@ async function viewSelectedHistory() {
     setHistoricalHeader(match.timestamp);
     window.isHistoricalReview = true;
     document.body.classList.add("history-viewing");
-
-    const sync =
-      document.getElementById(
-        "syncText"
-      );
-
-    if (sync) {
-      sync.textContent =
-        "REVIEW TIME: " +
-        new Date(match.timestamp).toLocaleString("en-PH", {
-          month: "long",
-          day: "2-digit",
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false
-        });
-    }
-
-    showHistoryExitButton();
-  }
-}
-
 function showHistoryExitButton() {
   const headerButton = document.getElementById("headerReturnLiveBtn");
   if (headerButton) {
     headerButton.classList.add("show");
-    headerButton.removeAttribute("hidden");
+    headerButton.hidden = false;
     headerButton.style.setProperty("display", "inline-flex", "important");
     headerButton.style.setProperty("visibility", "visible", "important");
     headerButton.style.setProperty("opacity", "1", "important");
