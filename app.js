@@ -90,81 +90,33 @@ async function cleanupSharedHistory() {
   return;
 }
 
-window.loadSharedHistory = loadSharedHistory;
-window.sharedHistoryConfigured = sharedHistoryConfigured;
-
-/* =========================================================
-   LAST CLOUD CAPTURE / PREVIOUS DISPLAY TIME
-   ========================================================= */
-
-async function loadLatestSharedHistory() {
-  if (!sharedHistoryConfigured()) return null;
+async function loadLatestCaptureTime() {
+  const el = document.getElementById('previousCaptureTime');
+  if (!el || !sharedHistoryConfigured()) return;
 
   try {
     const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
     url.searchParams.set('action', 'latest');
     url.searchParams.set('_', Date.now());
 
-    const response = await fetch(url.toString(), {
-      cache: 'no-store'
-    });
-
+    const response = await fetch(url.toString(), { cache: 'no-store' });
     if (!response.ok) throw new Error('HTTP ' + response.status);
 
     const result = await response.json();
-    if (!result.ok || !result.row) return null;
+    if (!result.ok || !result.recorded_at) return;
 
-    return result.row;
+    el.textContent = new Date(result.recorded_at).toLocaleString('en-PH', {
+      month: 'short', day: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
   } catch (error) {
     console.warn('[Shared History] Latest capture load failed:', error);
-    return null;
   }
 }
 
-function formatPreviousCaptureTime(iso) {
-  if (!iso) return '--:--:--';
-
-  const d = new Date(iso);
-  if (!Number.isFinite(d.getTime())) return '--:--:--';
-
-  return d.toLocaleTimeString('en-PH', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  });
-}
-
-function updatePreviousCaptureDisplay(row) {
-  const timeEl = $('previousCaptureTime');
-  const dateEl = $('previousCaptureDate');
-  const stateEl = $('previousCaptureState');
-
-  if (!timeEl) return;
-
-  if (!row || !row.recorded_at) {
-    timeEl.textContent = '--:--:--';
-    if (dateEl) dateEl.textContent = 'NO CLOUD SNAPSHOT';
-    if (stateEl) stateEl.textContent = 'CLOUD CAPTURE OFFLINE';
-    return;
-  }
-
-  const d = new Date(row.recorded_at);
-  timeEl.textContent = formatPreviousCaptureTime(row.recorded_at);
-  if (dateEl) {
-    dateEl.textContent = d.toLocaleDateString('en-PH', {
-      day: '2-digit', month: 'short', year: 'numeric'
-    });
-  }
-  if (stateEl) stateEl.textContent = 'LAST CLOUD CAPTURE';
-}
-
-async function refreshPreviousCaptureDisplay() {
-  const row = await loadLatestSharedHistory();
-  updatePreviousCaptureDisplay(row);
-}
-
-window.refreshPreviousCaptureDisplay = refreshPreviousCaptureDisplay;
+window.loadSharedHistory = loadSharedHistory;
+window.sharedHistoryConfigured = sharedHistoryConfigured;
+window.loadLatestCaptureTime = loadLatestCaptureTime;
 
 const $ = id => document.getElementById(id);
 
@@ -1065,7 +1017,7 @@ setInterval(
 );
 
 load();
-refreshPreviousCaptureDisplay();
+loadLatestCaptureTime();
 
 setInterval(
   load,
@@ -1073,6 +1025,6 @@ setInterval(
 );
 
 setInterval(
-  refreshPreviousCaptureDisplay,
-  30000
+  loadLatestCaptureTime,
+  60000
 );

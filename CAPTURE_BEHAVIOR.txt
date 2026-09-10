@@ -9,9 +9,6 @@ Cloud capture behavior:
 - Identical data.json content still produces a new snapshot.
 - The dashboard/TV does not need to be open.
 - The Apps Script trigger runs independently in Google's cloud.
-- The saved snapshot contains the complete data.json dashboard state, so the dashboard can reconstruct the previous display later.
-- The live header shows PREV CAPTURE with the time/date of the latest cloud snapshot.
-- Dashboard 2 has a RETURN TO LIVE button for immediately leaving the historical screen.
 
 One-time setup:
 1. Open your Google Sheet.

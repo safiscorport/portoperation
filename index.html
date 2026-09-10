@@ -348,11 +348,9 @@
         style="height:40px;object-fit:contain;"
       >
 
-      <div class="previous-capture" title="Time of the most recent cloud dashboard snapshot">
-        <div class="previous-capture-label">PREV CAPTURE</div>
-        <div id="previousCaptureTime" class="previous-capture-time">--:--:--</div>
-        <div id="previousCaptureDate" class="previous-capture-date">NO CLOUD SNAPSHOT</div>
-        <div id="previousCaptureState" class="previous-capture-state">CLOUD CAPTURE OFFLINE</div>
+      <div class="previous-capture" title="Latest dashboard snapshot saved in the cloud">
+        <span class="previous-capture-label">PREV CAPTURE</span>
+        <span id="previousCaptureTime">--</span>
       </div>
     </div>
 
@@ -1942,8 +1940,9 @@
           class="history-return-live"
           type="button"
           onclick="returnToLiveDisplay()"
+          title="Return immediately to the live dashboard"
         >
-          ↻ LIVE NOW
+          ↻ RETURN TO LIVE
         </button>
 
         <div class="dashboard-switcher">
@@ -4153,27 +4152,28 @@ function hideHistoryScreen(){
    RETURN TO LIVE DASHBOARD
    ========================================================= */
 
-async function returnToLiveDisplay(){
+function returnToLiveDisplay(){
+
   manualOverride = false;
 
   clearTimeout(rotationTimer);
   clearTimeout(historyTimer);
   clearTimeout(window.resumeAutoTimer);
 
-  const exitButton = document.getElementById("historyExitBtn");
-  if (exitButton) exitButton.style.display = "none";
-
   historicalMode = false;
   document.body.classList.remove("history-viewing");
 
   hideHistoryScreen();
+
   lastHash = "";
 
-  await load();
-  await refreshPreviousCaptureDisplay();
+  // Immediately reload the newest live data.
+  load();
 
+  // Restart the normal 3-minute live -> graph rotation.
   startRotation();
 }
+
 
 /* =========================================================
    MANUAL DASHBOARD SWITCH

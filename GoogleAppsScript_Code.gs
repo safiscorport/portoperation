@@ -3,14 +3,14 @@
  * Google Sheets cloud history backend
  *
  * IMPORTANT:
- * This version captures data in the CLOUD every 30 minutes.
+ * This version captures data in the CLOUD every 5 minutes.
  * The dashboard browser/TV does NOT need to be open.
  *
  * One-time setup:
  * 1. Open the Google Sheet -> Extensions -> Apps Script.
  * 2. Replace Code.gs with this file.
  * 3. Check DATA_URL below.
- * 4. Run setup30MinuteTrigger() ONCE from the Apps Script editor.
+ * 4. Run setup5MinuteTrigger() ONCE from the Apps Script editor.
  *    Authorize the script when Google asks.
  * 5. Deploy -> New deployment -> Web app:
  *      Execute as: Me
@@ -21,7 +21,7 @@
  */
 
 const DATA_URL =
-  "https://safisccport.github.io/portoperation/data.json";
+  "https://safiscorport.github.io/portoperation/data.json";
 
 const SHEET_NAME = "DashboardHistory";
 const RETENTION_DAYS = 7;
@@ -46,24 +46,24 @@ function doGet(e) {
       });
     }
 
+    if (action === "latest") {
+      const latest = getLatestHistory_();
+      return jsonOutput({
+        ok: true,
+        recorded_at: latest ? latest.recorded_at : null
+      });
+    }
+
     if (action === "capture") {
       const result = captureDashboardSnapshot_();
       return jsonOutput(result);
-    }
-
-    if (action === "latest") {
-      const row = getLatestHistory_();
-      return jsonOutput({
-        ok: true,
-        row: row
-      });
     }
 
     return jsonOutput({
       ok: true,
       service: "cement-dashboard-history",
       message: "Cloud capture backend is running.",
-      capture: "every 30 minutes"
+      capture: "every 5 minutes"
     });
 
   } catch (err) {
@@ -115,9 +115,9 @@ function doPost(e) {
  * RUN THIS ONCE manually from Apps Script.
  *
  * It creates a single time-driven trigger which runs approximately
- * every 30 minutes. Apps Script controls the exact execution minute.
+ * every 5 minutes. Apps Script controls the exact execution minute.
  */
-function setup30MinuteTrigger() {
+function setup5MinuteTrigger() {
   const triggers =
     ScriptApp.getProjectTriggers();
 
@@ -134,14 +134,14 @@ function setup30MinuteTrigger() {
     "captureDashboardSnapshot"
   )
     .timeBased()
-    .everyMinutes(30)
+    .everyMinutes(5)
     .create();
 
   // Take one snapshot immediately so history starts now.
   captureDashboardSnapshot();
 
   Logger.log(
-    "30-minute cloud capture trigger installed."
+    "5-minute cloud capture trigger installed."
   );
 }
 
@@ -258,19 +258,11 @@ function getLatestHistory_() {
 
   if (lastRow < 2) return null;
 
-  const row = sheet.getRange(lastRow, 1, 1, 2).getValues()[0];
-  const dt = row[0] instanceof Date ? row[0] : new Date(row[0]);
-
-  let payload = null;
-  try {
-    payload = JSON.parse(row[1]);
-  } catch (_) {}
-
-  if (!Number.isFinite(dt.getTime()) || payload === null) return null;
-
+  const value = sheet.getRange(lastRow, 1).getValue();
   return {
-    recorded_at: dt.toISOString(),
-    payload: payload
+    recorded_at: value instanceof Date
+      ? value.toISOString()
+      : new Date(value).toISOString()
   };
 }
 

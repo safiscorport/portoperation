@@ -135,14 +135,7 @@ Then deploy/update the Apps Script Web App and put its `/exec` URL in
 
 DATA SOURCE:
 The Apps Script currently fetches:
-https://safisccport.github.io/portoperation/data.json
+https://safiscorport.github.io/portoperation/data.json
 
 If your live `data.json` is hosted at a different public address, change
 `DATA_URL` in `GoogleAppsScript_Code.gs`.
-
-
-## Previous capture / return to live
-
-The live dashboard now shows the latest cloud snapshot time beside the logo as **PREV CAPTURE**. This timestamp comes from `DashboardHistory`, not from the browser clock. The historical screen includes a **LIVE NOW** button that immediately returns to Dashboard 1 and resumes automatic rotation.
-
-Cloud capture remains independent of the dashboard page: the Apps Script time trigger fetches `data.json` and stores the complete dashboard data even when the GitHub Pages link is not open. This is a data snapshot/reconstruction, not a PNG screenshot of the rendered browser page.
