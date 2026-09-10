@@ -2012,3 +2012,21 @@ body,
     grid-template-columns: 1fr;
   }
 }
+
+
+/* FINAL REVIEW TIME FIX */
+#reviewInfo.show,
+body.history-viewing #reviewInfo {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+#reviewInfo:not(.show) {
+  display: none !important;
+}
+#reviewLabel,
+#reviewTimeText {
+  white-space: nowrap !important;
+}

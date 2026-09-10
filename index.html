@@ -348,23 +348,24 @@
         style="height:40px;object-fit:contain;flex:0 0 auto;"
       >
 
-      <div id="logoReviewGroup" class="logo-review-group">
-        <div id="reviewInfo" class="review-info" aria-live="polite">
-          <span id="reviewLabel" class="review-label">REVIEW TIME</span>
-          <span id="reviewTimeText">--</span>
-        </div>
-
-        <button
-          id="headerReturnLiveBtn"
-          class="header-return-live show"
-          type="button"
-          onclick="returnToLiveDisplay()"
-          title="Return to the current live dashboard"
-        >
-          ↻ RETURN TO LIVE
-        </button>
-      </div>
+      <div id="logoReviewGroup" class="logo-review-group" style="display:flex;align-items:center;gap:12px;">
+    <div id="reviewInfo" class="review-info" aria-live="polite"
+         style="display:none;align-items:center;gap:8px;visibility:hidden;">
+      <span id="reviewLabel" class="review-label">REVIEW TIME:</span>
+      <span id="reviewTimeText">--</span>
     </div>
+
+    <button
+      id="headerReturnLiveBtn"
+      class="header-return-live show"
+      type="button"
+      onclick="returnToLiveDisplay()"
+      title="Return to the current live dashboard"
+    >
+      ↻ RETURN TO LIVE
+    </button>
+  </div>
+</div>
 
     <div
       style="

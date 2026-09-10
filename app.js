@@ -97,14 +97,6 @@ window.sharedHistoryConfigured = sharedHistoryConfigured;
    LAST CLOUD CAPTURE DISPLAY
    ========================================================= */
 
-async function updateLastCaptureDisplay() {
-  // LAST CAPTURE display has been removed.
-  // REVIEW TIME is shown only after a previous dashboard is opened.
-  return;
-}
-
-window.updateLastCaptureDisplay = updateLastCaptureDisplay;
-
 const $ = id => document.getElementById(id);
 
 const num = v =>
