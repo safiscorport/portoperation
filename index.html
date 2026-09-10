@@ -2606,6 +2606,9 @@ async function viewSelectedHistory() {
     // IMPORTANT: set the review header AFTER rendering so no render/live update
     // can leave the header showing LAST CAPTURE.
     setHistoricalHeader(match.timestamp);
+  if (typeof window.ensureDashboardControlsClickable === "function") {
+    window.ensureDashboardControlsClickable();
+  }
     window.isHistoricalReview = true;
     document.body.classList.add("history-viewing");
 function showHistoryExitButton() {

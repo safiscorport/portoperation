@@ -1020,3 +1020,25 @@ window.formatPreviousReviewTime = function(recordedAt) {
       })
     : "--";
 };
+
+
+/* =========================================================
+   DASHBOARD HEADER CONTROLS — CLICKABILITY GUARD
+   ========================================================= */
+window.ensureDashboardControlsClickable = function() {
+  const ids = [
+    "dashboard1Btn",
+    "dashboard2Btn",
+    "previousBtn",
+    "headerReturnLiveBtn"
+  ];
+
+  ids.forEach(function(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    el.style.setProperty("pointer-events", "auto", "important");
+    el.style.setProperty("position", "relative", "important");
+    el.style.setProperty("z-index", "1000", "important");
+  });
+};

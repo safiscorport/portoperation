@@ -2096,3 +2096,49 @@ body.history-viewing #headerReturnLiveBtn {
     font-size: 11px !important;
   }
 }
+
+
+/* =========================================================
+   HEADER CONTROLS — CLICKABILITY FIX
+   Review timestamp must NEVER cover or intercept buttons.
+   ========================================================= */
+
+#previousReviewStamp {
+  pointer-events: none !important;
+  z-index: 10 !important;
+}
+
+/* Keep the actual navigation controls above the timestamp. */
+#headerReturnLiveBtn,
+.header-return-live,
+.dashboard-switcher,
+.dashboard-switcher *,
+#dashboard1Btn,
+#dashboard2Btn,
+#previousBtn,
+button,
+a {
+  pointer-events: auto !important;
+}
+
+/* Header/navigation layer */
+.topbar,
+.topbar * {
+  position: relative;
+}
+
+.topbar {
+  z-index: 100 !important;
+}
+
+/* Timestamp is visually above the title area but below controls. */
+#previousReviewStamp {
+  position: absolute !important;
+  z-index: 5 !important;
+}
+
+/* Never let the timestamp block clicks anywhere. */
+#previousReviewStamp,
+#previousReviewStamp * {
+  pointer-events: none !important;
+}
