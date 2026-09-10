@@ -94,41 +94,44 @@ window.loadSharedHistory = loadSharedHistory;
 window.sharedHistoryConfigured = sharedHistoryConfigured;
 
 /* =========================================================
-   LATEST CLOUD CAPTURE TIME
+   LAST CLOUD CAPTURE DISPLAY
    ========================================================= */
 
-let latestCloudCaptureAt = null;
-
-async function loadLatestCloudCapture() {
-  if (!sharedHistoryConfigured()) return null;
+async function updateLastCaptureDisplay() {
+  if (document.body.classList.contains('history-viewing')) return;
+  if (!sharedHistoryConfigured()) return;
 
   try {
     const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
     url.searchParams.set('action', 'latest');
-    url.searchParams.set('_', Date.now().toString());
+    url.searchParams.set('_', Date.now());
 
     const response = await fetch(url.toString(), { cache: 'no-store' });
     if (!response.ok) throw new Error('HTTP ' + response.status);
 
     const result = await response.json();
-    if (!result.ok || !result.row || !result.row.recorded_at) return null;
+    if (!result.ok || !result.row || !result.row.recorded_at) return;
 
-    latestCloudCaptureAt = result.row.recorded_at;
-    window.latestCloudCaptureAt = latestCloudCaptureAt;
+    const dt = new Date(result.row.recorded_at);
+    if (!Number.isFinite(dt.getTime())) return;
 
-    if (typeof window.updateLiveCaptureDisplay === 'function') {
-      window.updateLiveCaptureDisplay(latestCloudCaptureAt);
-    }
+    const label = document.getElementById('reviewLabel');
+    const text = document.getElementById('reviewTimeText');
+    const info = document.getElementById('reviewInfo');
 
-    return latestCloudCaptureAt;
+    if (label) label.textContent = 'LAST CAPTURE';
+    if (text) text.textContent = dt.toLocaleString('en-PH', {
+      year: 'numeric', month: 'short', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit',
+      hour12: false
+    });
+    if (info) info.classList.add('show');
   } catch (error) {
     console.warn('[Shared History] Latest capture lookup failed:', error);
-    return null;
   }
 }
 
-window.loadLatestCloudCapture = loadLatestCloudCapture;
-window.latestCloudCaptureAt = null;
+window.updateLastCaptureDisplay = updateLastCaptureDisplay;
 
 const $ = id => document.getElementById(id);
 
@@ -987,6 +990,9 @@ async function load() {
 }
 
 
+updateLastCaptureDisplay();
+setInterval(updateLastCaptureDisplay, 30000);
+
 /* =========================================================
    CLOCK
    ========================================================= */
@@ -1037,7 +1043,3 @@ setInterval(
   load,
   REFRESH_MS
 );
-
-// Refresh the displayed cloud capture timestamp once per minute.
-setTimeout(loadLatestCloudCapture, 1500);
-setInterval(loadLatestCloudCapture, 60000);

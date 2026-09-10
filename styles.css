@@ -170,6 +170,7 @@ body {
 
 .header-return-live {
   display: inline-flex;
+  align-items: center;
   border: 1px solid #ff9f35;
   border-radius: 6px;
   background: linear-gradient(135deg, #9d4e08, #5b2d06);
@@ -1980,18 +1981,3 @@ body,
     grid-template-columns: 1fr;
   }
 }
-
-
-/* Always-visible live/history controls */
-body:not(.history-viewing) .review-info {
-  border-color: rgba(0, 191, 255, .35);
-  background: rgba(0, 55, 85, .22);
-  color: #bdefff;
-}
-body:not(.history-viewing) .review-label { color: #5fd8ff; }
-body:not(.history-viewing) .header-return-live {
-  border-color: rgba(0, 191, 255, .45);
-  background: linear-gradient(135deg, #064f6b, #063247);
-}
-body.history-viewing .review-info { display: flex; }
-body.history-viewing .header-return-live { display: inline-flex; }
