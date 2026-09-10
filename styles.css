@@ -2014,19 +2014,91 @@ body,
 }
 
 
-/* FINAL REVIEW TIME FIX */
-#reviewInfo.show,
-body.history-viewing #reviewInfo {
+/* =========================================================
+   DEFINITIVE PREVIOUS DISPLAY REVIEW TIMESTAMP
+   Shows the exact saved snapshot time while reviewing.
+   ========================================================= */
+
+/* Hidden during normal live display */
+#reviewInfo {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* Forced visible whenever Previous Display is active */
+body.history-viewing #reviewInfo,
+body.history-viewing #reviewInfo.show {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
+
+  position: fixed !important;
+  top: 6px !important;
+  left: 175px !important;
+
+  z-index: 999999 !important;
+
   align-items: center !important;
-  gap: 8px !important;
-}
-#reviewInfo:not(.show) {
-  display: none !important;
-}
-#reviewLabel,
-#reviewTimeText {
+  justify-content: center !important;
+  gap: 7px !important;
+
+  width: auto !important;
+  max-width: none !important;
+  min-width: max-content !important;
+
+  margin: 0 !important;
+  padding: 5px 10px !important;
+
+  background: #111 !important;
+  border: 1px solid #ffb14a !important;
+  border-radius: 5px !important;
+
+  color: #fff !important;
   white-space: nowrap !important;
+  overflow: visible !important;
+
+  font-size: 12px !important;
+  font-weight: 900 !important;
+
+  box-shadow: 0 0 10px rgba(255,177,74,.25) !important;
+  pointer-events: none !important;
+}
+
+body.history-viewing #reviewLabel {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #ffb14a !important;
+  font-size: 10px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+body.history-viewing #reviewTimeText {
+  display: inline-block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #fff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  min-width: max-content !important;
+}
+
+/* Keep it visible on the 1366px TV shown in the screenshot */
+@media screen and (max-width: 1400px) {
+  body.history-viewing #reviewInfo,
+  body.history-viewing #reviewInfo.show {
+    top: 5px !important;
+    left: 175px !important;
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+
+  body.history-viewing #reviewTimeText {
+    font-size: 11px !important;
+  }
 }
