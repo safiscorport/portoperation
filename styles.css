@@ -134,6 +134,109 @@ body {
 }
 
 
+
+/* Review status is intentionally positioned beside the logo. */
+.logo-review-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.logo-review-group .review-info {
+  margin-right: 0;
+}
+
+.logo-review-group .header-return-live {
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .logo-review-group {
+    gap: 4px;
+  }
+  .logo-review-group .review-info {
+    padding: 5px 7px;
+  }
+  .logo-review-group .header-return-live {
+    padding: 6px 8px;
+  }
+}
+
+/* =========================================================
+   HISTORICAL REVIEW HEADER
+   ========================================================= */
+
+.review-info {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  margin-right: 8px;
+  border: 1px solid rgba(255, 177, 71, .45);
+  border-radius: 6px;
+  background: rgba(75, 42, 8, .28);
+  color: #ffd59a;
+  white-space: nowrap;
+  box-shadow: inset 0 0 12px rgba(255, 160, 40, .05);
+}
+
+.review-info.show {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.review-label {
+  color: #ffb14a;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+#reviewTimeText {
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.header-return-live {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #ff9f35;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #9d4e08, #5b2d06);
+  color: #fff;
+  padding: 7px 11px;
+  margin-right: 8px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 0 14px rgba(255, 159, 53, .14);
+}
+
+.header-return-live.show {
+  display: inline-flex;
+  align-items: center;
+}
+
+.header-return-live:hover {
+  filter: brightness(1.18);
+}
+
+.history-return-live {
+  border: 1px solid #ff9f35;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #9d4e08, #5b2d06);
+  color: #fff;
+  padding: 7px 11px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
 /* =========================================================
    CLOCK
    ========================================================= */
@@ -1910,26 +2013,103 @@ body,
   }
 }
 
-/* Replay controls: hour-only replay and clear return-to-live action */
-.history-return-live-top {
-  background: linear-gradient(135deg, rgba(35, 180, 90, .24), rgba(35, 150, 100, .16));
-  border: 1px solid rgba(110, 235, 150, .45);
-  color: #eafff0;
-  border-radius: 6px;
-  padding: 6px 11px;
-  margin-right: 10px;
-  font-size: .72rem;
-  font-weight: 900;
-  letter-spacing: .06em;
-  cursor: pointer;
-  white-space: nowrap;
+
+/* =========================================================
+   PREVIOUS DISPLAY — REVIEW TIME
+   Position: immediately LEFT of the CEMENT LOADING header.
+   Format is supplied by JavaScript, e.g.:
+   September 10, 20:00
+   ========================================================= */
+
+body.history-viewing #reviewInfo,
+body:has(#headerReturnLiveBtn.show) #reviewInfo {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  position: fixed !important;
+  top: 8px !important;
+  left: 375px !important;
+
+  z-index: 999999 !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  color: #ffffff !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+
+  pointer-events: none !important;
 }
-.history-return-live-top:hover {
-  border-color: rgba(140, 255, 180, .85);
+
+body.history-viewing #reviewLabel,
+body:has(#headerReturnLiveBtn.show) #reviewLabel {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #70ddff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
 }
-.history-hour-select {
-  appearance: auto;
-  min-height: 42px;
-  font-weight: 800;
-  font-size: 1rem;
+
+body.history-viewing #reviewTimeText,
+body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* Hide it during live display */
+body:not(.history-viewing) #reviewInfo {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+}
+
+/* 1366px TV layout */
+@media screen and (min-width: 1200px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 375px !important;
+    top: 8px !important;
+  }
+}
+
+/* Smaller screens */
+@media screen and (max-width: 1199px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 250px !important;
+    top: 7px !important;
+    font-size: 11px !important;
+  }
+
+  body.history-viewing #reviewTimeText,
+  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+    font-size: 11px !important;
+  }
 }

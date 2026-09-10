@@ -93,6 +93,10 @@ async function cleanupSharedHistory() {
 window.loadSharedHistory = loadSharedHistory;
 window.sharedHistoryConfigured = sharedHistoryConfigured;
 
+/* =========================================================
+   LAST CLOUD CAPTURE DISPLAY
+   ========================================================= */
+
 const $ = id => document.getElementById(id);
 
 const num = v =>
@@ -931,7 +935,10 @@ async function load() {
 
       lastHash = h;
 
-      render(d);
+      // Do not overwrite a selected historical display with live data.
+      if (!document.body.classList.contains('history-viewing')) {
+        render(d);
+      }
 
     }
 
@@ -945,6 +952,7 @@ async function load() {
   }
 
 }
+
 
 
 /* =========================================================
