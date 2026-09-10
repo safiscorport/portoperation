@@ -1005,3 +1005,48 @@ setInterval(
   load,
   REFRESH_MS
 );
+
+
+/* =========================================================
+   PREVIOUS DISPLAY REVIEW TIME
+   ========================================================= */
+
+window.setPreviousReviewTime = function(recordedAt) {
+  let stamp = document.getElementById('previousReviewStamp');
+
+  if (!stamp) {
+    stamp = document.createElement('div');
+    stamp.id = 'previousReviewStamp';
+    document.body.appendChild(stamp);
+  }
+
+  const dt = new Date(recordedAt);
+
+  stamp.textContent = Number.isFinite(dt.getTime())
+    ? 'REVIEW TIME: ' + dt.toLocaleString('en-PH', {
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      })
+    : 'REVIEW TIME: --';
+
+  stamp.classList.add('show');
+  stamp.style.display = 'block';
+  stamp.style.visibility = 'visible';
+  stamp.style.opacity = '1';
+};
+
+window.clearPreviousReviewTime = function() {
+  const stamp = document.getElementById('previousReviewStamp');
+
+  if (stamp) {
+    stamp.textContent = '';
+    stamp.classList.remove('show');
+    stamp.style.display = 'none';
+    stamp.style.visibility = 'hidden';
+    stamp.style.opacity = '0';
+  }
+};
+

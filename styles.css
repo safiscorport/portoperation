@@ -2015,101 +2015,58 @@ body,
 
 
 /* =========================================================
-   PREVIOUS DISPLAY — REVIEW TIME
-   Position: immediately LEFT of the CEMENT LOADING header.
-   Format is supplied by JavaScript, e.g.:
-   September 10, 20:00
+   PREVIOUS DISPLAY REVIEW TIMESTAMP
+   Exact saved snapshot time, positioned immediately left of
+   the CEMENT LOADING title.
    ========================================================= */
 
-body.history-viewing #reviewInfo,
-body:has(#headerReturnLiveBtn.show) #reviewInfo {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+#previousReviewStamp {
+  display: none;
+  visibility: hidden;
+  opacity: 0;
 
   position: fixed !important;
-  top: 8px !important;
+  top: 7px !important;
   left: 375px !important;
 
-  z-index: 999999 !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 5px !important;
-
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
+  z-index: 2147483647 !important;
 
   margin: 0 !important;
   padding: 0 !important;
+
+  width: max-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: auto !important;
 
   background: transparent !important;
   border: 0 !important;
   box-shadow: none !important;
 
   color: #ffffff !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
 
+  font-family: "Segoe UI", Arial, sans-serif !important;
   font-size: 12px !important;
-  font-weight: 800 !important;
+  font-weight: 900 !important;
   line-height: 1.2 !important;
 
+  white-space: nowrap !important;
+  overflow: visible !important;
   pointer-events: none !important;
 }
 
-body.history-viewing #reviewLabel,
-body:has(#headerReturnLiveBtn.show) #reviewLabel {
-  display: inline !important;
+#previousReviewStamp.show,
+body.history-viewing #previousReviewStamp {
+  display: block !important;
   visibility: visible !important;
   opacity: 1 !important;
-
-  color: #70ddff !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  white-space: nowrap !important;
 }
 
-body.history-viewing #reviewTimeText,
-body:has(#headerReturnLiveBtn.show) #reviewTimeText {
-  display: inline !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  color: #ffffff !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  white-space: nowrap !important;
-}
-
-/* Hide it during live display */
-body:not(.history-viewing) #reviewInfo {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-/* 1366px TV layout */
-@media screen and (min-width: 1200px) {
-  body.history-viewing #reviewInfo,
-  body:has(#headerReturnLiveBtn.show) #reviewInfo {
-    left: 375px !important;
-    top: 8px !important;
-  }
-}
-
-/* Smaller screens */
 @media screen and (max-width: 1199px) {
-  body.history-viewing #reviewInfo,
-  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+  #previousReviewStamp,
+  body.history-viewing #previousReviewStamp {
     left: 250px !important;
-    top: 7px !important;
-    font-size: 11px !important;
-  }
-
-  body.history-viewing #reviewTimeText,
-  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+    top: 6px !important;
     font-size: 11px !important;
   }
 }
