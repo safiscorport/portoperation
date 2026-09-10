@@ -2014,42 +2014,31 @@ body,
 }
 
 
-/* FINAL REVIEW TIME FIX */
-#reviewInfo.show,
-body.history-viewing #reviewInfo {
+/* =========================================================
+   PREVIOUS DISPLAY — REVIEW TIME
+   Position: immediately LEFT of the CEMENT LOADING header.
+   Format is supplied by JavaScript, e.g.:
+   September 10, 20:00
+   ========================================================= */
+
+body.history-viewing #reviewInfo,
+body:has(#headerReturnLiveBtn.show) #reviewInfo {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
-  align-items: center !important;
-  gap: 8px !important;
-}
-#reviewInfo:not(.show) {
-  display: none !important;
-}
-#reviewLabel,
-#reviewTimeText {
-  white-space: nowrap !important;
-}
-
-
-/* =========================================================
-   PREVIOUS REVIEW TIME
-   Exact saved snapshot time, beside CEMENT LOADING heading.
-   ========================================================= */
-
-#previousReviewStamp {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
 
   position: fixed !important;
+  top: 8px !important;
   left: 375px !important;
-  top: 9px !important;
 
-  z-index: 2147483647 !important;
+  z-index: 999999 !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
 
   width: auto !important;
-  min-width: max-content !important;
+  min-width: 0 !important;
   max-width: none !important;
 
   margin: 0 !important;
@@ -2060,85 +2049,67 @@ body.history-viewing #reviewInfo {
   box-shadow: none !important;
 
   color: #ffffff !important;
-  font-family: Arial, "Segoe UI", sans-serif !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+
   font-size: 12px !important;
-  font-weight: 900 !important;
+  font-weight: 800 !important;
   line-height: 1.2 !important;
 
-  white-space: nowrap !important;
   pointer-events: none !important;
 }
 
-#previousReviewStamp.show,
-body.history-viewing #previousReviewStamp {
-  display: block !important;
+body.history-viewing #reviewLabel,
+body:has(#headerReturnLiveBtn.show) #reviewLabel {
+  display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
+
+  color: #70ddff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
 }
 
-/* RETURN TO LIVE must remain visible in Previous mode. */
-.header-return-live {
+body.history-viewing #reviewTimeText,
+body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+}
+
+/* Hide it during live display */
+body:not(.history-viewing) #reviewInfo {
   display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
-.header-return-live.show,
-body.history-viewing #headerReturnLiveBtn {
-  display: inline-flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  z-index: 2147483647 !important;
+/* 1366px TV layout */
+@media screen and (min-width: 1200px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 375px !important;
+    top: 8px !important;
+  }
 }
 
+/* Smaller screens */
 @media screen and (max-width: 1199px) {
-  #previousReviewStamp {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
     left: 250px !important;
     top: 7px !important;
     font-size: 11px !important;
   }
-}
 
-
-/* =========================================================
-   HEADER CONTROLS — CLICKABILITY FIX
-   Review timestamp must NEVER cover or intercept buttons.
-   ========================================================= */
-
-#previousReviewStamp {
-  pointer-events: none !important;
-  z-index: 10 !important;
-}
-
-/* Keep the actual navigation controls above the timestamp. */
-#headerReturnLiveBtn,
-.header-return-live,
-.dashboard-switcher,
-.dashboard-switcher *,
-#dashboard1Btn,
-#dashboard2Btn,
-#previousBtn,
-button,
-a {
-  pointer-events: auto !important;
-}
-
-/* Header/navigation layer */
-.topbar,
-.topbar * {
-  position: relative;
-}
-
-.topbar {
-  z-index: 100 !important;
-}
-
-/* Timestamp is visually above the title area but below controls. */
-#previousReviewStamp {
-  position: absolute !important;
-  z-index: 5 !important;
-}
-
-/* Never let the timestamp block clicks anywhere. */
-#previousReviewStamp,
-#previousReviewStamp * {
-  pointer-events: none !important;
+  body.history-viewing #reviewTimeText,
+  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+    font-size: 11px !important;
+  }
 }
