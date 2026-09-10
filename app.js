@@ -98,37 +98,9 @@ window.sharedHistoryConfigured = sharedHistoryConfigured;
    ========================================================= */
 
 async function updateLastCaptureDisplay() {
-  if (document.body.classList.contains('history-viewing') || window.isHistoricalReview === true) return;
-  if (!sharedHistoryConfigured()) return;
-
-  try {
-    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
-    url.searchParams.set('action', 'latest');
-    url.searchParams.set('_', Date.now());
-
-    const response = await fetch(url.toString(), { cache: 'no-store' });
-    if (!response.ok) throw new Error('HTTP ' + response.status);
-
-    const result = await response.json();
-    if (!result.ok || !result.row || !result.row.recorded_at) return;
-
-    const dt = new Date(result.row.recorded_at);
-    if (!Number.isFinite(dt.getTime())) return;
-
-    const label = document.getElementById('reviewLabel');
-    const text = document.getElementById('reviewTimeText');
-    const info = document.getElementById('reviewInfo');
-
-    if (label) label.textContent = 'LAST CAPTURE';
-    if (text) text.textContent = dt.toLocaleString('en-PH', {
-      year: 'numeric', month: 'short', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
-    });
-    if (info) info.classList.add('show');
-  } catch (error) {
-    console.warn('[Shared History] Latest capture lookup failed:', error);
-  }
+  // LAST CAPTURE display has been removed.
+  // REVIEW TIME is shown only after a previous dashboard is opened.
+  return;
 }
 
 window.updateLastCaptureDisplay = updateLastCaptureDisplay;
@@ -991,7 +963,7 @@ async function load() {
 
 
 updateLastCaptureDisplay();
-setInterval(updateLastCaptureDisplay, 30000);
+
 
 /* =========================================================
    CLOCK

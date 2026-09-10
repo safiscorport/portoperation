@@ -350,7 +350,7 @@
 
       <div id="logoReviewGroup" class="logo-review-group">
         <div id="reviewInfo" class="review-info" aria-live="polite">
-          <span id="reviewLabel" class="review-label">LAST CAPTURE</span>
+          <span id="reviewLabel" class="review-label">REVIEW TIME</span>
           <span id="reviewTimeText">--</span>
         </div>
 
@@ -2240,7 +2240,7 @@ function clearHistoricalHeader() {
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
   if (info) info.classList.remove("show");
-  if (label) label.textContent = "LAST CAPTURE";
+  if (label) label.textContent = "REVIEW TIME";
   if (returnBtn) returnBtn.classList.remove("show");
   if (text) text.textContent = "--";
 }

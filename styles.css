@@ -168,7 +168,7 @@ body {
    ========================================================= */
 
 .review-info {
-  display: flex;
+  display: none;
   align-items: center;
   gap: 7px;
   padding: 6px 10px;
