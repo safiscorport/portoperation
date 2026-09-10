@@ -1005,3 +1005,20 @@ setInterval(
   load,
   REFRESH_MS
 );
+
+
+/* =========================================================
+   PREVIOUS DISPLAY REVIEW TIME HELPER
+   ========================================================= */
+window.formatPreviousReviewTime = function(recordedAt) {
+  const dt = new Date(recordedAt);
+  return Number.isFinite(dt.getTime())
+    ? "REVIEW TIME: " + dt.toLocaleString("en-PH", {
+        month: "long",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false
+      })
+    : "REVIEW TIME: --";
+};
