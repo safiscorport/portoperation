@@ -1,3 +1,38 @@
+
+/* =========================================================
+   AUTOMATIC SCREEN FIT
+   Designed for 14" 1366x768 displays and larger monitors/TVs.
+   The complete dashboard scales to the available viewport.
+   ========================================================= */
+
+(function setupAutomaticScreenFit() {
+  const BASE_W = 1366;
+  const BASE_H = 768;
+
+  function fitDashboard() {
+    const w = Math.max(window.innerWidth || 1, 1);
+    const h = Math.max(window.innerHeight || 1, 1);
+
+    // Scale up on larger displays and scale down on smaller ones.
+    // Keep a tiny margin so borders are not cut by browser rounding.
+    const scale = Math.min(w / BASE_W, h / BASE_H);
+
+    document.documentElement.style.setProperty(
+      '--dashboard-scale',
+      Math.max(0.55, scale).toFixed(4)
+    );
+  }
+
+  window.addEventListener('resize', fitDashboard, { passive: true });
+  window.addEventListener('orientationchange', fitDashboard, { passive: true });
+
+  fitDashboard();
+
+  // Recalculate after kiosk/browser UI settles.
+  setTimeout(fitDashboard, 250);
+  setTimeout(fitDashboard, 1000);
+})();
+
 const REFRESH_MS = 10000;
 let lastHash = '';
 

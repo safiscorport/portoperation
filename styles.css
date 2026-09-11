@@ -2158,3 +2158,65 @@ body:has(#headerReturnLiveBtn.show) .header-review-inline {
     font-size: 11px;
   }
 }
+
+
+/* =========================================================
+   AUTOMATIC FULL-SCREEN FIT — 14" MONITOR TO LARGE TV
+   Keeps the entire dashboard visible without clipping.
+   JavaScript sets --dashboard-scale from the actual viewport.
+   ========================================================= */
+
+:root {
+  --dashboard-scale: 1;
+}
+
+body {
+  width: 100vw !important;
+  height: 100vh !important;
+}
+
+.app {
+  width: calc(100vw / var(--dashboard-scale)) !important;
+  height: calc(100vh / var(--dashboard-scale)) !important;
+  min-height: 0 !important;
+  transform: scale(var(--dashboard-scale));
+  transform-origin: top left;
+}
+
+/* At small desktop resolutions, keep text visible instead of clipping it. */
+@media screen and (max-width: 1200px) {
+  .table-header-bar,
+  .berth-row,
+  .alpha-header-bar,
+  .alpha-row {
+    font-size: clamp(10px, 0.78vw, 16px);
+  }
+
+  .title {
+    font-size: clamp(15px, 1.35vw, 26px);
+  }
+}
+
+/* Never hide important cell text with horizontal scrolling. */
+.table-header-bar > *,
+.berth-row > *,
+.alpha-header-bar > *,
+.alpha-row > *,
+.table-mini .tr > *,
+.monthly-row > * {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Review time remains visible beside the title when historical mode is active. */
+.header-review-inline {
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.header-review-inline #reviewTimeTextInline {
+  overflow: visible;
+  text-overflow: clip;
+}
