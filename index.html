@@ -521,7 +521,7 @@ body {
 }
 
 .header-return-live {
-  display: none;
+  display: inline-flex;
   align-items: center;
   border: 1px solid #ff9f35;
   border-radius: 6px;
@@ -537,13 +537,9 @@ body {
   box-shadow: 0 0 14px rgba(255, 159, 53, .14);
 }
 
-.header-return-live.show,
-body.history-viewing #headerReturnLiveBtn {
-  display: inline-flex !important;
+.header-return-live.show {
+  display: inline-flex;
   align-items: center;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
 }
 
 .header-return-live:hover {
@@ -2346,7 +2342,8 @@ body,
    September 10, 20:00
    ========================================================= */
 
-body.history-viewing #reviewInfo {
+body.history-viewing #reviewInfo,
+body:has(#headerReturnLiveBtn.show) #reviewInfo {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2383,7 +2380,8 @@ body.history-viewing #reviewInfo {
   pointer-events: none !important;
 }
 
-body.history-viewing #reviewLabel {
+body.history-viewing #reviewLabel,
+body:has(#headerReturnLiveBtn.show) #reviewLabel {
   display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2394,7 +2392,8 @@ body.history-viewing #reviewLabel {
   white-space: nowrap !important;
 }
 
-body.history-viewing #reviewTimeText {
+body.history-viewing #reviewTimeText,
+body:has(#headerReturnLiveBtn.show) #reviewTimeText {
   display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2414,7 +2413,8 @@ body:not(.history-viewing) #reviewInfo {
 
 /* 1366px TV layout */
 @media screen and (min-width: 1200px) {
-  body.history-viewing #reviewInfo {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
     left: 375px !important;
     top: 8px !important;
   }
@@ -2422,13 +2422,15 @@ body:not(.history-viewing) #reviewInfo {
 
 /* Smaller screens */
 @media screen and (max-width: 1199px) {
-  body.history-viewing #reviewInfo {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
     left: 250px !important;
     top: 7px !important;
     font-size: 11px !important;
   }
 
-  body.history-viewing #reviewTimeText {
+  body.history-viewing #reviewTimeText,
+  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
     font-size: 11px !important;
   }
 }
@@ -2475,8 +2477,10 @@ body:not(.history-viewing) #reviewInfo {
       id="headerReturnLiveBtn"
       class="header-return-live"
       type="button"
-      onclick="returnToLiveDisplay()"
+      onclick="returnToLiveDisplay(event)"
       title="Return to the current live dashboard"
+      aria-hidden="true"
+      tabindex="-1"
     >
       ↻ RETURN TO LIVE
     </button>
@@ -4319,33 +4323,51 @@ let historicalMode = false;
 let historicalRecordedAt = null;
 window.isHistoricalReview = false;
 
+/*
+  HISTORY REVIEW STATE
+  ---------------------------------------------------------
+  There is ONE source of truth: body.history-viewing.
+
+  The RETURN TO LIVE button is never destroyed and never
+  recreated. It is only shown/hidden by enter/exit state.
+  This makes repeated PREVIOUS -> REVIEW -> LIVE cycles safe.
+*/
+let historyActionInProgress = false;
+let historyActionToken = 0;
+
 function setHistoricalHeader(recordedAt) {
   historicalMode = true;
   historicalRecordedAt = recordedAt || null;
   window.isHistoricalReview = true;
 
-  // The body class is the single source of truth for review mode.
-  document.body.classList.add("history-viewing");
-
+  const body = document.body;
   const info = document.getElementById("reviewInfo");
   const text = document.getElementById("reviewTimeText");
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
+  body.classList.add("history-viewing");
+
   if (info) {
     info.classList.add("show");
     info.style.display = "flex";
     info.style.visibility = "visible";
+    info.style.opacity = "1";
   }
 
-  if (label) label.textContent = "REVIEW TIME";
+  if (label) {
+    label.textContent = "REVIEW TIME";
+  }
 
   if (returnBtn) {
     returnBtn.classList.add("show");
-    // Do not set inline display here. CSS uses body.history-viewing.
+    returnBtn.style.display = "inline-flex";
     returnBtn.style.visibility = "visible";
     returnBtn.style.opacity = "1";
     returnBtn.style.pointerEvents = "auto";
+    returnBtn.disabled = false;
+    returnBtn.setAttribute("aria-hidden", "false");
+    returnBtn.removeAttribute("tabindex");
   }
 
   if (text) {
@@ -4367,130 +4389,90 @@ function clearHistoricalHeader() {
   historicalRecordedAt = null;
   window.isHistoricalReview = false;
 
+  const body = document.body;
   const info = document.getElementById("reviewInfo");
   const text = document.getElementById("reviewTimeText");
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
+  body.classList.remove("history-viewing");
+
   if (info) {
     info.classList.remove("show");
     info.style.display = "none";
     info.style.visibility = "hidden";
+    info.style.opacity = "0";
   }
 
-  if (label) label.textContent = "REVIEW TIME";
+  if (label) {
+    label.textContent = "REVIEW TIME";
+  }
 
   if (returnBtn) {
     returnBtn.classList.remove("show");
-    // Remove only transient inline visibility/interaction overrides.
-    returnBtn.style.removeProperty("visibility");
-    returnBtn.style.removeProperty("opacity");
-    returnBtn.style.removeProperty("pointer-events");
+    returnBtn.style.display = "none";
+    returnBtn.style.visibility = "hidden";
+    returnBtn.style.opacity = "0";
+    returnBtn.style.pointerEvents = "none";
+    returnBtn.disabled = false;
+    returnBtn.setAttribute("aria-hidden", "true");
+    returnBtn.setAttribute("tabindex", "-1");
   }
 
-  if (text) text.textContent = "--";
-
-  // Keep the button hidden through CSS while live.
-  document.body.classList.remove("history-viewing");
+  if (text) {
+    text.textContent = "--";
+  }
 }
 
-
 function openHistoryPicker() {
-  const picker =
-    document.getElementById(
-      "historyPicker"
-    );
-
+  const picker = document.getElementById("historyPicker");
   if (!picker) return;
 
   const now = new Date();
 
-  selectedHistoryDate =
-    now.toLocaleDateString(
-      "en-CA"
-    );
+  selectedHistoryDate = now.toLocaleDateString("en-CA");
+  selectedHistoryTime = now.toTimeString().slice(0, 8);
 
-  selectedHistoryTime =
-    now.toTimeString().slice(0, 8);
+  const dateInput = document.getElementById("historyDateInput");
+  const timeInput = document.getElementById("historyTimeInput");
 
-  const dateInput =
-    document.getElementById(
-      "historyDateInput"
-    );
-
-  const timeInput =
-    document.getElementById(
-      "historyTimeInput"
-    );
-
-  if (dateInput) {
-    dateInput.value =
-      selectedHistoryDate;
-  }
-
-  if (timeInput) {
-    timeInput.value =
-      selectedHistoryTime;
-  }
+  if (dateInput) dateInput.value = selectedHistoryDate;
+  if (timeInput) timeInput.value = selectedHistoryTime;
 
   updateHistoryPickerLabels();
   refreshHistoryAvailability();
 
   picker.classList.add("show");
-  picker.setAttribute(
-    "aria-hidden",
-    "false"
-  );
+  picker.setAttribute("aria-hidden", "false");
 }
 
 function closeHistoryPicker() {
-  const picker =
-    document.getElementById(
-      "historyPicker"
-    );
-
+  const picker = document.getElementById("historyPicker");
   if (!picker) return;
 
   picker.classList.remove("show");
-  picker.setAttribute(
-    "aria-hidden",
-    "true"
-  );
+  picker.setAttribute("aria-hidden", "true");
 }
 
 function pickHistoryDate() {
-  const input =
-    document.getElementById(
-      "historyDateInput"
-    );
-
+  const input = document.getElementById("historyDateInput");
   if (!input) return;
 
   try {
-    if (input.showPicker) {
-      input.showPicker();
-    } else {
-      input.click();
-    }
+    if (input.showPicker) input.showPicker();
+    else input.click();
   } catch (e) {
     input.click();
   }
 }
 
 function pickHistoryTime() {
-  const input =
-    document.getElementById(
-      "historyTimeInput"
-    );
-
+  const input = document.getElementById("historyTimeInput");
   if (!input) return;
 
   try {
-    if (input.showPicker) {
-      input.showPicker();
-    } else {
-      input.click();
-    }
+    if (input.showPicker) input.showPicker();
+    else input.click();
   } catch (e) {
     input.click();
   }
@@ -4498,55 +4480,88 @@ function pickHistoryTime() {
 
 function historyDateChanged(value) {
   if (!value) return;
-
   selectedHistoryDate = value;
-
   updateHistoryPickerLabels();
   refreshHistoryAvailability();
 }
 
 function historyTimeChanged(value) {
   if (!value) return;
-
   selectedHistoryTime = value;
-
   updateHistoryPickerLabels();
   refreshHistoryAvailability();
 }
 
 function updateHistoryPickerLabels() {
-  const date =
-    document.getElementById(
-      "historyDateValue"
-    );
+  const date = document.getElementById("historyDateValue");
+  const time = document.getElementById("historyTimeValue");
 
-  const time =
-    document.getElementById(
-      "historyTimeValue"
-    );
+  if (date) date.textContent = selectedHistoryDate || "--";
+  if (time) time.textContent = selectedHistoryTime || "--:--";
+}
 
-  if (date) {
-    date.textContent =
-      selectedHistoryDate || "--";
+async function getSelectedHistoryMatch() {
+  if (
+    typeof window.sharedHistoryConfigured !== "function" ||
+    !window.sharedHistoryConfigured()
+  ) {
+    return {
+      error:
+        "Shared history is not configured. Please add your Google Apps Script Web App URL to config.js first."
+    };
   }
 
-  if (time) {
-    time.textContent =
-      selectedHistoryTime || "--:--";
+  const target = new Date(
+    selectedHistoryDate +
+    "T" +
+    (selectedHistoryTime || "00:00:00") +
+    "+08:00"
+  ).getTime();
+
+  if (!Number.isFinite(target)) {
+    return { error: "Please select a valid date and time." };
   }
+
+  const start = new Date(
+    selectedHistoryDate + "T00:00:00+08:00"
+  );
+
+  const end = new Date(
+    selectedHistoryDate + "T23:59:59+08:00"
+  );
+
+  const rows = await window.loadSharedHistory(
+    start.toISOString(),
+    end.toISOString()
+  );
+
+  const match = rows
+    .map(row => ({
+      timestamp: new Date(row.recorded_at).getTime(),
+      data: row.payload
+    }))
+    .filter(row =>
+      Number.isFinite(row.timestamp) &&
+      row.timestamp <= target
+    )
+    .sort((a, b) => b.timestamp - a.timestamp)[0];
+
+  if (!match) {
+    return {
+      error:
+        "No saved dashboard display was found at or before the selected time."
+    };
+  }
+
+  return { match };
 }
 
 async function refreshHistoryAvailability() {
-  const status =
-    document.getElementById(
-      "historyAvailability"
-    );
-
+  const status = document.getElementById("historyAvailability");
   if (!status) return;
 
   if (
-    typeof window.sharedHistoryConfigured !==
-    "function" ||
+    typeof window.sharedHistoryConfigured !== "function" ||
     !window.sharedHistoryConfigured()
   ) {
     status.textContent =
@@ -4554,272 +4569,221 @@ async function refreshHistoryAvailability() {
     return;
   }
 
-  status.textContent =
-    "Checking shared history...";
+  status.textContent = "Checking shared history...";
 
-  const start =
-    new Date(
-      selectedHistoryDate +
-      "T00:00:00+08:00"
-    );
+  const result = await getSelectedHistoryMatch();
 
-  const end =
-    new Date(
-      selectedHistoryDate +
-      "T23:59:59+08:00"
-    );
-
-  if (
-    !Number.isFinite(start.getTime()) ||
-    !Number.isFinite(end.getTime())
-  ) {
-    status.textContent =
-      "Choose a valid date.";
-    return;
-  }
-
-  const rows =
-    await window.loadSharedHistory(
-      start.toISOString(),
-      end.toISOString()
-    );
-
-  if (!rows.length) {
-    status.textContent =
-      "No saved display exists for this date.";
-    return;
-  }
-
-  const target =
-    new Date(
-      selectedHistoryDate +
-      "T" +
-      (selectedHistoryTime || "00:00:00") +
-      "+08:00"
-    ).getTime();
-
-  const match =
-    rows
-      .map(row => ({
-        timestamp:
-          new Date(
-            row.recorded_at
-          ).getTime(),
-        data: row.payload
-      }))
-      .filter(
-        row =>
-          Number.isFinite(row.timestamp) &&
-          row.timestamp <= target
-      )
-      .sort(
-        (a,b) =>
-          b.timestamp - a.timestamp
-      )[0];
-
-  if (!match) {
-    status.textContent =
-      "No saved display exists at or before the selected time.";
+  if (result.error) {
+    if (
+      result.error ===
+      "No saved dashboard display was found at or before the selected time."
+    ) {
+      status.textContent =
+        "No saved display exists at or before the selected time.";
+    } else {
+      status.textContent = result.error;
+    }
     return;
   }
 
   status.textContent =
     "Closest saved display: " +
-    new Date(
-      match.timestamp
-    ).toLocaleString(
+    new Date(result.match.timestamp).toLocaleString(
       "en-PH",
-      { hour12:false }
+      { hour12: false }
     );
 }
 
 async function viewSelectedHistory() {
-  if (
-    typeof window.sharedHistoryConfigured !==
-    "function" ||
-    !window.sharedHistoryConfigured()
-  ) {
-    alert(
-      "Shared history is not configured. Please add your Google Apps Script Web App URL to config.js first."
-    );
-    return;
-  }
+  if (historyActionInProgress) return;
 
-  const target =
-    new Date(
-      selectedHistoryDate +
-      "T" +
-      (selectedHistoryTime || "00:00:00") +
-      "+08:00"
-    ).getTime();
+  historyActionInProgress = true;
+  const myToken = ++historyActionToken;
 
-  if (!Number.isFinite(target)) {
-    alert(
-      "Please select a valid date and time."
-    );
-    return;
-  }
+  try {
+    const result = await getSelectedHistoryMatch();
 
-  const start =
-    new Date(
-      selectedHistoryDate +
-      "T00:00:00+08:00"
-    );
+    if (myToken !== historyActionToken) return;
 
-  const end =
-    new Date(
-      selectedHistoryDate +
-      "T23:59:59+08:00"
-    );
-
-  const rows =
-    await window.loadSharedHistory(
-      start.toISOString(),
-      end.toISOString()
-    );
-
-  const match =
-    rows
-      .map(row => ({
-        timestamp:
-          new Date(
-            row.recorded_at
-          ).getTime(),
-        data: row.payload
-      }))
-      .filter(
-        row =>
-          Number.isFinite(row.timestamp) &&
-          row.timestamp <= target
-      )
-      .sort(
-        (a,b) =>
-          b.timestamp - a.timestamp
-      )[0];
-
-  if (!match) {
-    alert(
-      "No saved dashboard display was found at or before the selected time."
-    );
-    return;
-  }
-
-  closeHistoryPicker();
-
-  // Display the complete saved Dashboard 1 payload.
-  if (
-    typeof render === "function"
-  ) {
-    manualOverride = true;
-
-    clearTimeout(rotationTimer);
-    clearTimeout(historyTimer);
-    clearTimeout(
-      window.resumeAutoTimer
-    );
-
-    render(match.data);
-
-    // IMPORTANT: set the review header AFTER rendering so no render/live update
-    // can leave the header showing LAST CAPTURE.
-    setHistoricalHeader(match.timestamp);
-    window.isHistoricalReview = true;
-    document.body.classList.add("history-viewing");
-    const reviewLabelNow = document.getElementById("reviewLabel");
-    const reviewInfoNow = document.getElementById("reviewInfo");
-    if (reviewLabelNow) reviewLabelNow.textContent = "REVIEW TIME";
-    if (reviewInfoNow) {
-      reviewInfoNow.classList.add("show");
-      reviewInfoNow.style.display = "flex";
-      reviewInfoNow.style.visibility = "visible";
+    if (result.error) {
+      alert(result.error);
+      return;
     }
 
-    const sync =
-      document.getElementById(
-        "syncText"
-      );
+    const match = result.match;
 
+    closeHistoryPicker();
+
+    /*
+      Stop every automatic process BEFORE rendering the saved data.
+      This is important when the TV has been open for a long time.
+    */
+    manualOverride = true;
+    clearTimeout(rotationTimer);
+    clearTimeout(historyTimer);
+    clearTimeout(window.resumeAutoTimer);
+
+    /*
+      Render the saved payload first.
+      Then apply history state LAST so render() cannot overwrite
+      the REVIEW TIME header.
+    */
+    if (typeof render === "function") {
+      render(match.data);
+    }
+
+    if (myToken !== historyActionToken) return;
+
+    setHistoricalHeader(match.timestamp);
+
+    const sync = document.getElementById("syncText");
     if (sync) {
       sync.textContent =
         "REVIEW TIME: " +
-        new Date(
-          match.timestamp
-        ).toLocaleString(
+        new Date(match.timestamp).toLocaleString(
           "en-PH",
-          { hour12:false }
+          { hour12: false }
         );
     }
 
-    showHistoryExitButton();
+    /*
+      Keep the existing Dashboard 1 screen visible.
+      Do NOT create/remove another LIVE button.
+    */
+    const historyExitBtn =
+      document.getElementById("historyExitBtn");
+
+    if (historyExitBtn) {
+      historyExitBtn.style.display = "none";
+    }
+  } finally {
+    historyActionInProgress = false;
   }
 }
 
+/*
+  Kept for compatibility with any old code that may call it.
+  It no longer creates a second/dynamic button.
+*/
 function showHistoryExitButton() {
-  const headerButton = document.getElementById("headerReturnLiveBtn");
+  const headerButton =
+    document.getElementById("headerReturnLiveBtn");
 
-  // Header button is the only LIVE exit control.
-  if (headerButton) {
-    document.body.classList.add("history-viewing");
+  if (headerButton && document.body.classList.contains("history-viewing")) {
     headerButton.classList.add("show");
+    headerButton.style.display = "inline-flex";
     headerButton.style.visibility = "visible";
-    headerButton.style.opacity = "1";
     headerButton.style.pointerEvents = "auto";
+    headerButton.setAttribute("aria-hidden", "false");
+    headerButton.removeAttribute("tabindex");
   }
 
-  // Remove the old dynamically-created duplicate if it exists.
-  const oldButton = document.getElementById("historyExitBtn");
-  if (oldButton) oldButton.remove();
+  const oldButton =
+    document.getElementById("historyExitBtn");
+
+  if (oldButton) {
+    oldButton.style.display = "none";
+  }
 }
 
-async function exitHistoricalDisplay() {
-  // Stop any rotation/history timers before switching state.
-  clearTimeout(rotationTimer);
-  clearTimeout(historyTimer);
-  clearTimeout(window.resumeAutoTimer);
-
-  manualOverride = false;
-  lastHash = "";
-
-  // Exit review mode FIRST so live refresh/render is allowed again.
-  clearHistoricalHeader();
-  document.body.classList.remove("history-viewing");
-
-  // Restore the live dashboard immediately.
-  if (typeof loadLive2026 === "function") {
-    await loadLive2026();
-  } else if (typeof load === "function") {
-    await load();
+async function exitHistoricalDisplay(event) {
+  if (event) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
-  // Make sure the live state is visually selected.
-  const historyScreen = document.getElementById("historyScreen");
-  if (historyScreen) historyScreen.classList.remove("show");
+  /*
+    Prevent double-clicks and stale async requests from bringing
+    the REVIEW state back after we leave it.
+  */
+  if (historyActionInProgress) return;
 
-  const btn1 = document.getElementById("btnDash1");
-  const btn2 = document.getElementById("btnDash2");
-  const hBtn1 = document.getElementById("hBtnDash1");
-  const hBtn2 = document.getElementById("hBtnDash2");
+  historyActionInProgress = true;
+  const myToken = ++historyActionToken;
 
-  if (btn1) btn1.classList.add("active");
-  if (btn2) btn2.classList.remove("active");
-  if (hBtn1) hBtn1.classList.add("active");
-  if (hBtn2) hBtn2.classList.remove("active");
+  try {
+    clearTimeout(rotationTimer);
+    clearTimeout(historyTimer);
+    clearTimeout(window.resumeAutoTimer);
 
-  // Re-arm normal automatic rotation.
-  startRotation();
+    closeHistoryPicker();
+
+    const button =
+      document.getElementById("headerReturnLiveBtn");
+
+    if (button) {
+      button.disabled = true;
+      button.style.pointerEvents = "none";
+    }
+
+    /*
+      Exit history BEFORE requesting live data.
+      manualOverride remains TRUE during the request so automatic
+      rotation cannot start halfway through the transition.
+    */
+    manualOverride = true;
+    clearHistoricalHeader();
+
+    const oldButton =
+      document.getElementById("historyExitBtn");
+
+    if (oldButton) {
+      oldButton.style.display = "none";
+    }
+
+    /*
+      Force a fresh live render.
+      We intentionally do not use the old async exit sequence
+      (clear state -> await load -> start rotation), because that
+      allowed overlapping timers/requests to interfere with the
+      next review cycle.
+    */
+    lastHash = "";
+
+    if (typeof load === "function") {
+      await load();
+    }
+
+    if (myToken !== historyActionToken) return;
+
+    /*
+      Make absolutely sure a stale history response cannot leave
+      the page in review mode.
+    */
+    clearHistoricalHeader();
+    document.body.classList.remove("history-viewing");
+
+    manualOverride = false;
+
+    /*
+      Restart the normal 3-minute Dashboard 1 -> Dashboard 2 cycle.
+    */
+    startRotation();
+
+  } finally {
+    historyActionInProgress = false;
+
+    const button =
+      document.getElementById("headerReturnLiveBtn");
+
+    if (button) {
+      button.disabled = false;
+      button.style.pointerEvents =
+        document.body.classList.contains("history-viewing")
+          ? "auto"
+          : "none";
+    }
+  }
 }
 
-function returnToLiveDisplay() {
-  return exitHistoricalDisplay();
+async function returnToLiveDisplay(event) {
+  return exitHistoricalDisplay(event);
 }
-
 
 document.addEventListener(
   "keydown",
   function(event) {
-    if (
-      event.key === "Escape"
-    ) {
+    if (event.key === "Escape") {
       closeHistoryPicker();
     }
   }
@@ -6391,9 +6355,7 @@ function manualSwitchDashboard(
   );
 
 
-  if(
-    target === 1
-  ){
+  if(target === 1){
 
     clearHistoricalHeader();
     document.body.classList.remove("history-viewing");
@@ -6402,7 +6364,14 @@ function manualSwitchDashboard(
   }
   else{
 
+    /*
+      Dashboard 2 is the normal history dashboard, not a selected
+      PREVIOUS snapshot. Selecting it must not destroy the reusable
+      RETURN TO LIVE button state unexpectedly.
+    */
     historicalMode = false;
+    historicalRecordedAt = null;
+    window.isHistoricalReview = false;
     document.body.classList.remove("history-viewing");
     showHistoryScreen();
 
