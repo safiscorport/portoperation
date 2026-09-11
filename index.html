@@ -2466,7 +2466,7 @@ body:not(.history-viewing) #reviewInfo {
         style="height:40px;object-fit:contain;flex:0 0 auto;"
       >
 
-      <div id="logoReviewGroup" class="logo-review-group" style="display:none;">
+      <div id="logoReviewGroup" class="logo-review-group" style="display:flex;align-items:center;gap:12px;">
     <div id="reviewInfo" class="review-info" aria-live="polite"
          style="display:none;align-items:center;gap:8px;visibility:hidden;">
       <span id="reviewLabel" class="review-label">REVIEW TIME:</span>
@@ -2486,7 +2486,6 @@ body:not(.history-viewing) #reviewInfo {
 </div>
 
     <div
-      class="cement-title-group"
       style="
         position:absolute;
         left:50%;
@@ -2497,11 +2496,6 @@ body:not(.history-viewing) #reviewInfo {
         text-align:left;
       "
     >
-
-      <div id="headerReviewInline" class="header-review-inline" aria-live="polite">
-        <span id="reviewLabelInline" class="review-label">REVIEW TIME:</span>
-        <span id="reviewTimeTextInline">--</span>
-      </div>
 
       <span class="live-dot"></span>
 
@@ -4344,20 +4338,13 @@ function setHistoricalHeader(recordedAt) {
 
   if (text) {
     const dt = new Date(recordedAt);
-    const formatted = Number.isFinite(dt.getTime())
+    text.textContent = Number.isFinite(dt.getTime())
       ? dt.toLocaleString("en-PH", {
-          month: "long", day: "numeric",
+          month: "long", day: "2-digit",
           hour: "2-digit", minute: "2-digit",
           hour12: false
         })
       : "--";
-
-    text.textContent = formatted;
-
-    const inlineTime = document.getElementById("reviewTimeTextInline");
-    const inlineLabel = document.getElementById("reviewLabelInline");
-    if (inlineTime) inlineTime.textContent = formatted;
-    if (inlineLabel) inlineLabel.textContent = "REVIEW TIME:";
   }
 }
 
