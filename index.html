@@ -4725,19 +4725,24 @@ async function viewSelectedHistory() {
 }
 
 function showHistoryExitButton() {
-  const headerButton = document.getElementById("headerReturnLiveBtn");
-  if (headerButton) headerButton.classList.add("show");
+  const headerButton =
+    document.getElementById("headerReturnLiveBtn");
+
+  // IMPORTANT: clearHistoricalHeader() hides this button when
+  // returning to live. Restore ALL visibility properties every
+  // time a new historical review is opened.
+  if (headerButton) {
+    headerButton.classList.add("show");
+    headerButton.style.display = "inline-flex";
+    headerButton.style.visibility = "visible";
+  }
 
   let button =
-    document.getElementById(
-      "historyExitBtn"
-    );
+    document.getElementById("historyExitBtn");
 
   if (!button) {
     button =
-      document.createElement(
-        "button"
-      );
+      document.createElement("button");
 
     button.id =
       "historyExitBtn";
@@ -4755,17 +4760,14 @@ function showHistoryExitButton() {
       exitHistoricalDisplay;
 
     const switcher =
-      document.querySelector(
-        ".dashboard-switcher"
-      );
+      document.querySelector(".dashboard-switcher");
 
     if (switcher) {
       switcher.prepend(button);
     }
   }
 
-  button.style.display =
-    "block";
+  button.style.display = "block";
 }
 
 async function exitHistoricalDisplay() {
