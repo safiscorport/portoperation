@@ -24,7 +24,7 @@ const DATA_URL =
   "https://raw.githubusercontent.com/safiscorport/portoperation/main/data.json";
 
 const SHEET_NAME = "DashboardHistory";
-const RETENTION_DAYS = 7;
+const RETENTION_DAYS = 30;
 const TIME_ZONE = "Asia/Manila";
 const HEADERS = ["recorded_at", "payload_json"];
 
