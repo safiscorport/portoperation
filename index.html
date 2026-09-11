@@ -520,27 +520,8 @@ body {
   font-weight: 900;
 }
 
-/* =========================================================
-   RETURN TO LIVE — ROBUST HISTORY VISIBILITY
-   The button must reappear every time a history review is opened.
-   Body history-viewing state is the single source of truth.
-   ========================================================= */
-body.history-viewing #headerReturnLiveBtn {
-  display: inline-flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-body:not(.history-viewing) #headerReturnLiveBtn {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
 .header-return-live {
-  display: inline-flex;
+  display: none;
   align-items: center;
   border: 1px solid #ff9f35;
   border-radius: 6px;
@@ -556,9 +537,13 @@ body:not(.history-viewing) #headerReturnLiveBtn {
   box-shadow: 0 0 14px rgba(255, 159, 53, .14);
 }
 
-.header-return-live.show {
-  display: inline-flex;
+.header-return-live.show,
+body.history-viewing #headerReturnLiveBtn {
+  display: inline-flex !important;
   align-items: center;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .header-return-live:hover {
@@ -2361,8 +2346,7 @@ body,
    September 10, 20:00
    ========================================================= */
 
-body.history-viewing #reviewInfo,
-body:has(#headerReturnLiveBtn.show) #reviewInfo {
+body.history-viewing #reviewInfo {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2399,8 +2383,7 @@ body:has(#headerReturnLiveBtn.show) #reviewInfo {
   pointer-events: none !important;
 }
 
-body.history-viewing #reviewLabel,
-body:has(#headerReturnLiveBtn.show) #reviewLabel {
+body.history-viewing #reviewLabel {
   display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2411,8 +2394,7 @@ body:has(#headerReturnLiveBtn.show) #reviewLabel {
   white-space: nowrap !important;
 }
 
-body.history-viewing #reviewTimeText,
-body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+body.history-viewing #reviewTimeText {
   display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
@@ -2432,8 +2414,7 @@ body:not(.history-viewing) #reviewInfo {
 
 /* 1366px TV layout */
 @media screen and (min-width: 1200px) {
-  body.history-viewing #reviewInfo,
-  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+  body.history-viewing #reviewInfo {
     left: 375px !important;
     top: 8px !important;
   }
@@ -2441,15 +2422,13 @@ body:not(.history-viewing) #reviewInfo {
 
 /* Smaller screens */
 @media screen and (max-width: 1199px) {
-  body.history-viewing #reviewInfo,
-  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+  body.history-viewing #reviewInfo {
     left: 250px !important;
     top: 7px !important;
     font-size: 11px !important;
   }
 
-  body.history-viewing #reviewTimeText,
-  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+  body.history-viewing #reviewTimeText {
     font-size: 11px !important;
   }
 }
@@ -4344,6 +4323,8 @@ function setHistoricalHeader(recordedAt) {
   historicalMode = true;
   historicalRecordedAt = recordedAt || null;
   window.isHistoricalReview = true;
+
+  // The body class is the single source of truth for review mode.
   document.body.classList.add("history-viewing");
 
   const info = document.getElementById("reviewInfo");
@@ -4351,22 +4332,30 @@ function setHistoricalHeader(recordedAt) {
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
-  if (info) { info.classList.add("show"); info.style.display = "flex"; info.style.visibility = "visible"; }
+  if (info) {
+    info.classList.add("show");
+    info.style.display = "flex";
+    info.style.visibility = "visible";
+  }
+
   if (label) label.textContent = "REVIEW TIME";
+
   if (returnBtn) {
     returnBtn.classList.add("show");
-    returnBtn.style.setProperty("display", "inline-flex", "important");
-    returnBtn.style.setProperty("visibility", "visible", "important");
-    returnBtn.style.setProperty("opacity", "1", "important");
-    returnBtn.style.setProperty("pointer-events", "auto", "important");
+    // Do not set inline display here. CSS uses body.history-viewing.
+    returnBtn.style.visibility = "visible";
+    returnBtn.style.opacity = "1";
+    returnBtn.style.pointerEvents = "auto";
   }
 
   if (text) {
     const dt = new Date(recordedAt);
     text.textContent = Number.isFinite(dt.getTime())
       ? dt.toLocaleString("en-PH", {
-          month: "long", day: "2-digit",
-          hour: "2-digit", minute: "2-digit",
+          month: "long",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
           hour12: false
         })
       : "--";
@@ -4383,16 +4372,26 @@ function clearHistoricalHeader() {
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
-  if (info) { info.classList.remove("show"); info.style.display = "none"; }
+  if (info) {
+    info.classList.remove("show");
+    info.style.display = "none";
+    info.style.visibility = "hidden";
+  }
+
   if (label) label.textContent = "REVIEW TIME";
+
   if (returnBtn) {
     returnBtn.classList.remove("show");
-    returnBtn.style.setProperty("display", "none", "important");
-    returnBtn.style.setProperty("visibility", "hidden", "important");
-    returnBtn.style.setProperty("opacity", "0", "important");
-    returnBtn.style.setProperty("pointer-events", "none", "important");
+    // Remove only transient inline visibility/interaction overrides.
+    returnBtn.style.removeProperty("visibility");
+    returnBtn.style.removeProperty("opacity");
+    returnBtn.style.removeProperty("pointer-events");
   }
+
   if (text) text.textContent = "--";
+
+  // Keep the button hidden through CSS while live.
+  document.body.classList.remove("history-viewing");
 }
 
 
@@ -4756,77 +4755,62 @@ async function viewSelectedHistory() {
 }
 
 function showHistoryExitButton() {
-  // HISTORY MODE is the source of truth.
-  // Always restore the header button when a review is opened.
-  document.body.classList.add("history-viewing");
+  const headerButton = document.getElementById("headerReturnLiveBtn");
 
-  const headerButton =
-    document.getElementById("headerReturnLiveBtn");
-
+  // Header button is the only LIVE exit control.
   if (headerButton) {
+    document.body.classList.add("history-viewing");
     headerButton.classList.add("show");
-    headerButton.style.setProperty("display", "inline-flex", "important");
-    headerButton.style.setProperty("visibility", "visible", "important");
-    headerButton.style.setProperty("opacity", "1", "important");
-    headerButton.style.setProperty("pointer-events", "auto", "important");
+    headerButton.style.visibility = "visible";
+    headerButton.style.opacity = "1";
+    headerButton.style.pointerEvents = "auto";
   }
 
-  let button =
-    document.getElementById("historyExitBtn");
-
-  if (!button) {
-    button =
-      document.createElement("button");
-
-    button.id =
-      "historyExitBtn";
-
-    button.className =
-      "switcher-btn";
-
-    button.type =
-      "button";
-
-    button.textContent =
-      "↻ LIVE NOW";
-
-    button.onclick =
-      exitHistoricalDisplay;
-
-    const switcher =
-      document.querySelector(".dashboard-switcher");
-
-    if (switcher) {
-      switcher.prepend(button);
-    }
-  }
-
-  button.style.display = "block";
+  // Remove the old dynamically-created duplicate if it exists.
+  const oldButton = document.getElementById("historyExitBtn");
+  if (oldButton) oldButton.remove();
 }
 
 async function exitHistoricalDisplay() {
-  const button =
-    document.getElementById(
-      "historyExitBtn"
-    );
+  // Stop any rotation/history timers before switching state.
+  clearTimeout(rotationTimer);
+  clearTimeout(historyTimer);
+  clearTimeout(window.resumeAutoTimer);
 
-  if (button) {
-    button.style.display =
-      "none";
-  }
-
-  clearHistoricalHeader();
-  document.body.classList.remove("history-viewing");
   manualOverride = false;
   lastHash = "";
 
-  await load();
+  // Exit review mode FIRST so live refresh/render is allowed again.
+  clearHistoricalHeader();
+  document.body.classList.remove("history-viewing");
 
+  // Restore the live dashboard immediately.
+  if (typeof loadLive2026 === "function") {
+    await loadLive2026();
+  } else if (typeof load === "function") {
+    await load();
+  }
+
+  // Make sure the live state is visually selected.
+  const historyScreen = document.getElementById("historyScreen");
+  if (historyScreen) historyScreen.classList.remove("show");
+
+  const btn1 = document.getElementById("btnDash1");
+  const btn2 = document.getElementById("btnDash2");
+  const hBtn1 = document.getElementById("hBtnDash1");
+  const hBtn2 = document.getElementById("hBtnDash2");
+
+  if (btn1) btn1.classList.add("active");
+  if (btn2) btn2.classList.remove("active");
+  if (hBtn1) hBtn1.classList.add("active");
+  if (hBtn2) hBtn2.classList.remove("active");
+
+  // Re-arm normal automatic rotation.
   startRotation();
 }
 
 function returnToLiveDisplay() {
-  exitHistoricalDisplay();
+  return exitHistoricalDisplay();
 }
 
 
