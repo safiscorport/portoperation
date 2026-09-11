@@ -1,2160 +1,1007 @@
-/* =========================================================
-   FULL SCREEN / TV DISPLAY
-   ========================================================= */
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-
-  width: 100%;
-  height: 100%;
-
-  background: #111;
-  color: #fff;
-
-  font-family: Arial, Helvetica, sans-serif;
-
-  overflow: hidden !important;
-}
-
-body {
-  font-size: clamp(13px, 0.85vw, 20px);
-}
-
+const REFRESH_MS = 10000;
+let lastHash = '';
 
 /* =========================================================
-   APP
+   SHARED HISTORY / GOOGLE SHEETS
    ========================================================= */
 
-.app {
-  width: 100vw;
-  max-width: 100vw;
+const SHARED_HISTORY_CONFIG =
+  window.SHARED_HISTORY_CONFIG || {};
 
-  height: 100vh;
-  min-height: 100vh;
+const SHARED_HISTORY_RETENTION_DAYS =
+  Number(SHARED_HISTORY_CONFIG.RETENTION_DAYS || 7);
 
-  display: flex;
-  flex-direction: column;
+const SHARED_HISTORY_SAVE_INTERVAL_MS =
+  Number(SHARED_HISTORY_CONFIG.SAVE_INTERVAL_MS || 30000);
 
-  overflow: hidden;
+let lastSharedHistoryPayload = '';
+let lastSharedHistorySaveAt = 0;
+
+function sharedHistoryConfigured() {
+  const url = String(
+    SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL || ''
+  ).trim();
+
+  return !!url && !url.includes('YOUR_DEPLOYMENT_ID');
 }
 
+async function saveSharedHistorySnapshot(d) {
+  if (!sharedHistoryConfigured()) return;
 
-/* =========================================================
-   TOP HEADER
-   ========================================================= */
+  const now = Date.now();
+  const payload = JSON.stringify(d);
 
-.topbar {
-  flex: 0 0 clamp(52px, 5.2vh, 78px);
+  if (payload === lastSharedHistoryPayload) return;
+  if (now - lastSharedHistorySaveAt < SHARED_HISTORY_SAVE_INTERVAL_MS) return;
 
-  width: 100%;
-  max-width: 100%;
+  try {
+    await fetch(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        action: 'save',
+        recorded_at: new Date().toISOString(),
+        payload: d
+      })
+    });
 
-  background: #080808;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  padding: 0 clamp(12px, 1.2vw, 30px);
-
-  border-bottom: 2px solid #555;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   BRAND
-   ========================================================= */
-
-.brand {
-  display: flex;
-  align-items: center;
-
-  gap: clamp(8px, 0.7vw, 15px);
-
-  min-width: 0;
-}
-
-.brand img {
-  max-width: 100%;
-}
-
-
-/* =========================================================
-   LIVE DOT
-   ========================================================= */
-
-.live-dot {
-  width: clamp(10px, 0.75vw, 16px);
-  height: clamp(10px, 0.75vw, 16px);
-
-  background: #ff3030;
-
-  border-radius: 50%;
-
-  flex-shrink: 0;
-
-  box-shadow:
-    0 0 8px #ff3030,
-    0 0 16px rgba(255, 48, 48, 0.5);
-
-  animation: blink 1s infinite;
-}
-
-
-/* =========================================================
-   TITLE
-   ========================================================= */
-
-.title {
-  font-size: clamp(17px, 1.35vw, 30px);
-
-  font-weight: 900;
-
-  letter-spacing: 1px;
-
-  white-space: nowrap;
-}
-
-.subtitle {
-  font-size: clamp(9px, 0.65vw, 15px);
-
-  color: #aaa;
-
-  letter-spacing: 1px;
-
-  white-space: nowrap;
-}
-
-
-
-/* Review status is intentionally positioned beside the logo. */
-.logo-review-group {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  min-width: 0;
-}
-
-.logo-review-group .review-info {
-  margin-right: 0;
-}
-
-.logo-review-group .header-return-live {
-  margin-right: 0;
-}
-
-@media (max-width: 900px) {
-  .logo-review-group {
-    gap: 4px;
-  }
-  .logo-review-group .review-info {
-    padding: 5px 7px;
-  }
-  .logo-review-group .header-return-live {
-    padding: 6px 8px;
+    lastSharedHistoryPayload = payload;
+    lastSharedHistorySaveAt = now;
+  } catch (error) {
+    console.warn('[Shared History] Google Sheets save failed:', error);
   }
 }
 
+async function loadSharedHistory(startIso, endIso) {
+  if (!sharedHistoryConfigured()) return [];
+
+  try {
+    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
+    url.searchParams.set('action', 'history');
+    url.searchParams.set('start', startIso);
+    url.searchParams.set('end', endIso);
+
+    const response = await fetch(url.toString(), {
+      cache: 'no-store'
+    });
+
+    if (!response.ok) {
+      throw new Error('HTTP ' + response.status);
+    }
+
+    const result = await response.json();
+
+    if (!result.ok) {
+      throw new Error(result.error || 'History request failed');
+    }
+
+    return Array.isArray(result.rows) ? result.rows : [];
+  } catch (error) {
+    console.warn('[Shared History] Google Sheets load failed:', error);
+    return [];
+  }
+}
+
+async function cleanupSharedHistory() {
+  // Old records are cleaned up by Google Apps Script after a save.
+  return;
+}
+
+window.loadSharedHistory = loadSharedHistory;
+window.sharedHistoryConfigured = sharedHistoryConfigured;
+
 /* =========================================================
-   HISTORICAL REVIEW HEADER
+   LAST CLOUD CAPTURE DISPLAY
    ========================================================= */
 
-.review-info {
-  display: none;
-  align-items: center;
-  gap: 7px;
-  padding: 6px 10px;
-  margin-right: 8px;
-  border: 1px solid rgba(255, 177, 71, .45);
-  border-radius: 6px;
-  background: rgba(75, 42, 8, .28);
-  color: #ffd59a;
-  white-space: nowrap;
-  box-shadow: inset 0 0 12px rgba(255, 160, 40, .05);
+const $ = id => document.getElementById(id);
+
+const num = v =>
+  (v === undefined ||
+   v === null ||
+   v === 0 ||
+   v === '-')
+    ? (v === 0 ? '0' : (v || '—'))
+    : Number(v).toLocaleString('en-US');
+
+
+function formatActivityTime(val) {
+  if (!val || val === '0:00' || val === '-') return '0:00';
+  return val;
 }
 
-.review-info.show {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
+
+function isStoppageRemark(text) {
+  if (!text || text === '-') return false;
+
+  const lower = text.toLowerCase();
+
+  return (
+    lower.includes('waiting') ||
+    lower.includes('stopped') ||
+    lower.includes('stop') ||
+    lower.includes('delay') ||
+    lower.includes('breakdown') ||
+    lower.includes('refuse') ||
+    lower.includes('standby') ||
+    lower.includes('repair') ||
+    lower.includes('maintenance') ||
+    lower.includes('problem') ||
+    lower.includes('issue') ||
+    lower.includes('shortage') ||
+    lower.includes('no stock')
+  );
 }
 
-.review-label {
-  color: #ffb14a;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .12em;
+
+/* =========================================================
+   MONTHLY NUMBER HELPERS
+   ========================================================= */
+
+function monthlyNumber(v) {
+
+  if (
+    v === undefined ||
+    v === null ||
+    v === '' ||
+    v === '-'
+  ) {
+    return 0;
+  }
+
+  const n = Number(
+    String(v).replace(/,/g, '')
+  );
+
+  return Number.isFinite(n) ? n : 0;
 }
 
-#reviewTimeText {
-  font-size: 11px;
-  font-weight: 900;
+
+function monthlyFormat(v) {
+
+  if (
+    v === undefined ||
+    v === null ||
+    v === '' ||
+    v === '-'
+  ) {
+    return '—';
+  }
+
+  const n = monthlyNumber(v);
+
+  return n.toLocaleString('en-US');
 }
 
-.header-return-live {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid #ff9f35;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #9d4e08, #5b2d06);
-  color: #fff;
-  padding: 7px 11px;
-  margin-right: 8px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  cursor: pointer;
-  white-space: nowrap;
-  box-shadow: 0 0 14px rgba(255, 159, 53, .14);
+
+function monthlyVarianceClass(v) {
+
+  if (v > 0) {
+    return 'monthly-var-positive';
+  }
+
+  if (v < 0) {
+    return 'monthly-var-negative';
+  }
+
+  return 'monthly-var-zero';
 }
 
-.header-return-live.show {
-  display: inline-flex;
-  align-items: center;
+
+function monthlyVarianceText(v) {
+
+  if (v > 0) {
+    return '+' + Math.abs(v).toLocaleString('en-US');
+  }
+
+  if (v < 0) {
+    return '-' + Math.abs(v).toLocaleString('en-US');
+  }
+
+  return '0';
 }
 
-.header-return-live:hover {
-  filter: brightness(1.18);
+
+/* =========================================================
+   RENDER
+   ========================================================= */
+
+function render(d) {
+
+  /* =======================================================
+     LIVE STATUS
+     ======================================================= */
+
+  $('syncText').textContent =
+    'LIVE • UPDATED ' +
+    new Date(d.updated_at).toLocaleTimeString(
+      'en-PH',
+      {
+        hour12: false
+      }
+    );
+
+  $('refreshSec').textContent =
+    (REFRESH_MS / 1000) + 's';
+
+
+  /* =======================================================
+     BERTHS
+     ======================================================= */
+
+  const rows = d.berths || [];
+
+  $('berthGrid').innerHTML =
+    rows.map(x => {
+
+      let p =
+        Math.max(
+          0,
+          Math.min(
+            100,
+            (x.progress || 0) * 100
+          )
+        );
+
+      let vacant =
+        String(x.vessel || '').toUpperCase() === 'VACANT';
+
+      let remarkAlert =
+        isStoppageRemark(x.remarks)
+          ? 'stoppage-alert'
+          : '';
+
+      return `
+        <div class="berth-row ${vacant ? 'vacant' : ''}">
+
+          <span>
+            <b>${x.berth}</b>
+          </span>
+
+          <span class="vessel">
+            ${x.vessel || '—'}
+          </span>
+
+          <span>
+            ${x.voyage || '-'}
+          </span>
+
+          <span>
+            ${num(x.booking)}
+          </span>
+
+          <span>
+            ${num(x.dispatch)}
+          </span>
+
+          <span>
+            ${num(x.loaded)}
+          </span>
+
+          <span>
+            ${num(x.balance)}
+          </span>
+
+          <span>
+            <div class="progress-wrap">
+              <div class="bar">
+                <i style="width:${p}%"></i>
+              </div>
+
+              ${p > 0 ? p.toFixed(0) + '%' : ''}
+            </div>
+          </span>
+
+          <span>
+            ${num(x.stockpile)}
+          </span>
+
+          <span>
+            ${x.time || '-'}
+          </span>
+
+          <span class="remark ${remarkAlert}">
+            ${x.remarks || '-'}
+          </span>
+
+          <span>
+            ${x.equipment || '0'}
+          </span>
+
+          <span class="activity">
+            ${formatActivityTime(x.activity_time)}
+          </span>
+
+        </div>
+      `;
+
+    }).join('');
+
+
+  /* =======================================================
+     TOTALS
+     ======================================================= */
+
+  const t = d.total || {};
+
+  $('totalBooking').textContent =
+    num(t.booking);
+
+  $('totalDispatch').textContent =
+    num(t.dispatch);
+
+  $('totalLoaded').textContent =
+    num(t.loaded);
+
+  $('totalBalance').textContent =
+    num(t.balance);
+
+  $('totalProgress').textContent =
+    ((t.progress || 0) * 100).toFixed(0) + '%';
+
+  $('totalStockpile').textContent =
+    num(t.stockpile);
+
+
+  /* =======================================================
+     ALPHA BERTHS
+     R1 / R2 / R3
+     ======================================================= */
+
+  $('alphaRows').innerHTML =
+    (d.alpha || []).map(x => {
+
+      let pVal =
+        parseFloat(
+          String(x.progress)
+            .replace('%', '')
+        ) || 0;
+
+      let remarkAlert =
+        isStoppageRemark(x.remarks)
+          ? 'stoppage-alert'
+          : '';
+
+      return `
+        <div class="alpha-row">
+
+          <span>
+            <b>${x.berth}</b>
+          </span>
+
+          <span class="vessel">
+            ${x.vessel}
+          </span>
+
+          <span>
+            ${x.materials || '-'}
+          </span>
+
+          <span>
+            ${x.discharge || '0%'}
+          </span>
+
+          <span>
+            ${x.balance || '0%'}
+          </span>
+
+          <span>
+            <div class="progress-wrap">
+              <div class="bar">
+                <i style="width:${pVal}%"></i>
+              </div>
+
+              ${x.progress}
+            </div>
+          </span>
+
+          <span>
+            ${x.time || '0:00'}
+          </span>
+
+          <span class="remark ${remarkAlert}">
+            ${x.remarks || '-'}
+          </span>
+
+          <span>
+            ${x.equip || '0'}
+          </span>
+
+          <span class="activity">
+            ${formatActivityTime(x.activity_time)}
+          </span>
+
+        </div>
+      `;
+
+    }).join('');
+
+
+  /* =======================================================
+     FOREIGN BERTH
+     BERTH F
+     ======================================================= */
+
+  const f = d.foreign || {};
+
+  let fPVal =
+    parseFloat(
+      String(f.progress || '0')
+        .replace('%', '')
+    ) || 0;
+
+  let fRemarkAlert =
+    isStoppageRemark(f.remarks)
+      ? 'stoppage-alert'
+      : '';
+
+  $('foreignRow').innerHTML = `
+
+    <span>
+      <b>${f.berth}</b>
+    </span>
+
+    <span class="vessel">
+      ${f.vessel}
+    </span>
+
+    <span>
+      ${f.materials || '-'}
+    </span>
+
+    <span>
+      ${f.discharge || '-'}
+    </span>
+
+    <span>
+      ${f.balance || '-'}
+    </span>
+
+    <span>
+
+      <div class="progress-wrap">
+
+        <div class="bar">
+          <i style="width:${fPVal}%"></i>
+        </div>
+
+        ${f.progress || '-'}
+
+      </div>
+
+    </span>
+
+    <span>
+      ${f.time || '-'}
+    </span>
+
+    <span class="remark ${fRemarkAlert}">
+      ${f.remarks || '-'}
+    </span>
+
+    <span>
+      ${f.equip || '0'}
+    </span>
+
+    <span class="activity">
+      ${formatActivityTime(f.activity_time)}
+    </span>
+
+  `;
+
+
+  /* =======================================================
+     TRUCKING
+     ======================================================= */
+
+  const truckData =
+    d.trucking || [];
+
+  const truckTotal =
+    truckData.reduce(
+      (acc, curr) => ({
+
+        august:
+          acc.august +
+          (
+            typeof curr.august === 'number'
+              ? curr.august
+              : 0
+          ),
+
+        september:
+          acc.september +
+          (
+            typeof curr.september === 'number'
+              ? curr.september
+              : 0
+          ),
+
+        daily:
+          acc.daily +
+          (
+            typeof curr.daily === 'number'
+              ? curr.daily
+              : 0
+          )
+
+      }),
+      {
+        august: 0,
+        september: 0,
+        daily: 0
+      }
+    );
+
+
+  $('trucking').innerHTML =
+
+    truckData.map(x => `
+
+      <div class="tr">
+
+        <b>
+          ${x.hauler}
+        </b>
+
+        <span>
+          ${num(x.august)}
+        </span>
+
+        <span>
+          ${num(x.september)}
+        </span>
+
+        <span>
+          ${num(x.daily)}
+        </span>
+
+      </div>
+
+    `).join('')
+
+    +
+
+    `
+
+      <div class="tr total-row">
+
+        <b>
+          Total
+        </b>
+
+        <span>
+          <b>${num(truckTotal.august)}</b>
+        </span>
+
+        <span>
+          <b>${num(truckTotal.september)}</b>
+        </span>
+
+        <span>
+          <b>${num(truckTotal.daily)}</b>
+        </span>
+
+      </div>
+
+    `;
+
+
+  /* =======================================================
+     MONTHLY TABLE
+     
+     2025 | VARIANCE | 2026
+
+     Variance = 2026 - 2025
+     ======================================================= */
+
+  const m =
+    d.monthly || [];
+
+  const mt =
+    d.monthly_total || {};
+
+  let monthlyHTML = '';
+
+
+  /* -------------------------------------------------------
+     MONTHLY ROWS
+     ------------------------------------------------------- */
+
+  m.forEach(x => {
+
+    const y2025 =
+      monthlyNumber(x.y2025);
+
+    const y2026 =
+      monthlyNumber(x.y2026);
+
+    const variance =
+      y2026 - y2025;
+
+
+    monthlyHTML += `
+
+      <div class="monthly-row">
+
+        <!-- MONTH -->
+
+        <div class="monthly-month">
+          ${x.month}
+        </div>
+
+
+        <!-- 2025 -->
+
+        <div class="monthly-2025">
+          ${monthlyFormat(x.y2025)}
+        </div>
+
+
+        <!-- CENTER VARIANCE -->
+
+        <div class="
+          monthly-variance
+          ${monthlyVarianceClass(variance)}
+        ">
+
+          <span class="variance-value">
+            ${monthlyVarianceText(variance)}
+          </span>
+
+        </div>
+
+
+        <!-- 2026 -->
+
+        <div class="monthly-2026">
+          ${monthlyFormat(x.y2026)}
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+
+  /* -------------------------------------------------------
+     TOTAL ROW
+     ------------------------------------------------------- */
+
+  const total2025 =
+    monthlyNumber(mt.y2025);
+
+  const total2026 =
+    monthlyNumber(mt.y2026);
+
+  const totalVariance =
+    total2026 - total2025;
+
+
+  monthlyHTML += `
+
+    <div class="
+      monthly-row
+      monthly-total
+    ">
+
+      <!-- TOTAL -->
+
+      <div class="monthly-month">
+        TOTAL
+      </div>
+
+
+      <!-- 2025 -->
+
+      <div class="monthly-2025">
+        ${monthlyFormat(mt.y2025)}
+      </div>
+
+
+      <!-- TOTAL VARIANCE -->
+
+      <div class="
+        monthly-variance
+        ${monthlyVarianceClass(totalVariance)}
+      ">
+
+        <span class="variance-value">
+          ${monthlyVarianceText(totalVariance)}
+        </span>
+
+      </div>
+
+
+      <!-- 2026 -->
+
+      <div class="monthly-2026">
+        ${monthlyFormat(mt.y2026)}
+      </div>
+
+    </div>
+
+  `;
+
+
+  $('monthly').innerHTML =
+    monthlyHTML;
+
+
+  /* =======================================================
+     DAILY PRODUCTION
+     ======================================================= */
+
+  const prodData =
+    d.daily_production || [];
+
+  const prodTotal =
+    prodData.reduce(
+      (sum, curr) =>
+        sum +
+        (
+          typeof curr.qty === 'number'
+            ? curr.qty
+            : 0
+        ),
+      0
+    );
+
+
+  $('dailyProduction').innerHTML =
+
+    prodData.map(x => `
+
+      <div class="prod-row">
+
+        <span>
+          ${x.shift}
+        </span>
+
+        <b>
+          ${num(x.qty)}
+        </b>
+
+      </div>
+
+    `).join('')
+
+    +
+
+    `
+
+      <div class="prod-row total-row">
+
+        <span>
+          Total
+        </span>
+
+        <b>
+          ${num(prodTotal)}
+        </b>
+
+      </div>
+
+    `;
+
+
+  /* =======================================================
+     TRUCKING STOCKPILE
+     ======================================================= */
+
+  const stockData =
+    d.trucking_stockpile || [];
+
+  const stockTotal =
+    stockData.reduce(
+      (sum, curr) =>
+        sum +
+        (
+          typeof curr.volume === 'number'
+            ? curr.volume
+            : 0
+        ),
+      0
+    );
+
+
+  $('truckingStockpile').innerHTML =
+
+    stockData.map(x => `
+
+      <div class="prod-row">
+
+        <span>
+          ${x.client}
+        </span>
+
+        <b>
+          ${num(x.volume)}
+        </b>
+
+      </div>
+
+    `).join('')
+
+    +
+
+    `
+
+      <div class="prod-row total-row">
+
+        <span>
+          Total
+        </span>
+
+        <b>
+          ${num(stockTotal)}
+        </b>
+
+      </div>
+
+    `;
+
+
+  /* =======================================================
+     STATUS & PERSONNEL
+     ======================================================= */
+
+  const s =
+    d.status || {};
+
+  $('supervisor').textContent =
+    s.supervisor || '--';
+
+  $('checker').textContent =
+    s.checker || '--';
+
+  $('pmc').textContent =
+    s.pmc || '--';
+
+  $('cranes').textContent =
+    s.cranes ?? '--';
+
+  $('forklifts').textContent =
+    s.forklifts ?? '--';
+
+  $('stevedores').textContent =
+    s.stevedores ?? '--';
+
+
+  /* =======================================================
+     TICKER / ALERTS
+     ======================================================= */
+
+  const alerts =
+    rows
+      .filter(
+        x =>
+          x.remarks &&
+          x.remarks !== '-' &&
+          x.vessel !== 'VACANT'
+      )
+      .map(
+        x =>
+          `${x.berth}: ${x.vessel} — ${x.remarks}`
+      );
+
+
+  $('tickerText').textContent =
+    alerts.length
+      ? alerts.join('    •    ')
+      : 'ALL PORT OPERATIONS NORMAL';
+
 }
 
-.history-return-live {
-  border: 1px solid #ff9f35;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #9d4e08, #5b2d06);
-  color: #fff;
-  padding: 7px 11px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  cursor: pointer;
+
+/* =========================================================
+   LOAD DATA.JSON
+   ========================================================= */
+
+async function load() {
+
+  try {
+
+    const r =
+      await fetch(
+        'data.json?t=' + Date.now(),
+        {
+          cache: 'no-store'
+        }
+      );
+
+
+    if (!r.ok) {
+      throw new Error(r.status);
+    }
+
+
+    const d =
+      await r.json();
+
+    // Save to shared cloud history in the background.
+    saveSharedHistorySnapshot(d);
+
+
+    const h =
+      JSON.stringify(d);
+
+
+    if (h !== lastHash) {
+
+      lastHash = h;
+
+      // Do not overwrite a selected historical display with live data.
+      if (!document.body.classList.contains('history-viewing')) {
+        render(d);
+      }
+
+    }
+
+  }
+
+  catch (e) {
+
+    $('syncText').textContent =
+      'ONLINE / WAITING FOR DATA';
+
+  }
+
 }
+
+
 
 /* =========================================================
    CLOCK
    ========================================================= */
 
-.clock {
-  text-align: right;
-
-  min-width: 0;
-
-  white-space: nowrap;
-}
-
-.clock div:first-child {
-  font-size: clamp(9px, 0.65vw, 15px);
-
-  color: #aaa;
-}
-
-.clock div:last-child {
-  font-size: clamp(17px, 1.25vw, 28px);
-
-  font-weight: 900;
-}
-
-
-/* =========================================================
-   MAIN AREA
-   ========================================================= */
-
-.main-content {
-
-  flex: 1;
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  padding:
-    clamp(3px, 0.35vh, 7px)
-    clamp(5px, 0.55vw, 15px);
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: clamp(3px, 0.35vh, 7px);
-
-  overflow: hidden !important;
-}
-
-
-/* =========================================================
-   TABLE CONTAINER
-   ========================================================= */
-
-.table-container {
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  background: #1d1d1d;
-
-  border: 1px solid #555;
-
-  margin: 0;
-
-  overflow: hidden !important;
-}
-
-
-/* =========================================================
-   MAIN BERTH TABLE
-
-   TOTAL = 100%
-
-   Berth      5%
-   Vessel     10%
-   Voyage     4%
-   Booking    7%
-   Dispatch   7%
-   Loaded     7%
-   Balance    7%
-   Progress   8%
-   Stockpile  7%
-   Time       5%
-   Remarks    14%
-   Equipment  10%
-   Activity Time 9%
-   ========================================================= */
-
-.table-header-bar,
-.berth-row,
-.table-footer-bar {
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  display: grid;
-
-  grid-template-columns:
-
-    5%
-    10%
-    4%
-    7%
-    7%
-    7%
-    7%
-    8%
-    7%
-    5%
-    14%
-    10%
-    9%;
-
-  align-items: center;
-
-  padding:
-    clamp(3px, 0.32vh, 6px)
-    clamp(4px, 0.35vw, 10px);
-
-  border-bottom: 1px solid #303030;
-
-  font-size: clamp(11px, 0.78vw, 18px);
-
-  line-height: 1.05;
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   TABLE HEADER
-   ========================================================= */
-
-.table-header-bar {
-
-  background: #34404d;
-
-  font-weight: 900;
-
-  color: #fff;
-
-  border-bottom: 1px solid #777;
-
-  font-size: clamp(10px, 0.68vw, 16px);
-
-  white-space: nowrap;
-}
-
-
-/* =========================================================
-   BERTH ROW
-   ========================================================= */
-
-.berth-row {
-
-  min-height: clamp(24px, 2.45vh, 42px);
-
-  min-width: 0;
-}
-
-
-/* Alternating rows */
-
-.berth-row:nth-child(even) {
-  background: #242424;
-}
-
-.berth-row:nth-child(odd) {
-  background: #1b1b1b;
-}
-
-
-/* Vacant */
-
-.berth-row.vacant {
-  opacity: 0.45;
-}
-
-
-/* =========================================================
-   VESSEL
-   ========================================================= */
-
-.berth-row .vessel,
-.alpha-row .vessel {
-
-  font-weight: 900;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   MAIN TABLE CELLS
-   ========================================================= */
-
-.berth-row > div,
-.berth-row > span,
-.table-header-bar > div,
-.table-header-bar > span,
-.table-footer-bar > div,
-.table-footer-bar > span {
-
-  min-width: 0;
-
-  width: 100%;
-
-  max-width: 100%;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   PROGRESS BAR
-   ========================================================= */
-
-.progress-wrap {
-
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  width: 100%;
-
-  height: clamp(10px, 1.15vh, 18px);
-
-  margin: 0;
-
-  padding: 0;
-
-  overflow: hidden;
-}
-
-
-.bar {
-
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  background: #333;
-
-  border: 1px solid #666;
-
-  overflow: hidden;
-
-  z-index: 1;
-}
-
-
-.bar i {
-
-  display: block;
-
-  height: 100%;
-
-  background: #65b83f;
-
-  box-shadow:
-    0 0 5px rgba(101, 184, 63, 0.5);
-
-  position: relative;
-
-  z-index: 1;
-}
-
-
-/* =========================================================
-   PROGRESS PERCENTAGE
-   ========================================================= */
-
-.progress-wrap span {
-
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  color: #fff;
-
-  font-size: clamp(9px, 0.68vw, 15px);
-
-  font-weight: 900;
-
-  line-height: 1;
-
-  text-align: center;
-
-  z-index: 10;
-
-  pointer-events: none;
-
-  text-shadow:
-    1px 1px 2px #000,
-    -1px -1px 2px #000,
-    0 0 3px #000;
-}
-
-
-/* =========================================================
-   ALPHA / FOREIGN SECTION
-   ========================================================= */
-
-.sub-section-title {
-
-  background: #303030;
-
-  padding:
-    clamp(2px, 0.25vh, 5px)
-    clamp(5px, 0.4vw, 10px);
-
-  font-weight: 900;
-
-  font-size: clamp(10px, 0.7vw, 16px);
-
-  color: #ccc;
-
-  border-bottom: 1px solid #555;
-
-  white-space: nowrap;
-}
-
-
-/* =========================================================
-   BERTH A / BERTH F
-
-   TOTAL = 100%
-
-   Berth       6%
-   Vessel      12%
-   Material    14%
-   Discharge   8%
-   Balance     8%
-   Progress    8%
-   Time        7%
-   Remarks     15%
-   Equipment   12%
-   Activity    10%
-   ========================================================= */
-
-.alpha-header-bar,
-.alpha-row {
-
-  display: grid;
-
-  grid-template-columns:
-
-    6%
-    12%
-    14%
-    8%
-    8%
-    8%
-    7%
-    15%
-    12%
-    10%;
-
-  align-items: center;
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  padding:
-    clamp(3px, 0.3vh, 6px)
-    clamp(5px, 0.4vw, 10px);
-
-  font-size: clamp(11px, 0.78vw, 18px);
-
-  line-height: 1.05;
-
-  overflow: hidden;
-}
-
-
-/* Alpha header */
-
-.alpha-header-bar {
-
-  background: #34404d;
-
-  font-weight: 900;
-
-  color: #fff;
-
-  font-size: clamp(10px, 0.68vw, 16px);
-
-  white-space: nowrap;
-}
-
-
-/* Alpha rows */
-
-.alpha-row {
-
-  background: #1b1b1b;
-
-  border-bottom: 1px solid #303030;
-
-  min-height: clamp(23px, 2.2vh, 38px);
-}
-
-
-/* Alpha cells */
-
-.alpha-header-bar > div,
-.alpha-header-bar > span,
-.alpha-row > div,
-.alpha-row > span {
-
-  min-width: 0;
-
-  width: 100%;
-
-  max-width: 100%;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   ANALYTICS
-   ========================================================= */
-
-.analytics-grid {
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  display: grid;
-
-  grid-template-columns:
-
-    minmax(0, 1.05fr)
-    minmax(0, 1.05fr)
-    minmax(0, 0.8fr);
-
-  gap: clamp(5px, 0.5vw, 12px);
-
-  margin-top: 1px;
-
-  flex: 1;
-
-  min-height: 0;
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   PANELS
-   ========================================================= */
-
-.panel {
-
-  background: #1d1d1d;
-
-  border: 1px solid #555;
-
-  padding: clamp(3px, 0.3vw, 8px);
-
-  display: flex;
-
-  flex-direction: column;
-
-  min-width: 0;
-
-  max-width: 100%;
-
-  overflow: hidden;
-}
-
-
-.panel-title {
-
-  font-weight: 900;
-
-  background: #34404d;
-
-  padding:
-    clamp(3px, 0.3vh, 6px)
-    clamp(5px, 0.4vw, 10px);
-
-  font-size: clamp(10px, 0.72vw, 17px);
-
-  color: #fff;
-
-  margin-bottom: 3px;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   STACK PANEL
-   ========================================================= */
-
-.stack-panel {
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: clamp(3px, 0.3vh, 6px);
-
-  min-height: 0;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   SMALL TABLES
-   ========================================================= */
-
-.table-mini {
-
-  display: flex;
-
-  flex-direction: column;
-
-  min-height: 0;
-
-  min-width: 0;
-
-  overflow: hidden;
-}
-
-
-.table-mini .tr {
-
-  display: grid;
-
-  grid-template-columns:
-    1.25fr
-    1fr
-    1fr
-    1fr;
-
-  align-items: center;
-
-  padding:
-    clamp(2px, 0.25vh, 5px)
-    clamp(4px, 0.4vw, 9px);
-
-  border-bottom: 1px solid #303030;
-
-  font-size: clamp(10px, 0.7vw, 16px);
-
-  line-height: 1.05;
-
-  min-height: clamp(19px, 1.9vh, 32px);
-
-  min-width: 0;
-
-  overflow: hidden;
-}
-
-
-.table-mini.header-row {
-
-  background: #303030;
-
-  font-weight: 900;
-
-  color: #ccc;
-
-  font-size: clamp(10px, 0.65vw, 15px);
-}
-
-
-.total-row {
-
-  background: #252525;
-
-  border-top: 1px solid #666;
-
-  font-weight: 900;
-}
-
-
-/* =========================================================
-   PRODUCTION
-   ========================================================= */
-
-.production {
-
-  display: flex;
-
-  flex-direction: column;
-
-  min-height: 0;
-
-  min-width: 0;
-
-  overflow: hidden;
-}
-
-
-.prod-row {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  padding:
-    clamp(3px, 0.28vh, 6px)
-    clamp(5px, 0.4vw, 10px);
-
-  border-bottom: 1px solid #303030;
-
-  font-size: clamp(10px, 0.72vw, 17px);
-
-  min-height: clamp(21px, 2vh, 34px);
-
-  min-width: 0;
-}
-
-
-.prod-row b {
-
-  font-size: clamp(11px, 0.8vw, 19px);
-
-  font-weight: 900;
-}
-
-
-/* =========================================================
-   MONTHLY VESSEL CEMENT LOADING
-   ========================================================= */
-
-/* Header:
-   EMPTY | 2025 | VARIANCE | 2026
-*/
-
-.monthly-grid-head {
-
-  display: grid;
-
-  grid-template-columns:
-    2fr
-    1.25fr
-    1fr
-    1.25fr;
-
-  width: 100%;
-  max-width: 100%;
-
-  background: #303030;
-
-  font-weight: 900;
-
-  font-size: clamp(10px, 0.68vw, 16px);
-
-  text-align: center;
-
-  padding:
-    clamp(3px, 0.25vh, 5px);
-
-  min-width: 0;
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   MONTHLY CONTAINER
-   ========================================================= */
-
-.monthly {
-
-  display: flex;
-
-  flex-direction: column;
-
-  width: 100%;
-  max-width: 100%;
-
-  gap: 1px;
-
-  font-size: clamp(10px, 0.68vw, 16px);
-
-  min-height: 0;
-
-  min-width: 0;
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   EACH MONTH ROW
-   ========================================================= */
-
-.monthly-row {
-
-  display: grid;
-
-  grid-template-columns:
-    2fr
-    1.25fr
-    1fr
-    1.25fr;
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  align-items: center;
-
-  min-height: clamp(19px, 1.9vh, 32px);
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   MONTHLY CELLS
-   ========================================================= */
-
-.monthly-row > div {
-
-  padding:
-    clamp(2px, 0.22vh, 5px)
-    3px;
-
-  background: #1b1b1b;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  min-width: 0;
-
-  width: 100%;
-
-  max-width: 100%;
-
-  text-align: center;
-}
-
-
-/* =========================================================
-   MONTH NAME
-   ========================================================= */
-
-.monthly-row .monthly-month {
-
-  background: #333;
-
-  font-weight: 900;
-
-  text-align: left;
-
-  padding-left: 6px;
-}
-
-
-/* =========================================================
-   2025 VALUE
-   ========================================================= */
-
-.monthly-row .monthly-2025 {
-
-  text-align: right;
-
-  font-weight: 700;
-}
-
-
-/* =========================================================
-   VARIANCE
-   ========================================================= */
-
-.monthly-row .monthly-variance {
-
-  text-align: center;
-
-  font-weight: 900;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  white-space: nowrap;
-}
-
-
-/* Positive */
-
-.monthly-var-positive {
-
-  color: #65b83f !important;
-
-  font-weight: 900;
-}
-
-
-/* Negative */
-
-.monthly-var-negative {
-
-  color: #ff3030 !important;
-
-  font-weight: 900;
-}
-
-
-/* Zero */
-
-.monthly-var-zero {
-
-  color: #fff !important;
-
-  font-weight: 900;
-}
-
-
-/* =========================================================
-   2026 VALUE
-   ========================================================= */
-
-.monthly-row .monthly-2026 {
-
-  text-align: right;
-
-  font-weight: 700;
-}
-
-
-/* =========================================================
-   MONTHLY TOTAL
-   ========================================================= */
-
-.monthly-row.monthly-total {
-
-  border-top: 1px solid #666;
-
-  font-weight: 900;
-}
-
-
-.monthly-row.monthly-total > div {
-
-  background: #1a1a1a;
-
-  font-weight: 900;
-}
-
-
-.monthly-row.monthly-total .monthly-month {
-
-  background: #252525;
-
-  font-weight: 900;
-}
-
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-.footer-bar {
-
-  flex: 0 0 clamp(40px, 5vh, 68px);
-
-  width: 100%;
-  max-width: 100%;
-
-  background: #080808;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding:
-    0
-    clamp(6px, 0.7vw, 18px);
-
-  border-top: 1px solid #555;
-
-  font-size: clamp(10px, 0.65vw, 15px);
-
-  min-width: 0;
-
-  overflow: hidden;
-}
-
-
-/* =========================================================
-   FOOTER GROUP
-   ========================================================= */
-
-.footer-group {
-
-  display: flex;
-
-  gap: clamp(5px, 0.7vw, 15px);
-
-  min-width: 0;
-
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   FOOTER ITEM
-   ========================================================= */
-
-.f-item {
-
-  background: #1b1b1b;
-
-  padding:
-    clamp(2px, 0.25vh, 5px)
-    clamp(5px, 0.4vw, 10px);
-
-  border: 1px solid #444;
-
-  display: flex;
-
-  flex-direction: column;
-
-  min-width: 0;
-}
-
-
-.f-item span {
-
-  color: #aaa;
-
-  font-size: clamp(8px, 0.5vw, 12px);
-
-  white-space: nowrap;
-}
-
-
-.f-item b {
-
-  font-size: clamp(10px, 0.65vw, 15px);
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   LIVE WEATHER TICKER
-   ========================================================= */
-
-.ticker-wrap {
-
-  display: flex;
-
-  align-items: center;
-
-  flex: 1;
-
-  min-width: 0;
-
-  margin:
-    0
-    clamp(5px, 1vw, 20px);
-
-  background: #151515;
-
-  border: 1px solid #444;
-
-  overflow: hidden;
-
-  height: clamp(25px, 2.7vh, 40px);
-}
-
-
-.ticker-label {
-
-  background: #b00000;
-
-  color: #fff;
-
-  padding:
-    0
-    clamp(6px, 0.5vw, 12px);
-
-  font-weight: 900;
-
-  font-size: clamp(9px, 0.6vw, 14px);
-
-  height: 100%;
-
-  display: flex;
-
-  align-items: center;
-
-  flex-shrink: 0;
-}
-
-
-.ticker {
-
-  overflow: hidden;
-
-  white-space: nowrap;
-
-  flex: 1;
-
-  min-width: 0;
-}
-
-
-.ticker div {
-
-  display: inline-block;
-
-  padding-left: 100%;
-
-  animation: ticker 25s linear infinite;
-
-  color: #ffc107;
-
-  font-weight: 900;
-
-  font-size: clamp(10px, 0.7vw, 17px);
-}
-
-
-/* =========================================================
-   FOOTER RIGHT
-   ========================================================= */
-
-.footer-right {
-
-  color: #aaa;
-
-  font-size: clamp(9px, 0.55vw, 13px);
-
-  white-space: nowrap;
-
-  flex-shrink: 0;
-}
-
-
-/* =========================================================
-   ANIMATIONS
-   ========================================================= */
-
-@keyframes blink {
-
-  50% {
-    opacity: 0.3;
-  }
-
-}
-
-
-@keyframes ticker {
-
-  to {
-    transform: translateX(-100%);
-  }
+function clock() {
+
+  const n =
+    new Date();
+
+
+  $('phDate').textContent =
+    n.toLocaleDateString(
+      'en-PH',
+      {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: '2-digit'
+      }
+    );
+
+
+  $('phTime').textContent =
+    n.toLocaleTimeString(
+      'en-PH',
+      {
+        hour12: false
+      }
+    );
 
 }
 
 
 /* =========================================================
-   STOPPAGE / DELAY HIGHLIGHT
+   START
    ========================================================= */
 
-@keyframes stoppageSweep {
-
-  0% {
-    background-position: 200% 0;
-  }
-
-  100% {
-    background-position: -200% 0;
-  }
-
-}
-
-
-.stoppage-alert {
-
-  background: linear-gradient(
-    90deg,
-    rgba(255, 48, 48, 0.4) 0%,
-    rgba(255, 120, 120, 0.9) 50%,
-    rgba(255, 48, 48, 0.4) 100%
-  );
-
-  background-size: 200% 100%;
-
-  animation: stoppageSweep 2s linear infinite;
-
-  color: #fff !important;
-
-  font-weight: 900;
-
-  display: block;
-
-  height: 100%;
-
-  width: 100%;
-
-  padding: 2px 4px;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   DASHBOARD PAGE TRANSITION
-   ========================================================= */
-
-.dashboard-page {
-
-  width: 100%;
-  max-width: 100%;
-
-  min-width: 0;
-
-  box-sizing: border-box;
-
-  position: absolute;
-
-  top: 0;
-  left: 0;
-
-  opacity: 0;
-
-  visibility: hidden;
-
-  transform: translateX(35px);
-
-  transition:
-    opacity 0.8s ease,
-    transform 0.8s ease,
-    visibility 0.8s ease;
-
-  overflow: hidden;
-}
-
-
-.dashboard-page.active {
-
-  position: relative;
-
-  opacity: 1;
-
-  visibility: visible;
-
-  transform: translateX(0);
-}
-
-
-.dashboard-page.leaving {
-
-  opacity: 0;
-
-  visibility: hidden;
-
-  transform: translateX(-35px);
-}
-
-
-/* =========================================================
-   PAGE INDICATOR
-   ========================================================= */
-
-.page-indicator {
-
-  position: fixed;
-
-  right: 10px;
-
-  bottom: 52px;
-
-  display: flex;
-
-  gap: 6px;
-
-  z-index: 9999;
-
-  pointer-events: none;
-}
-
-
-.page-indicator-dot {
-
-  width: 7px;
-
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: #555;
-
-  opacity: 0.45;
-
-  transition:
-    opacity 0.3s ease,
-    background 0.3s ease,
-    box-shadow 0.3s ease;
-}
-
-
-.page-indicator-dot.active {
-
-  background: #6dcc45;
-
-  opacity: 1;
-
-  box-shadow:
-    0 0 7px rgba(108, 204, 69, 0.9);
-}
-
-
-/* =========================================================
-   1920 x 1080 TV OPTIMIZATION
-   ========================================================= */
-
-@media screen and
-(min-width: 1600px) and
-(max-width: 2499px) {
-
-  body {
-    font-size: 14px;
-  }
-
-
-  /* Main berth table */
-
-  .table-header-bar,
-  .berth-row,
-  .table-footer-bar {
-
-    font-size: 14px;
-
-  }
-
-
-  .table-header-bar {
-
-    font-size: 13px;
-
-  }
-
-
-  /* Berth A / F */
-
-  .alpha-header-bar,
-  .alpha-row {
-
-    font-size: 14px;
-
-  }
-
-
-  .alpha-header-bar {
-
-    font-size: 13px;
-
-  }
-
-
-  /* Progress */
-
-  .progress-wrap span {
-
-    font-size: 12px;
-
-  }
-
-
-  /* Main row height */
-
-  .berth-row {
-
-    min-height: 30px;
-
-  }
-
-
-  .alpha-row {
-
-    min-height: 28px;
-
-  }
-
-
-  /* Monthly */
-
-  .monthly-grid-head {
-
-    font-size: 13px;
-
-  }
-
-
-  .monthly {
-
-    font-size: 13px;
-
-  }
-
-
-  .monthly-row {
-
-    min-height: 25px;
-
-  }
-
-}
-
-
-/* =========================================================
-   4K / VERY WIDE TV
-   ========================================================= */
-
-@media (min-width: 2500px) {
-
-  body {
-
-    font-size: 18px;
-
-  }
-
-
-  .title {
-
-    font-size: 30px;
-
-  }
-
-
-  .berth-row,
-  .alpha-row {
-
-    min-height: 42px;
-
-  }
-
-}
-
-
-/* =========================================================
-   1366 / 1360 / 1280 SCREEN
-   ========================================================= */
-
-@media (max-width: 1400px) {
-
-  body {
-
-    font-size: 13px;
-
-  }
-
-
-  .berth-row,
-  .alpha-row {
-
-    min-height: 23px;
-
-  }
-
-
-  .analytics-grid {
-
-    gap: 4px;
-
-  }
-
-
-  .table-header-bar,
-  .berth-row,
-  .table-footer-bar {
-
-    font-size: 11px;
-
-  }
-
-
-  .alpha-header-bar,
-  .alpha-row {
-
-    font-size: 11px;
-
-  }
-
-
-  /* Monthly */
-
-  .monthly-grid-head {
-
-    font-size: 11px;
-
-  }
-
-
-  .monthly {
-
-    font-size: 11px;
-
-  }
-
-
-  .monthly-row {
-
-    min-height: 23px;
-
-  }
-
-}
-
-
-/* =========================================================
-   SMALLER LAPTOP
-   ========================================================= */
-
-@media (max-width: 1100px) {
-
-  body {
-
-    font-size: 12px;
-
-  }
-
-
-  .table-header-bar,
-  .berth-row,
-  .table-footer-bar {
-
-    font-size: 10px;
-
-  }
-
-
-  .alpha-header-bar,
-  .alpha-row {
-
-    font-size: 10px;
-
-  }
-
-}
-
-
-/* =========================================================
-   FINAL WIDTH SAFETY
-   ========================================================= */
-
-html,
-body,
-.app,
-.main-content,
-.dashboard-page,
-.table-container,
-.table-header-bar,
-.berth-row,
-.table-footer-bar,
-.alpha-header-bar,
-.alpha-row,
-.analytics-grid,
-.panel,
-.monthly-grid-head,
-.monthly,
-.monthly-row {
-
-  max-width: 100%;
-
-  min-width: 0;
-}
-
-
-/* =========================================================
-   ABSOLUTELY PREVENT HORIZONTAL OVERFLOW
-   ========================================================= */
-
-html,
-body,
-.app,
-.main-content {
-
-  overflow-x: hidden !important;
-
-}
-
-
-/* =========================================================
-   IMPORTANT:
-   CHILDREN MUST NOT FORCE THE GRID WIDER
-   ========================================================= */
-
-.table-header-bar *,
-.berth-row *,
-.table-footer-bar *,
-.alpha-header-bar *,
-.alpha-row *,
-.monthly-grid-head *,
-.monthly *,
-.monthly-row * {
-
-  min-width: 0;
-
-  max-width: 100%;
-}
-
-
-/* =========================================================
-   KEEP LONG TEXT INSIDE ITS COLUMN
-   ========================================================= */
-
-.berth-row > div,
-.berth-row > span,
-.table-header-bar > div,
-.table-header-bar > span,
-.table-footer-bar > div,
-.table-footer-bar > span,
-.alpha-row > div,
-.alpha-row > span,
-.alpha-header-bar > div,
-.alpha-header-bar > span {
-
-  min-width: 0 !important;
-
-  max-width: 100% !important;
-
-  overflow: hidden !important;
-
-  white-space: nowrap;
-
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   MONTHLY FINAL SAFETY
-   ========================================================= */
-
-.monthly-row > div {
-
-  min-width: 0 !important;
-
-  max-width: 100% !important;
-
-  overflow: hidden !important;
-
-  white-space: nowrap;
-
-  text-overflow: ellipsis;
-}
-
-
-/* =========================================================
-   SHARED PREVIOUS DISPLAY PICKER
-   ========================================================= */
-
-.shared-history-picker {
-  position: fixed;
-  inset: 0;
-  z-index: 100000;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.shared-history-picker.show {
-  display: flex;
-}
-
-.shared-history-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,.78);
-  backdrop-filter: blur(8px);
-}
-
-.shared-history-modal {
-  position: relative;
-  z-index: 2;
-  width: min(560px, 94vw);
-  padding: 24px;
-  border: 1px solid rgba(105,216,255,.25);
-  border-radius: 16px;
-  background:
-    linear-gradient(145deg, #0b1c28, #050b10);
-  box-shadow: 0 30px 100px rgba(0,0,0,.65);
-  color: #edf8ff;
-}
-
-.shared-history-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 22px;
-}
-
-.shared-history-kicker {
-  color: #68d8ff;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .18em;
-}
-
-.shared-history-heading {
-  margin-top: 5px;
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: .04em;
-}
-
-.shared-history-close {
-  width: 36px;
-  height: 36px;
-  border: 1px solid #455762;
-  border-radius: 8px;
-  background: #17232b;
-  color: #fff;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.shared-history-controls {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-}
-
-.shared-history-control {
-  position: relative;
-}
-
-.shared-history-control label {
-  display: block;
-  margin-bottom: 7px;
-  color: #8ba5b1;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: .15em;
-}
-
-.shared-history-input-button {
-  width: 100%;
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 14px;
-  border: 1px solid #405663;
-  border-radius: 9px;
-  background: #111d24;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.shared-history-input-button:hover {
-  border-color: #66d9ff;
-}
-
-.shared-history-control input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.shared-history-availability {
-  margin-top: 16px;
-  min-height: 40px;
-  padding: 11px 13px;
-  border-radius: 8px;
-  background: rgba(255,255,255,.035);
-  color: #9fb4be;
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.shared-history-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.shared-history-cancel,
-.shared-history-view {
-  padding: 11px 16px;
-  border-radius: 8px;
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: .08em;
-  cursor: pointer;
-}
-
-.shared-history-cancel {
-  border: 1px solid #465761;
-  background: #11191f;
-  color: #b7c9d1;
-}
-
-.shared-history-view {
-  border: 1px solid #4fcfff;
-  background: linear-gradient(135deg, #0c6f91, #0a4358);
-  color: #fff;
-}
-
-.shared-history-view:hover {
-  filter: brightness(1.15);
-}
-
-@media (max-width: 650px) {
-  .shared-history-controls {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* =========================================================
-   PREVIOUS DISPLAY — REVIEW TIME
-   Position: immediately LEFT of the CEMENT LOADING header.
-   Format is supplied by JavaScript, e.g.:
-   September 10, 20:00
-   ========================================================= */
-
-body.history-viewing #reviewInfo,
-body:has(#headerReturnLiveBtn.show) #reviewInfo {
-  display: flex !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  position: fixed !important;
-  top: 8px !important;
-  left: 375px !important;
-
-  z-index: 999999 !important;
-
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 5px !important;
-
-  width: auto !important;
-  min-width: 0 !important;
-  max-width: none !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: transparent !important;
-  border: 0 !important;
-  box-shadow: none !important;
-
-  color: #ffffff !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-
-  font-size: 12px !important;
-  font-weight: 800 !important;
-  line-height: 1.2 !important;
-
-  pointer-events: none !important;
-}
-
-body.history-viewing #reviewLabel,
-body:has(#headerReturnLiveBtn.show) #reviewLabel {
-  display: inline !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  color: #70ddff !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  white-space: nowrap !important;
-}
-
-body.history-viewing #reviewTimeText,
-body:has(#headerReturnLiveBtn.show) #reviewTimeText {
-  display: inline !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-
-  color: #ffffff !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  white-space: nowrap !important;
-}
-
-/* Hide it during live display */
-body:not(.history-viewing) #reviewInfo {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-}
-
-/* 1366px TV layout */
-@media screen and (min-width: 1200px) {
-  body.history-viewing #reviewInfo,
-  body:has(#headerReturnLiveBtn.show) #reviewInfo {
-    left: 375px !important;
-    top: 8px !important;
-  }
-}
-
-/* Smaller screens */
-@media screen and (max-width: 1199px) {
-  body.history-viewing #reviewInfo,
-  body:has(#headerReturnLiveBtn.show) #reviewInfo {
-    left: 250px !important;
-    top: 7px !important;
-    font-size: 11px !important;
-  }
-
-  body.history-viewing #reviewTimeText,
-  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
-    font-size: 11px !important;
-  }
-}
-
-
-/* =========================================================
-   INLINE HISTORICAL REVIEW TIME
-   Review timestamp sits immediately LEFT of CEMENT LOADING.
-   Example: REVIEW TIME: September 8, 20:00
-   ========================================================= */
-.cement-title-group {
-  gap: clamp(7px, 0.6vw, 12px) !important;
-}
-
-.header-review-inline {
-  display: none;
-  align-items: center;
-  gap: 5px;
-  white-space: nowrap;
-  color: #fff;
-  font-size: clamp(9px, 0.65vw, 14px);
-  font-weight: 900;
-  line-height: 1.2;
-}
-
-body.history-viewing .header-review-inline,
-body:has(#headerReturnLiveBtn.show) .header-review-inline {
-  display: inline-flex !important;
-}
-
-.header-review-inline .review-label {
-  color: #70ddff;
-  font-size: clamp(8px, 0.55vw, 11px);
-  font-weight: 800;
-  letter-spacing: .08em;
-}
-
-.header-review-inline #reviewTimeTextInline {
-  color: #fff;
-  font-size: clamp(10px, 0.68vw, 14px);
-  font-weight: 900;
-}
-
-@media screen and (max-width: 1199px) {
-  .header-review-inline #reviewTimeTextInline {
-    font-size: 11px;
-  }
-}
+clock();
+
+setInterval(
+  clock,
+  1000
+);
+
+load();
+
+setInterval(
+  load,
+  REFRESH_MS
+);

@@ -4346,7 +4346,7 @@ function setHistoricalHeader(recordedAt) {
     const dt = new Date(recordedAt);
     const formatted = Number.isFinite(dt.getTime())
       ? dt.toLocaleString("en-PH", {
-          month: "long", day: "2-digit",
+          month: "long", day: "numeric",
           hour: "2-digit", minute: "2-digit",
           hour12: false
         })
