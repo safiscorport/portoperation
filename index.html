@@ -469,7 +469,59 @@ body {
 }
 
 .logo-review-group .header-return-live {
-  display: none !important;
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .logo-review-group {
+    gap: 4px;
+  }
+  .logo-review-group .review-info {
+    padding: 5px 7px;
+  }
+  .logo-review-group .header-return-live {
+    padding: 6px 8px;
+  }
+}
+
+/* =========================================================
+   HISTORICAL REVIEW HEADER
+   ========================================================= */
+
+.review-info {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  margin-right: 8px;
+  border: 1px solid rgba(255, 177, 71, .45);
+  border-radius: 6px;
+  background: rgba(75, 42, 8, .28);
+  color: #ffd59a;
+  white-space: nowrap;
+  box-shadow: inset 0 0 12px rgba(255, 160, 40, .05);
+}
+
+.review-info.show {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.review-label {
+  color: #ffb14a;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+#reviewTimeText {
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.header-return-live {
+  display: inline-flex;
   align-items: center;
   border: 1px solid #ff9f35;
   border-radius: 6px;
@@ -484,14 +536,16 @@ body {
   white-space: nowrap;
   box-shadow: 0 0 14px rgba(255, 159, 53, .14);
 }
-body.history-viewing #headerReturnLiveBtn {
-  display: inline-flex !important;
-  visibility: visible !important;
-  pointer-events: auto !important;
+
+.header-return-live.show {
+  display: inline-flex;
+  align-items: center;
 }
+
 .header-return-live:hover {
   filter: brightness(1.18);
 }
+
 .history-return-live {
   border: 1px solid #ff9f35;
   border-radius: 6px;
@@ -2289,30 +2343,74 @@ body,
    ========================================================= */
 
 body.history-viewing #reviewInfo,
-body.history-viewing #reviewInfo {
+body:has(#headerReturnLiveBtn.show) #reviewInfo {
   display: flex !important;
   visibility: visible !important;
   opacity: 1 !important;
+
+  position: fixed !important;
+  top: 8px !important;
+  left: 375px !important;
+
+  z-index: 999999 !important;
+
   align-items: center !important;
   justify-content: center !important;
   gap: 5px !important;
+
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  color: #ffffff !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+
+  pointer-events: none !important;
+}
+
+body.history-viewing #reviewLabel,
+body:has(#headerReturnLiveBtn.show) #reviewLabel {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+
+  color: #70ddff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
   white-space: nowrap !important;
 }
-body.history-viewing #reviewLabel {
+
+body.history-viewing #reviewTimeText,
+body:has(#headerReturnLiveBtn.show) #reviewTimeText {
   display: inline !important;
   visibility: visible !important;
   opacity: 1 !important;
+
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
 }
-body.history-viewing #reviewTimeText {
-  display: inline !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
+
+/* Hide it during live display */
 body:not(.history-viewing) #reviewInfo {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
 }
+
 /* 1366px TV layout */
 @media screen and (min-width: 1200px) {
   body.history-viewing #reviewInfo,
@@ -2368,7 +2466,7 @@ body:not(.history-viewing) #reviewInfo {
         style="height:40px;object-fit:contain;flex:0 0 auto;"
       >
 
-      <div id="logoReviewGroup" class="logo-review-group" style="display:flex;align-items:center;gap:12px;">
+      <div id="logoReviewGroup" class="logo-review-group" style="display:none;">
     <div id="reviewInfo" class="review-info" aria-live="polite"
          style="display:none;align-items:center;gap:8px;visibility:hidden;">
       <span id="reviewLabel" class="review-label">REVIEW TIME:</span>
@@ -2388,6 +2486,7 @@ body:not(.history-viewing) #reviewInfo {
 </div>
 
     <div
+      class="cement-title-group"
       style="
         position:absolute;
         left:50%;
@@ -2398,6 +2497,11 @@ body:not(.history-viewing) #reviewInfo {
         text-align:left;
       "
     >
+
+      <div id="headerReviewInline" class="header-review-inline" aria-live="polite">
+        <span id="reviewLabelInline" class="review-label">REVIEW TIME:</span>
+        <span id="reviewTimeTextInline">--</span>
+      </div>
 
       <span class="live-dot"></span>
 
@@ -4223,66 +4327,56 @@ let historicalMode = false;
 let historicalRecordedAt = null;
 window.isHistoricalReview = false;
 
-let historyActionInProgress = false;
-let historyActionToken = 0;
+function setHistoricalHeader(recordedAt) {
+  historicalMode = true;
+  historicalRecordedAt = recordedAt || null;
+  window.isHistoricalReview = true;
+  document.body.classList.add("history-viewing");
 
-function forceHistoryUi(isHistory, recordedAt) {
-  const body = document.body;
   const info = document.getElementById("reviewInfo");
   const text = document.getElementById("reviewTimeText");
   const label = document.getElementById("reviewLabel");
   const returnBtn = document.getElementById("headerReturnLiveBtn");
 
-  if (isHistory) {
-    historicalMode = true;
-    historicalRecordedAt = recordedAt || null;
-    window.isHistoricalReview = true;
-    body.classList.add("history-viewing");
+  if (info) { info.classList.add("show"); info.style.display = "flex"; info.style.visibility = "visible"; }
+  if (label) label.textContent = "REVIEW TIME";
+  if (returnBtn) { returnBtn.classList.add("show"); returnBtn.style.display = "inline-flex"; returnBtn.style.visibility = "visible"; }
 
-    if (info) { info.classList.add("show"); info.style.display = "flex"; info.style.visibility = "visible"; info.style.opacity = "1"; }
-    if (label) label.textContent = "REVIEW TIME";
-    if (returnBtn) {
-      returnBtn.classList.add("show");
-      returnBtn.style.display = "inline-flex";
-      returnBtn.style.visibility = "visible";
-      returnBtn.style.pointerEvents = "auto";
-      returnBtn.removeAttribute("aria-hidden");
-      returnBtn.removeAttribute("tabindex");
-    }
+  if (text) {
+    const dt = new Date(recordedAt);
+    const formatted = Number.isFinite(dt.getTime())
+      ? dt.toLocaleString("en-PH", {
+          month: "long", day: "2-digit",
+          hour: "2-digit", minute: "2-digit",
+          hour12: false
+        })
+      : "--";
 
-    if (text) {
-      const dt = new Date(recordedAt);
-      text.textContent = Number.isFinite(dt.getTime())
-        ? dt.toLocaleString("en-PH", { month: "long", day: "2-digit", hour: "2-digit", minute: "2-digit", hour12: false })
-        : "--";
-    }
-  } else {
-    historicalMode = false;
-    historicalRecordedAt = null;
-    window.isHistoricalReview = false;
-    body.classList.remove("history-viewing");
+    text.textContent = formatted;
 
-    if (info) { info.classList.remove("show"); info.style.display = "none"; info.style.visibility = "hidden"; info.style.opacity = "0"; }
-    if (label) label.textContent = "REVIEW TIME";
-    if (text) text.textContent = "--";
-    if (returnBtn) {
-      returnBtn.classList.remove("show");
-      returnBtn.style.display = "none";
-      returnBtn.style.visibility = "hidden";
-      returnBtn.style.pointerEvents = "none";
-      returnBtn.setAttribute("aria-hidden", "true");
-      returnBtn.setAttribute("tabindex", "-1");
-    }
+    const inlineTime = document.getElementById("reviewTimeTextInline");
+    const inlineLabel = document.getElementById("reviewLabelInline");
+    if (inlineTime) inlineTime.textContent = formatted;
+    if (inlineLabel) inlineLabel.textContent = "REVIEW TIME:";
   }
 }
 
-function setHistoricalHeader(recordedAt) {
-  forceHistoryUi(true, recordedAt);
+function clearHistoricalHeader() {
+  historicalMode = false;
+  historicalRecordedAt = null;
+  window.isHistoricalReview = false;
+
+  const info = document.getElementById("reviewInfo");
+  const text = document.getElementById("reviewTimeText");
+  const label = document.getElementById("reviewLabel");
+  const returnBtn = document.getElementById("headerReturnLiveBtn");
+
+  if (info) { info.classList.remove("show"); info.style.display = "none"; }
+  if (label) label.textContent = "REVIEW TIME";
+  if (returnBtn) { returnBtn.classList.remove("show"); returnBtn.style.display = "none"; }
+  if (text) text.textContent = "--";
 }
 
-function clearHistoricalHeader() {
-  forceHistoryUi(false);
-}
 
 function openHistoryPicker() {
   const picker =
@@ -4644,69 +4738,74 @@ async function viewSelectedHistory() {
 }
 
 function showHistoryExitButton() {
-  // Legacy compatibility only. The permanent header button is the sole exit control.
-  const button = document.getElementById("historyExitBtn");
-  if (button) button.style.display = "none";
   const headerButton = document.getElementById("headerReturnLiveBtn");
-  if (headerButton && document.body.classList.contains("history-viewing")) {
-    headerButton.style.display = "inline-flex";
-    headerButton.style.pointerEvents = "auto";
-  }
-}
+  if (headerButton) headerButton.classList.add("show");
 
-async function loadLiveDashboardNow() {
-  try {
-    const r = await fetch("data.json?t=" + Date.now(), { cache: "no-store" });
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    const d = await r.json();
-    lastHash = JSON.stringify(d);
-    render(d);
-    return true;
-  } catch (e) {
-    console.error("Live dashboard refresh failed:", e);
-    return false;
-  }
-}
+  let button =
+    document.getElementById(
+      "historyExitBtn"
+    );
 
-async function exitHistoricalDisplay(event) {
-  if (event) { event.preventDefault(); event.stopPropagation(); }
-  if (historyActionInProgress) return;
+  if (!button) {
+    button =
+      document.createElement(
+        "button"
+      );
 
-  historyActionInProgress = true;
-  const token = ++historyActionToken;
+    button.id =
+      "historyExitBtn";
 
-  clearTimeout(rotationTimer);
-  clearTimeout(historyTimer);
-  clearTimeout(window.resumeAutoTimer);
-  closeHistoryPicker();
+    button.className =
+      "switcher-btn";
 
-  // Change state BEFORE fetching live data so the 10-second app refresh cannot repaint history.
-  manualOverride = true;
-  clearHistoricalHeader();
-  const legacy = document.getElementById("historyExitBtn");
-  if (legacy) legacy.style.display = "none";
+    button.type =
+      "button";
 
-  try {
-    await loadLiveDashboardNow();
-    if (token !== historyActionToken) return;
-    clearHistoricalHeader();
-    manualOverride = false;
-    startRotation();
-  } finally {
-    if (token === historyActionToken) {
-      historyActionInProgress = false;
-      const btn = document.getElementById("headerReturnLiveBtn");
-      if (btn) {
-        btn.style.display = "none";
-        btn.style.pointerEvents = "none";
-      }
+    button.textContent =
+      "↻ LIVE NOW";
+
+    button.onclick =
+      exitHistoricalDisplay;
+
+    const switcher =
+      document.querySelector(
+        ".dashboard-switcher"
+      );
+
+    if (switcher) {
+      switcher.prepend(button);
     }
   }
+
+  button.style.display =
+    "block";
 }
 
-function returnToLiveDisplay(event) {
-  return exitHistoricalDisplay(event);
+async function exitHistoricalDisplay() {
+  const button =
+    document.getElementById(
+      "historyExitBtn"
+    );
+
+  if (button) {
+    button.style.display =
+      "none";
+  }
+
+  clearHistoricalHeader();
+  document.body.classList.remove("history-viewing");
+  manualOverride = false;
+  lastHash = "";
+
+  await load();
+
+  startRotation();
 }
+
+function returnToLiveDisplay() {
+  exitHistoricalDisplay();
+}
+
 
 document.addEventListener(
   "keydown",
@@ -6484,11 +6583,5 @@ startRotation();
 
 </script>
 
-<script>
-// History UI hard reset: never show RETURN TO LIVE on startup/live mode.
-document.addEventListener("DOMContentLoaded", function () {
-  if (typeof clearHistoricalHeader === "function") clearHistoricalHeader();
-});
-</script>
 </body>
 </html>
