@@ -2113,3 +2113,48 @@ body:not(.history-viewing) #reviewInfo {
     font-size: 11px !important;
   }
 }
+
+
+/* =========================================================
+   INLINE HISTORICAL REVIEW TIME
+   Review timestamp sits immediately LEFT of CEMENT LOADING.
+   Example: REVIEW TIME: September 8, 20:00
+   ========================================================= */
+.cement-title-group {
+  gap: clamp(7px, 0.6vw, 12px) !important;
+}
+
+.header-review-inline {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  color: #fff;
+  font-size: clamp(9px, 0.65vw, 14px);
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+body.history-viewing .header-review-inline,
+body:has(#headerReturnLiveBtn.show) .header-review-inline {
+  display: inline-flex !important;
+}
+
+.header-review-inline .review-label {
+  color: #70ddff;
+  font-size: clamp(8px, 0.55vw, 11px);
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.header-review-inline #reviewTimeTextInline {
+  color: #fff;
+  font-size: clamp(10px, 0.68vw, 14px);
+  font-weight: 900;
+}
+
+@media screen and (max-width: 1199px) {
+  .header-review-inline #reviewTimeTextInline {
+    font-size: 11px;
+  }
+}
