@@ -520,6 +520,25 @@ body {
   font-weight: 900;
 }
 
+/* =========================================================
+   RETURN TO LIVE — ROBUST HISTORY VISIBILITY
+   The button must reappear every time a history review is opened.
+   Body history-viewing state is the single source of truth.
+   ========================================================= */
+body.history-viewing #headerReturnLiveBtn {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+body:not(.history-viewing) #headerReturnLiveBtn {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 .header-return-live {
   display: inline-flex;
   align-items: center;
@@ -4334,7 +4353,13 @@ function setHistoricalHeader(recordedAt) {
 
   if (info) { info.classList.add("show"); info.style.display = "flex"; info.style.visibility = "visible"; }
   if (label) label.textContent = "REVIEW TIME";
-  if (returnBtn) { returnBtn.classList.add("show"); returnBtn.style.display = "inline-flex"; returnBtn.style.visibility = "visible"; }
+  if (returnBtn) {
+    returnBtn.classList.add("show");
+    returnBtn.style.setProperty("display", "inline-flex", "important");
+    returnBtn.style.setProperty("visibility", "visible", "important");
+    returnBtn.style.setProperty("opacity", "1", "important");
+    returnBtn.style.setProperty("pointer-events", "auto", "important");
+  }
 
   if (text) {
     const dt = new Date(recordedAt);
@@ -4360,7 +4385,13 @@ function clearHistoricalHeader() {
 
   if (info) { info.classList.remove("show"); info.style.display = "none"; }
   if (label) label.textContent = "REVIEW TIME";
-  if (returnBtn) { returnBtn.classList.remove("show"); returnBtn.style.display = "none"; }
+  if (returnBtn) {
+    returnBtn.classList.remove("show");
+    returnBtn.style.setProperty("display", "none", "important");
+    returnBtn.style.setProperty("visibility", "hidden", "important");
+    returnBtn.style.setProperty("opacity", "0", "important");
+    returnBtn.style.setProperty("pointer-events", "none", "important");
+  }
   if (text) text.textContent = "--";
 }
 
@@ -4725,16 +4756,19 @@ async function viewSelectedHistory() {
 }
 
 function showHistoryExitButton() {
+  // HISTORY MODE is the source of truth.
+  // Always restore the header button when a review is opened.
+  document.body.classList.add("history-viewing");
+
   const headerButton =
     document.getElementById("headerReturnLiveBtn");
 
-  // IMPORTANT: clearHistoricalHeader() hides this button when
-  // returning to live. Restore ALL visibility properties every
-  // time a new historical review is opened.
   if (headerButton) {
     headerButton.classList.add("show");
-    headerButton.style.display = "inline-flex";
-    headerButton.style.visibility = "visible";
+    headerButton.style.setProperty("display", "inline-flex", "important");
+    headerButton.style.setProperty("visibility", "visible", "important");
+    headerButton.style.setProperty("opacity", "1", "important");
+    headerButton.style.setProperty("pointer-events", "auto", "important");
   }
 
   let button =
