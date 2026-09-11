@@ -2,30 +2,6 @@ const REFRESH_MS = 10000;
 let lastHash = '';
 
 /* =========================================================
-   HISTORY DISPLAY STATE
-   ========================================================= */
-
-/*
-   These two states are controlled by index.html.
-
-   history-viewing:
-   CSS/UI state.
-
-   isHistoricalReview:
-   Explicit JavaScript state.
-
-   We use BOTH so the automatic 10-second data refresh
-   can NEVER overwrite a historical review.
-*/
-function isHistoryDisplayActive() {
-  return (
-    document.body.classList.contains('history-viewing') ||
-    window.isHistoricalReview === true
-  );
-}
-
-
-/* =========================================================
    SHARED HISTORY / GOOGLE SHEETS
    ========================================================= */
 
@@ -41,9 +17,7 @@ const SHARED_HISTORY_SAVE_INTERVAL_MS =
 let lastSharedHistoryPayload = '';
 let lastSharedHistorySaveAt = 0;
 
-
 function sharedHistoryConfigured() {
-
   const url = String(
     SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL || ''
   ).trim();
@@ -51,256 +25,115 @@ function sharedHistoryConfigured() {
   return !!url && !url.includes('YOUR_DEPLOYMENT_ID');
 }
 
-
-/* =========================================================
-   SAVE LIVE SNAPSHOT
-   ========================================================= */
-
 async function saveSharedHistorySnapshot(d) {
-
   if (!sharedHistoryConfigured()) return;
 
   const now = Date.now();
-
   const payload = JSON.stringify(d);
 
-  /*
-     Do not repeatedly save identical data.
-  */
   if (payload === lastSharedHistoryPayload) return;
-
-  /*
-     Minimum save interval.
-  */
-  if (
-    now - lastSharedHistorySaveAt <
-    SHARED_HISTORY_SAVE_INTERVAL_MS
-  ) {
-    return;
-  }
+  if (now - lastSharedHistorySaveAt < SHARED_HISTORY_SAVE_INTERVAL_MS) return;
 
   try {
-
-    await fetch(
-      SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL,
-      {
-        method: 'POST',
-        mode: 'no-cors',
-
-        headers: {
-          'Content-Type':
-            'text/plain;charset=utf-8'
-        },
-
-        body: JSON.stringify({
-          action: 'save',
-
-          recorded_at:
-            new Date().toISOString(),
-
-          payload: d
-        })
-      }
-    );
+    await fetch(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'text/plain;charset=utf-8'
+      },
+      body: JSON.stringify({
+        action: 'save',
+        recorded_at: new Date().toISOString(),
+        payload: d
+      })
+    });
 
     lastSharedHistoryPayload = payload;
-
     lastSharedHistorySaveAt = now;
-
   } catch (error) {
-
-    console.warn(
-      '[Shared History] Google Sheets save failed:',
-      error
-    );
-
+    console.warn('[Shared History] Google Sheets save failed:', error);
   }
 }
 
-
-/* =========================================================
-   LOAD SHARED HISTORY
-   ========================================================= */
-
-async function loadSharedHistory(
-  startIso,
-  endIso
-) {
-
-  if (!sharedHistoryConfigured()) {
-    return [];
-  }
+async function loadSharedHistory(startIso, endIso) {
+  if (!sharedHistoryConfigured()) return [];
 
   try {
+    const url = new URL(SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL);
+    url.searchParams.set('action', 'history');
+    url.searchParams.set('start', startIso);
+    url.searchParams.set('end', endIso);
 
-    const url =
-      new URL(
-        SHARED_HISTORY_CONFIG.APPS_SCRIPT_URL
-      );
-
-    url.searchParams.set(
-      'action',
-      'history'
-    );
-
-    url.searchParams.set(
-      'start',
-      startIso
-    );
-
-    url.searchParams.set(
-      'end',
-      endIso
-    );
-
-
-    const response =
-      await fetch(
-        url.toString(),
-        {
-          cache: 'no-store'
-        }
-      );
-
+    const response = await fetch(url.toString(), {
+      cache: 'no-store'
+    });
 
     if (!response.ok) {
-      throw new Error(
-        'HTTP ' + response.status
-      );
+      throw new Error('HTTP ' + response.status);
     }
 
-
-    const result =
-      await response.json();
-
+    const result = await response.json();
 
     if (!result.ok) {
-
-      throw new Error(
-        result.error ||
-        'History request failed'
-      );
-
+      throw new Error(result.error || 'History request failed');
     }
 
-
-    return Array.isArray(result.rows)
-      ? result.rows
-      : [];
-
-
+    return Array.isArray(result.rows) ? result.rows : [];
   } catch (error) {
-
-    console.warn(
-      '[Shared History] Google Sheets load failed:',
-      error
-    );
-
+    console.warn('[Shared History] Google Sheets load failed:', error);
     return [];
-
   }
 }
 
-
 async function cleanupSharedHistory() {
-
-  /*
-     Old records are cleaned up by
-     Google Apps Script after a save.
-  */
-
+  // Old records are cleaned up by Google Apps Script after a save.
   return;
-
 }
 
-
-window.loadSharedHistory =
-  loadSharedHistory;
-
-window.sharedHistoryConfigured =
-  sharedHistoryConfigured;
-
+window.loadSharedHistory = loadSharedHistory;
+window.sharedHistoryConfigured = sharedHistoryConfigured;
 
 /* =========================================================
    LAST CLOUD CAPTURE DISPLAY
    ========================================================= */
 
-const $ =
-  id => document.getElementById(id);
-
+const $ = id => document.getElementById(id);
 
 const num = v =>
-  (
-    v === undefined ||
-    v === null ||
-    v === 0 ||
-    v === '-'
-  )
-    ? (
-        v === 0
-          ? '0'
-          : (v || '—')
-      )
+  (v === undefined ||
+   v === null ||
+   v === 0 ||
+   v === '-')
+    ? (v === 0 ? '0' : (v || '—'))
     : Number(v).toLocaleString('en-US');
 
 
 function formatActivityTime(val) {
-
-  if (
-    !val ||
-    val === '0:00' ||
-    val === '-'
-  ) {
-    return '0:00';
-  }
-
+  if (!val || val === '0:00' || val === '-') return '0:00';
   return val;
-
 }
 
 
 function isStoppageRemark(text) {
+  if (!text || text === '-') return false;
 
-  if (
-    !text ||
-    text === '-'
-  ) {
-    return false;
-  }
-
-  const lower =
-    text.toLowerCase();
+  const lower = text.toLowerCase();
 
   return (
-
     lower.includes('waiting') ||
-
     lower.includes('stopped') ||
-
     lower.includes('stop') ||
-
     lower.includes('delay') ||
-
     lower.includes('breakdown') ||
-
     lower.includes('refuse') ||
-
     lower.includes('standby') ||
-
     lower.includes('repair') ||
-
     lower.includes('maintenance') ||
-
     lower.includes('problem') ||
-
     lower.includes('issue') ||
-
     lower.includes('shortage') ||
-
     lower.includes('no stock')
-
   );
-
 }
 
 
@@ -319,18 +152,11 @@ function monthlyNumber(v) {
     return 0;
   }
 
+  const n = Number(
+    String(v).replace(/,/g, '')
+  );
 
-  const n =
-    Number(
-      String(v)
-        .replace(/,/g, '')
-    );
-
-
-  return Number.isFinite(n)
-    ? n
-    : 0;
-
+  return Number.isFinite(n) ? n : 0;
 }
 
 
@@ -345,15 +171,9 @@ function monthlyFormat(v) {
     return '—';
   }
 
+  const n = monthlyNumber(v);
 
-  const n =
-    monthlyNumber(v);
-
-
-  return n.toLocaleString(
-    'en-US'
-  );
-
+  return n.toLocaleString('en-US');
 }
 
 
@@ -368,32 +188,20 @@ function monthlyVarianceClass(v) {
   }
 
   return 'monthly-var-zero';
-
 }
 
 
 function monthlyVarianceText(v) {
 
   if (v > 0) {
-
-    return '+' +
-      Math.abs(v)
-        .toLocaleString('en-US');
-
+    return '+' + Math.abs(v).toLocaleString('en-US');
   }
-
 
   if (v < 0) {
-
-    return '-' +
-      Math.abs(v)
-        .toLocaleString('en-US');
-
+    return '-' + Math.abs(v).toLocaleString('en-US');
   }
 
-
   return '0';
-
 }
 
 
@@ -403,31 +211,18 @@ function monthlyVarianceText(v) {
 
 function render(d) {
 
-  /*
-     IMPORTANT:
-
-     render() is used by BOTH live data and
-     historical data.
-
-     Therefore we do NOT change history state here.
-  */
-
-
   /* =======================================================
      LIVE STATUS
      ======================================================= */
 
   $('syncText').textContent =
     'LIVE • UPDATED ' +
-    new Date(
-      d.updated_at
-    ).toLocaleTimeString(
+    new Date(d.updated_at).toLocaleTimeString(
       'en-PH',
       {
         hour12: false
       }
     );
-
 
   $('refreshSec').textContent =
     (REFRESH_MS / 1000) + 's';
@@ -437,9 +232,7 @@ function render(d) {
      BERTHS
      ======================================================= */
 
-  const rows =
-    d.berths || [];
-
+  const rows = d.berths || [];
 
   $('berthGrid').innerHTML =
     rows.map(x => {
@@ -453,24 +246,15 @@ function render(d) {
           )
         );
 
-
       let vacant =
-        String(
-          x.vessel || ''
-        ).toUpperCase() ===
-        'VACANT';
-
+        String(x.vessel || '').toUpperCase() === 'VACANT';
 
       let remarkAlert =
-        isStoppageRemark(
-          x.remarks
-        )
+        isStoppageRemark(x.remarks)
           ? 'stoppage-alert'
           : '';
 
-
       return `
-
         <div class="berth-row ${vacant ? 'vacant' : ''}">
 
           <span>
@@ -502,17 +286,13 @@ function render(d) {
           </span>
 
           <span>
-
             <div class="progress-wrap">
-
               <div class="bar">
                 <i style="width:${p}%"></i>
               </div>
 
               ${p > 0 ? p.toFixed(0) + '%' : ''}
-
             </div>
-
           </span>
 
           <span>
@@ -532,13 +312,10 @@ function render(d) {
           </span>
 
           <span class="activity">
-            ${formatActivityTime(
-              x.activity_time
-            )}
+            ${formatActivityTime(x.activity_time)}
           </span>
 
         </div>
-
       `;
 
     }).join('');
@@ -548,31 +325,22 @@ function render(d) {
      TOTALS
      ======================================================= */
 
-  const t =
-    d.total || {};
-
+  const t = d.total || {};
 
   $('totalBooking').textContent =
     num(t.booking);
 
-
   $('totalDispatch').textContent =
     num(t.dispatch);
-
 
   $('totalLoaded').textContent =
     num(t.loaded);
 
-
   $('totalBalance').textContent =
     num(t.balance);
 
-
   $('totalProgress').textContent =
-    (
-      (t.progress || 0) * 100
-    ).toFixed(0) + '%';
-
+    ((t.progress || 0) * 100).toFixed(0) + '%';
 
   $('totalStockpile').textContent =
     num(t.stockpile);
@@ -580,113 +348,95 @@ function render(d) {
 
   /* =======================================================
      ALPHA BERTHS
+     R1 / R2 / R3
      ======================================================= */
 
   $('alphaRows').innerHTML =
-    (d.alpha || [])
-      .map(x => {
+    (d.alpha || []).map(x => {
 
-        let pVal =
-          parseFloat(
-            String(x.progress)
-              .replace('%', '')
-          ) || 0;
+      let pVal =
+        parseFloat(
+          String(x.progress)
+            .replace('%', '')
+        ) || 0;
 
+      let remarkAlert =
+        isStoppageRemark(x.remarks)
+          ? 'stoppage-alert'
+          : '';
 
-        let remarkAlert =
-          isStoppageRemark(
-            x.remarks
-          )
-            ? 'stoppage-alert'
-            : '';
+      return `
+        <div class="alpha-row">
 
+          <span>
+            <b>${x.berth}</b>
+          </span>
 
-        return `
+          <span class="vessel">
+            ${x.vessel}
+          </span>
 
-          <div class="alpha-row">
+          <span>
+            ${x.materials || '-'}
+          </span>
 
-            <span>
-              <b>${x.berth}</b>
-            </span>
+          <span>
+            ${x.discharge || '0%'}
+          </span>
 
-            <span class="vessel">
-              ${x.vessel}
-            </span>
+          <span>
+            ${x.balance || '0%'}
+          </span>
 
-            <span>
-              ${x.materials || '-'}
-            </span>
-
-            <span>
-              ${x.discharge || '0%'}
-            </span>
-
-            <span>
-              ${x.balance || '0%'}
-            </span>
-
-            <span>
-
-              <div class="progress-wrap">
-
-                <div class="bar">
-                  <i style="width:${pVal}%"></i>
-                </div>
-
-                ${x.progress}
-
+          <span>
+            <div class="progress-wrap">
+              <div class="bar">
+                <i style="width:${pVal}%"></i>
               </div>
 
-            </span>
+              ${x.progress}
+            </div>
+          </span>
 
-            <span>
-              ${x.time || '0:00'}
-            </span>
+          <span>
+            ${x.time || '0:00'}
+          </span>
 
-            <span class="remark ${remarkAlert}">
-              ${x.remarks || '-'}
-            </span>
+          <span class="remark ${remarkAlert}">
+            ${x.remarks || '-'}
+          </span>
 
-            <span>
-              ${x.equip || '0'}
-            </span>
+          <span>
+            ${x.equip || '0'}
+          </span>
 
-            <span class="activity">
-              ${formatActivityTime(
-                x.activity_time
-              )}
-            </span>
+          <span class="activity">
+            ${formatActivityTime(x.activity_time)}
+          </span>
 
-          </div>
+        </div>
+      `;
 
-        `;
-
-      }).join('');
+    }).join('');
 
 
   /* =======================================================
      FOREIGN BERTH
+     BERTH F
      ======================================================= */
 
-  const f =
-    d.foreign || {};
-
+  const f = d.foreign || {};
 
   let fPVal =
     parseFloat(
-      String(
-        f.progress || '0'
-      ).replace('%', '')
+      String(f.progress || '0')
+        .replace('%', '')
     ) || 0;
 
-
   let fRemarkAlert =
-    isStoppageRemark(
-      f.remarks
-    )
+    isStoppageRemark(f.remarks)
       ? 'stoppage-alert'
       : '';
-
 
   $('foreignRow').innerHTML = `
 
@@ -737,9 +487,7 @@ function render(d) {
     </span>
 
     <span class="activity">
-      ${formatActivityTime(
-        f.activity_time
-      )}
+      ${formatActivityTime(f.activity_time)}
     </span>
 
   `;
@@ -752,7 +500,6 @@ function render(d) {
   const truckData =
     d.trucking || [];
 
-
   const truckTotal =
     truckData.reduce(
       (acc, curr) => ({
@@ -760,8 +507,7 @@ function render(d) {
         august:
           acc.august +
           (
-            typeof curr.august ===
-            'number'
+            typeof curr.august === 'number'
               ? curr.august
               : 0
           ),
@@ -769,8 +515,7 @@ function render(d) {
         september:
           acc.september +
           (
-            typeof curr.september ===
-            'number'
+            typeof curr.september === 'number'
               ? curr.september
               : 0
           ),
@@ -778,8 +523,7 @@ function render(d) {
         daily:
           acc.daily +
           (
-            typeof curr.daily ===
-            'number'
+            typeof curr.daily === 'number'
               ? curr.daily
               : 0
           )
@@ -830,21 +574,15 @@ function render(d) {
         </b>
 
         <span>
-          <b>
-            ${num(truckTotal.august)}
-          </b>
+          <b>${num(truckTotal.august)}</b>
         </span>
 
         <span>
-          <b>
-            ${num(truckTotal.september)}
-          </b>
+          <b>${num(truckTotal.september)}</b>
         </span>
 
         <span>
-          <b>
-            ${num(truckTotal.daily)}
-          </b>
+          <b>${num(truckTotal.daily)}</b>
         </span>
 
       </div>
@@ -854,33 +592,32 @@ function render(d) {
 
   /* =======================================================
      MONTHLY TABLE
+     
+     2025 | VARIANCE | 2026
+
+     Variance = 2026 - 2025
      ======================================================= */
 
   const m =
     d.monthly || [];
 
-
   const mt =
     d.monthly_total || {};
 
+  let monthlyHTML = '';
 
-  let monthlyHTML =
-    '';
 
+  /* -------------------------------------------------------
+     MONTHLY ROWS
+     ------------------------------------------------------- */
 
   m.forEach(x => {
 
     const y2025 =
-      monthlyNumber(
-        x.y2025
-      );
-
+      monthlyNumber(x.y2025);
 
     const y2026 =
-      monthlyNumber(
-        x.y2026
-      );
-
+      monthlyNumber(x.y2026);
 
     const variance =
       y2026 - y2025;
@@ -890,35 +627,38 @@ function render(d) {
 
       <div class="monthly-row">
 
+        <!-- MONTH -->
+
         <div class="monthly-month">
           ${x.month}
         </div>
 
+
+        <!-- 2025 -->
+
         <div class="monthly-2025">
-          ${monthlyFormat(
-            x.y2025
-          )}
+          ${monthlyFormat(x.y2025)}
         </div>
+
+
+        <!-- CENTER VARIANCE -->
 
         <div class="
           monthly-variance
-          ${monthlyVarianceClass(
-            variance
-          )}
+          ${monthlyVarianceClass(variance)}
         ">
 
           <span class="variance-value">
-            ${monthlyVarianceText(
-              variance
-            )}
+            ${monthlyVarianceText(variance)}
           </span>
 
         </div>
 
+
+        <!-- 2026 -->
+
         <div class="monthly-2026">
-          ${monthlyFormat(
-            x.y2026
-          )}
+          ${monthlyFormat(x.y2026)}
         </div>
 
       </div>
@@ -928,17 +668,15 @@ function render(d) {
   });
 
 
-  const total2025 =
-    monthlyNumber(
-      mt.y2025
-    );
+  /* -------------------------------------------------------
+     TOTAL ROW
+     ------------------------------------------------------- */
 
+  const total2025 =
+    monthlyNumber(mt.y2025);
 
   const total2026 =
-    monthlyNumber(
-      mt.y2026
-    );
-
+    monthlyNumber(mt.y2026);
 
   const totalVariance =
     total2026 - total2025;
@@ -951,35 +689,38 @@ function render(d) {
       monthly-total
     ">
 
+      <!-- TOTAL -->
+
       <div class="monthly-month">
         TOTAL
       </div>
 
+
+      <!-- 2025 -->
+
       <div class="monthly-2025">
-        ${monthlyFormat(
-          mt.y2025
-        )}
+        ${monthlyFormat(mt.y2025)}
       </div>
+
+
+      <!-- TOTAL VARIANCE -->
 
       <div class="
         monthly-variance
-        ${monthlyVarianceClass(
-          totalVariance
-        )}
+        ${monthlyVarianceClass(totalVariance)}
       ">
 
         <span class="variance-value">
-          ${monthlyVarianceText(
-            totalVariance
-          )}
+          ${monthlyVarianceText(totalVariance)}
         </span>
 
       </div>
 
+
+      <!-- 2026 -->
+
       <div class="monthly-2026">
-        ${monthlyFormat(
-          mt.y2026
-        )}
+        ${monthlyFormat(mt.y2026)}
       </div>
 
     </div>
@@ -998,14 +739,12 @@ function render(d) {
   const prodData =
     d.daily_production || [];
 
-
   const prodTotal =
     prodData.reduce(
       (sum, curr) =>
         sum +
         (
-          typeof curr.qty ===
-          'number'
+          typeof curr.qty === 'number'
             ? curr.qty
             : 0
         ),
@@ -1035,10 +774,7 @@ function render(d) {
 
     `
 
-      <div class="
-        prod-row
-        total-row
-      ">
+      <div class="prod-row total-row">
 
         <span>
           Total
@@ -1060,14 +796,12 @@ function render(d) {
   const stockData =
     d.trucking_stockpile || [];
 
-
   const stockTotal =
     stockData.reduce(
       (sum, curr) =>
         sum +
         (
-          typeof curr.volume ===
-          'number'
+          typeof curr.volume === 'number'
             ? curr.volume
             : 0
         ),
@@ -1097,10 +831,7 @@ function render(d) {
 
     `
 
-      <div class="
-        prod-row
-        total-row
-      ">
+      <div class="prod-row total-row">
 
         <span>
           Total
@@ -1122,26 +853,20 @@ function render(d) {
   const s =
     d.status || {};
 
-
   $('supervisor').textContent =
     s.supervisor || '--';
-
 
   $('checker').textContent =
     s.checker || '--';
 
-
   $('pmc').textContent =
     s.pmc || '--';
-
 
   $('cranes').textContent =
     s.cranes ?? '--';
 
-
   $('forklifts').textContent =
     s.forklifts ?? '--';
-
 
   $('stevedores').textContent =
     s.stevedores ?? '--';
@@ -1167,35 +892,15 @@ function render(d) {
 
   $('tickerText').textContent =
     alerts.length
-      ? alerts.join(
-          '    •    '
-        )
+      ? alerts.join('    •    ')
       : 'ALL PORT OPERATIONS NORMAL';
 
 }
 
 
 /* =========================================================
-   LOAD LIVE DATA
+   LOAD DATA.JSON
    ========================================================= */
-
-/*
-   IMPORTANT FIX
-
-   The old code only checked:
-
-       body.history-viewing
-
-   The revised code checks:
-
-       body.history-viewing
-       OR
-       window.isHistoricalReview
-
-   Therefore even if another function accidentally removes
-   the CSS class, the live 10-second refresh will NOT replace
-   the historical dashboard while the JS history state is active.
-*/
 
 async function load() {
 
@@ -1203,8 +908,7 @@ async function load() {
 
     const r =
       await fetch(
-        'data.json?t=' +
-        Date.now(),
+        'data.json?t=' + Date.now(),
         {
           cache: 'no-store'
         }
@@ -1212,25 +916,14 @@ async function load() {
 
 
     if (!r.ok) {
-
-      throw new Error(
-        r.status
-      );
-
+      throw new Error(r.status);
     }
 
 
     const d =
       await r.json();
 
-
-    /*
-       Save the current live snapshot
-       to cloud history.
-
-       This happens even if the user is
-       currently viewing an old record.
-    */
+    // Save to shared cloud history in the background.
     saveSharedHistorySnapshot(d);
 
 
@@ -1238,128 +931,28 @@ async function load() {
       JSON.stringify(d);
 
 
-    /*
-       Always update lastHash so that when
-       the user returns to live, the next
-       refresh can correctly detect changes.
-    */
     if (h !== lastHash) {
 
       lastHash = h;
 
-
-      /*
-         NEVER render live data over a
-         historical review.
-      */
-      if (!isHistoryDisplayActive()) {
-
+      // Do not overwrite a selected historical display with live data.
+      if (!document.body.classList.contains('history-viewing')) {
         render(d);
-
       }
 
     }
 
-
-  } catch (e) {
-
-    /*
-       Do not destroy historical display
-       because of a live-data fetch error.
-    */
-
-    if (!isHistoryDisplayActive()) {
-
-      $('syncText').textContent =
-        'ONLINE / WAITING FOR DATA';
-
-    }
-
   }
 
-}
-
-
-/* =========================================================
-   FORCE LOAD CURRENT LIVE DATA
-   ========================================================= */
-
-/*
-   This function is intentionally separate from load().
-
-   It is used when RETURN TO LIVE is pressed.
-
-   It fetches the current data.json directly and renders
-   it after the history state has already been cleared.
-*/
-
-async function loadLiveDashboardNow() {
-
-  try {
-
-    const r =
-      await fetch(
-        'data.json?t=' +
-        Date.now(),
-        {
-          cache: 'no-store'
-        }
-      );
-
-
-    if (!r.ok) {
-
-      throw new Error(
-        r.status
-      );
-
-    }
-
-
-    const d =
-      await r.json();
-
-
-    /*
-       Update hash.
-    */
-    lastHash =
-      JSON.stringify(d);
-
-
-    /*
-       Render current live dashboard.
-    */
-    render(d);
-
-
-    return d;
-
-
-  } catch (error) {
-
-    console.error(
-      '[LIVE] Failed to load current data:',
-      error
-    );
-
+  catch (e) {
 
     $('syncText').textContent =
       'ONLINE / WAITING FOR DATA';
 
-
-    return null;
-
   }
 
 }
 
-
-/*
-   Make this available to index.html.
-*/
-window.loadLiveDashboardNow =
-  loadLiveDashboardNow;
 
 
 /* =========================================================
@@ -1401,35 +994,13 @@ function clock() {
 
 clock();
 
-
 setInterval(
   clock,
   1000
 );
 
-
-/* =========================================================
-   INITIAL DATA LOAD
-   ========================================================= */
-
 load();
 
-
-/* =========================================================
-   AUTOMATIC REFRESH
-   ========================================================= */
-
-/*
-   The dashboard continues checking data.json every 10 sec.
-
-   During history review:
-       - data is still fetched
-       - cloud history can still be saved
-       - dashboard is NOT overwritten
-
-   During live mode:
-       - dashboard updates normally
-*/
 setInterval(
   load,
   REFRESH_MS
