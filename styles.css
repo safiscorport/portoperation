@@ -1,71 +1,10 @@
 /* =========================================================
-   SAFISCOR PORT OPERATIONS DASHBOARD
-   AUTOMATIC SMART TV / TV DISPLAY CSS
-
-   ORIGINAL COLORS PRESERVED
-   - Background : #111
-   - Panels     : #1d1d1d
-   - Panel 2    : #282828
-   - Header     : #34404d
-   - Border     : #555
-   - Text       : #fff
-   - Muted      : #aaa
-   - Green      : #65b83f
-   - Red        : #ff3030
-   - Yellow     : #ffc107
-
-   FEATURES
-   - Automatic TV resolution scaling
-   - 720p
-   - 1080p
-   - 1440p
-   - 4K
-   - 8K
-   - Vertical scrolling
-   - No horizontal scrolling
-   - Bottom rows remain accessible
-   - Original table proportions preserved
+   FULL SCREEN / TV DISPLAY
    ========================================================= */
 
-
-/* =========================================================
-   GLOBAL
-   ========================================================= */
-
-*,
-*::before,
-*::after {
+* {
   box-sizing: border-box;
 }
-
-
-/* =========================================================
-   HTML
-   ========================================================= */
-
-html {
-  margin: 0;
-  padding: 0;
-
-  width: 100%;
-  min-width: 0;
-
-  height: auto;
-  min-height: 100%;
-
-  background: #111;
-  color: #fff;
-
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-
-  -webkit-text-size-adjust: 100%;
-}
-
-
-/* =========================================================
-   BODY
-   ========================================================= */
 
 html,
 body {
@@ -73,35 +12,18 @@ body {
   padding: 0;
 
   width: 100%;
-  max-width: 100vw;
-
-  min-width: 0;
-
-  height: auto;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100%;
 
   background: #111;
   color: #fff;
 
   font-family: Arial, Helvetica, sans-serif;
 
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
 }
 
-
-/*
-   Automatic base text scaling.
-
-   The clamp keeps text readable on small TVs while
-   preventing extremely large text on 4K/8K displays.
-*/
-
 body {
-  font-size: clamp(12px, 0.78vw, 22px);
-
-  line-height: 1.15;
+  font-size: clamp(13px, 0.85vw, 20px);
 }
 
 
@@ -110,29 +32,16 @@ body {
    ========================================================= */
 
 .app {
-  width: 100%;
+  width: 100vw;
   max-width: 100vw;
 
-  min-width: 0;
-
-  /*
-     IMPORTANT:
-     Do not use height:100vh here.
-
-     A fixed 100vh container can cut off the lower
-     dashboard when the content becomes taller than
-     the TV viewport.
-  */
-
-  height: auto;
-
+  height: 100vh;
   min-height: 100vh;
-  min-height: 100dvh;
 
   display: flex;
   flex-direction: column;
 
-  overflow: visible !important;
+  overflow: hidden;
 }
 
 
@@ -141,34 +50,22 @@ body {
    ========================================================= */
 
 .topbar {
-  flex: 0 0 clamp(48px, 5vh, 78px);
+  flex: 0 0 clamp(52px, 5.2vh, 78px);
 
   width: 100%;
   max-width: 100%;
 
-  min-width: 0;
-
   background: #080808;
 
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 
-  padding:
-    0
-    clamp(8px, 1vw, 30px);
+  padding: 0 clamp(12px, 1.2vw, 30px);
 
   border-bottom: 2px solid #555;
 
-  gap: clamp(6px, 0.7vw, 18px);
-
-  overflow: hidden;
-
-  position: relative;
-
-  z-index: 100;
+  min-width: 0;
 }
 
 
@@ -178,41 +75,15 @@ body {
 
 .brand {
   display: flex;
-
   align-items: center;
 
-  gap:
-    clamp(
-      6px,
-      0.7vw,
-      15px
-    );
+  gap: clamp(8px, 0.7vw, 15px);
 
   min-width: 0;
-
-  flex: 1 1 auto;
-
-  overflow: hidden;
 }
 
-
 .brand img {
-  display: block;
-
-  max-width: clamp(100px, 12vw, 280px);
-
-  max-height:
-    calc(
-      clamp(48px, 5vh, 78px) - 8px
-    );
-
-  width: auto;
-
-  height: auto;
-
-  object-fit: contain;
-
-  flex-shrink: 1;
+  max-width: 100%;
 }
 
 
@@ -221,33 +92,8 @@ body {
    ========================================================= */
 
 .live-dot {
-  width:
-    clamp(
-      9px,
-      0.7vw,
-      16px
-    );
-
-  height:
-    clamp(
-      9px,
-      0.7vw,
-      16px
-    );
-
-  min-width:
-    clamp(
-      9px,
-      0.7vw,
-      16px
-    );
-
-  min-height:
-    clamp(
-      9px,
-      0.7vw,
-      16px
-    );
+  width: clamp(10px, 0.75vw, 16px);
+  height: clamp(10px, 0.75vw, 16px);
 
   background: #ff3030;
 
@@ -268,60 +114,128 @@ body {
    ========================================================= */
 
 .title {
-  font-size:
-    clamp(
-      15px,
-      1.3vw,
-      30px
-    );
+  font-size: clamp(17px, 1.35vw, 30px);
 
   font-weight: 900;
 
-  letter-spacing:
-    clamp(
-      0.5px,
-      0.05vw,
-      1px
-    );
-
-  color: #fff !important;
+  letter-spacing: 1px;
 
   white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  min-width: 0;
 }
-
 
 .subtitle {
-  font-size:
-    clamp(
-      8px,
-      0.63vw,
-      15px
-    );
+  font-size: clamp(9px, 0.65vw, 15px);
 
-  color: #aaa !important;
+  color: #aaa;
 
-  letter-spacing:
-    clamp(
-      0.4px,
-      0.05vw,
-      1px
-    );
+  letter-spacing: 1px;
 
   white-space: nowrap;
+}
 
-  overflow: hidden;
 
-  text-overflow: ellipsis;
 
+/* Review status is intentionally positioned beside the logo. */
+.logo-review-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   min-width: 0;
 }
 
+.logo-review-group .review-info {
+  margin-right: 0;
+}
+
+.logo-review-group .header-return-live {
+  margin-right: 0;
+}
+
+@media (max-width: 900px) {
+  .logo-review-group {
+    gap: 4px;
+  }
+  .logo-review-group .review-info {
+    padding: 5px 7px;
+  }
+  .logo-review-group .header-return-live {
+    padding: 6px 8px;
+  }
+}
+
+/* =========================================================
+   HISTORICAL REVIEW HEADER
+   ========================================================= */
+
+.review-info {
+  display: none;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 10px;
+  margin-right: 8px;
+  border: 1px solid rgba(255, 177, 71, .45);
+  border-radius: 6px;
+  background: rgba(75, 42, 8, .28);
+  color: #ffd59a;
+  white-space: nowrap;
+  box-shadow: inset 0 0 12px rgba(255, 160, 40, .05);
+}
+
+.review-info.show {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.review-label {
+  color: #ffb14a;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+#reviewTimeText {
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.header-return-live {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #ff9f35;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #9d4e08, #5b2d06);
+  color: #fff;
+  padding: 7px 11px;
+  margin-right: 8px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 0 14px rgba(255, 159, 53, .14);
+}
+
+.header-return-live.show {
+  display: inline-flex;
+  align-items: center;
+}
+
+.header-return-live:hover {
+  filter: brightness(1.18);
+}
+
+.history-return-live {
+  border: 1px solid #ff9f35;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #9d4e08, #5b2d06);
+  color: #fff;
+  padding: 7px 11px;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
 
 /* =========================================================
    CLOCK
@@ -332,37 +246,19 @@ body {
 
   min-width: 0;
 
-  flex-shrink: 0;
-
   white-space: nowrap;
-
-  overflow: hidden;
 }
-
 
 .clock div:first-child {
-  font-size:
-    clamp(
-      8px,
-      0.63vw,
-      15px
-    );
+  font-size: clamp(9px, 0.65vw, 15px);
 
-  color: #aaa !important;
+  color: #aaa;
 }
 
-
 .clock div:last-child {
-  font-size:
-    clamp(
-      15px,
-      1.2vw,
-      28px
-    );
+  font-size: clamp(17px, 1.25vw, 28px);
 
   font-weight: 900;
-
-  color: #fff !important;
 }
 
 
@@ -371,43 +267,25 @@ body {
    ========================================================= */
 
 .main-content {
-  /*
-     IMPORTANT:
-     flex: 1 is removed.
 
-     This allows the content to grow beyond the
-     TV viewport and lets the BODY scrollbar handle
-     the extra rows.
-  */
-
-  flex: none;
+  flex: 1;
 
   width: 100%;
   max-width: 100%;
 
   min-width: 0;
 
-  height: auto;
-
-  min-height: 0;
-
   padding:
     clamp(3px, 0.35vh, 7px)
-    clamp(5px, 0.55vw, 15px)
-    clamp(8px, 0.8vh, 15px);
+    clamp(5px, 0.55vw, 15px);
 
   display: flex;
 
   flex-direction: column;
 
-  gap:
-    clamp(
-      3px,
-      0.35vh,
-      7px
-    );
+  gap: clamp(3px, 0.35vh, 7px);
 
-  overflow: visible !important;
+  overflow: hidden !important;
 }
 
 
@@ -416,14 +294,13 @@ body {
    ========================================================= */
 
 .table-container {
+
   width: 100%;
   max-width: 100%;
 
   min-width: 0;
 
   background: #1d1d1d;
-
-  color: #fff;
 
   border: 1px solid #555;
 
@@ -435,6 +312,22 @@ body {
 
 /* =========================================================
    MAIN BERTH TABLE
+
+   TOTAL = 100%
+
+   Berth      5%
+   Vessel     10%
+   Voyage     4%
+   Booking    7%
+   Dispatch   7%
+   Loaded     7%
+   Balance    7%
+   Progress   8%
+   Stockpile  7%
+   Time       5%
+   Remarks    14%
+   Equipment  10%
+   Activity Time 9%
    ========================================================= */
 
 .table-header-bar,
@@ -472,16 +365,9 @@ body {
 
   border-bottom: 1px solid #303030;
 
-  font-size:
-    clamp(
-      10px,
-      0.76vw,
-      20px
-    );
+  font-size: clamp(11px, 0.78vw, 18px);
 
   line-height: 1.05;
-
-  color: #fff;
 
   overflow: hidden;
 }
@@ -497,25 +383,13 @@ body {
 
   font-weight: 900;
 
-  color: #fff !important;
+  color: #fff;
 
   border-bottom: 1px solid #777;
 
-  font-size:
-    clamp(
-      9px,
-      0.66vw,
-      18px
-    );
+  font-size: clamp(10px, 0.68vw, 16px);
 
   white-space: nowrap;
-
-  min-height:
-    clamp(
-      24px,
-      2.8vh,
-      50px
-    );
 }
 
 
@@ -525,34 +399,24 @@ body {
 
 .berth-row {
 
-  min-height:
-    clamp(
-      24px,
-      2.45vh,
-      42px
-    );
+  min-height: clamp(24px, 2.45vh, 42px);
 
-  color: #fff;
+  min-width: 0;
 }
 
 
-/* =========================================================
-   ALTERNATING ROWS
-   ========================================================= */
+/* Alternating rows */
 
 .berth-row:nth-child(even) {
   background: #242424;
 }
-
 
 .berth-row:nth-child(odd) {
   background: #1b1b1b;
 }
 
 
-/* =========================================================
-   VACANT
-   ========================================================= */
+/* Vacant */
 
 .berth-row.vacant {
   opacity: 0.45;
@@ -567,8 +431,6 @@ body {
 .alpha-row .vessel {
 
   font-weight: 900;
-
-  color: #fff;
 
   white-space: nowrap;
 
@@ -597,8 +459,6 @@ body {
 
   max-width: 100%;
 
-  color: #fff;
-
   white-space: nowrap;
 
   overflow: hidden;
@@ -623,12 +483,7 @@ body {
 
   width: 100%;
 
-  height:
-    clamp(
-      10px,
-      1.15vh,
-      20px
-    );
+  height: clamp(10px, 1.15vh, 18px);
 
   margin: 0;
 
@@ -695,14 +550,9 @@ body {
 
   justify-content: center;
 
-  color: #fff !important;
+  color: #fff;
 
-  font-size:
-    clamp(
-      8px,
-      0.65vw,
-      16px
-    );
+  font-size: clamp(9px, 0.68vw, 15px);
 
   font-weight: 900;
 
@@ -735,27 +585,31 @@ body {
 
   font-weight: 900;
 
-  font-size:
-    clamp(
-      9px,
-      0.68vw,
-      17px
-    );
+  font-size: clamp(10px, 0.7vw, 16px);
 
-  color: #ccc !important;
+  color: #ccc;
 
   border-bottom: 1px solid #555;
 
   white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 }
 
 
 /* =========================================================
    BERTH A / BERTH F
+
+   TOTAL = 100%
+
+   Berth       6%
+   Vessel      12%
+   Material    14%
+   Discharge   8%
+   Balance     8%
+   Progress    8%
+   Time        7%
+   Remarks     15%
+   Equipment   12%
+   Activity    10%
    ========================================================= */
 
 .alpha-header-bar,
@@ -787,12 +641,7 @@ body {
     clamp(3px, 0.3vh, 6px)
     clamp(5px, 0.4vw, 10px);
 
-  font-size:
-    clamp(
-      10px,
-      0.76vw,
-      20px
-    );
+  font-size: clamp(11px, 0.78vw, 18px);
 
   line-height: 1.05;
 
@@ -800,9 +649,7 @@ body {
 }
 
 
-/* =========================================================
-   ALPHA HEADER
-   ========================================================= */
+/* Alpha header */
 
 .alpha-header-bar {
 
@@ -810,50 +657,27 @@ body {
 
   font-weight: 900;
 
-  color: #fff !important;
+  color: #fff;
 
-  font-size:
-    clamp(
-      9px,
-      0.66vw,
-      18px
-    );
+  font-size: clamp(10px, 0.68vw, 16px);
 
   white-space: nowrap;
-
-  min-height:
-    clamp(
-      24px,
-      2.8vh,
-      50px
-    );
 }
 
 
-/* =========================================================
-   ALPHA ROWS
-   ========================================================= */
+/* Alpha rows */
 
 .alpha-row {
 
   background: #1b1b1b;
 
-  color: #fff;
-
   border-bottom: 1px solid #303030;
 
-  min-height:
-    clamp(
-      23px,
-      2.2vh,
-      40px
-    );
+  min-height: clamp(23px, 2.2vh, 38px);
 }
 
 
-/* =========================================================
-   ALPHA CELLS
-   ========================================================= */
+/* Alpha cells */
 
 .alpha-header-bar > div,
 .alpha-header-bar > span,
@@ -865,8 +689,6 @@ body {
   width: 100%;
 
   max-width: 100%;
-
-  color: #fff;
 
   white-space: nowrap;
 
@@ -895,30 +717,15 @@ body {
     minmax(0, 1.05fr)
     minmax(0, 0.8fr);
 
-  gap:
-    clamp(
-      4px,
-      0.5vw,
-      12px
-    );
+  gap: clamp(5px, 0.5vw, 12px);
 
   margin-top: 1px;
 
-  /*
-     IMPORTANT:
-     Do not use flex:1 here.
-
-     The analytics section must be allowed to
-     grow naturally so the lower content can scroll.
-  */
-
-  flex: none;
-
-  height: auto;
+  flex: 1;
 
   min-height: 0;
 
-  overflow: visible;
+  overflow: hidden;
 }
 
 
@@ -930,16 +737,9 @@ body {
 
   background: #1d1d1d;
 
-  color: #fff;
-
   border: 1px solid #555;
 
-  padding:
-    clamp(
-      3px,
-      0.3vw,
-      8px
-    );
+  padding: clamp(3px, 0.3vw, 8px);
 
   display: flex;
 
@@ -953,10 +753,6 @@ body {
 }
 
 
-/* =========================================================
-   PANEL TITLE
-   ========================================================= */
-
 .panel-title {
 
   font-weight: 900;
@@ -967,24 +763,13 @@ body {
     clamp(3px, 0.3vh, 6px)
     clamp(5px, 0.4vw, 10px);
 
-  font-size:
-    clamp(
-      9px,
-      0.7vw,
-      18px
-    );
+  font-size: clamp(10px, 0.72vw, 17px);
 
-  color: #fff !important;
+  color: #fff;
 
   margin-bottom: 3px;
 
   min-width: 0;
-
-  white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 }
 
 
@@ -998,12 +783,7 @@ body {
 
   flex-direction: column;
 
-  gap:
-    clamp(
-      3px,
-      0.3vh,
-      6px
-    );
+  gap: clamp(3px, 0.3vh, 6px);
 
   min-height: 0;
 
@@ -1026,8 +806,6 @@ body {
   min-width: 0;
 
   overflow: hidden;
-
-  color: #fff;
 }
 
 
@@ -1049,33 +827,17 @@ body {
 
   border-bottom: 1px solid #303030;
 
-  font-size:
-    clamp(
-      9px,
-      0.68vw,
-      18px
-    );
+  font-size: clamp(10px, 0.7vw, 16px);
 
   line-height: 1.05;
 
-  min-height:
-    clamp(
-      19px,
-      1.9vh,
-      34px
-    );
+  min-height: clamp(19px, 1.9vh, 32px);
 
   min-width: 0;
 
   overflow: hidden;
-
-  color: #fff;
 }
 
-
-/* =========================================================
-   SMALL TABLE HEADER
-   ========================================================= */
 
 .table-mini.header-row {
 
@@ -1083,20 +845,11 @@ body {
 
   font-weight: 900;
 
-  color: #ccc !important;
+  color: #ccc;
 
-  font-size:
-    clamp(
-      9px,
-      0.63vw,
-      17px
-    );
+  font-size: clamp(10px, 0.65vw, 15px);
 }
 
-
-/* =========================================================
-   TOTAL ROW
-   ========================================================= */
 
 .total-row {
 
@@ -1105,8 +858,6 @@ body {
   border-top: 1px solid #666;
 
   font-weight: 900;
-
-  color: #fff;
 }
 
 
@@ -1125,14 +876,8 @@ body {
   min-width: 0;
 
   overflow: hidden;
-
-  color: #fff;
 }
 
-
-/* =========================================================
-   PRODUCTION ROW
-   ========================================================= */
 
 .prod-row {
 
@@ -1148,38 +893,19 @@ body {
 
   border-bottom: 1px solid #303030;
 
-  font-size:
-    clamp(
-      9px,
-      0.7vw,
-      18px
-    );
+  font-size: clamp(10px, 0.72vw, 17px);
 
-  min-height:
-    clamp(
-      21px,
-      2vh,
-      36px
-    );
+  min-height: clamp(21px, 2vh, 34px);
 
   min-width: 0;
-
-  color: #fff;
 }
 
 
 .prod-row b {
 
-  font-size:
-    clamp(
-      10px,
-      0.78vw,
-      20px
-    );
+  font-size: clamp(11px, 0.8vw, 19px);
 
   font-weight: 900;
-
-  color: #fff;
 }
 
 
@@ -1187,12 +913,15 @@ body {
    MONTHLY VESSEL CEMENT LOADING
    ========================================================= */
 
+/* Header:
+   EMPTY | 2025 | VARIANCE | 2026
+*/
+
 .monthly-grid-head {
 
   display: grid;
 
   grid-template-columns:
-
     2fr
     1.25fr
     1fr
@@ -1205,27 +934,16 @@ body {
 
   font-weight: 900;
 
-  font-size:
-    clamp(
-      9px,
-      0.66vw,
-      17px
-    );
+  font-size: clamp(10px, 0.68vw, 16px);
 
   text-align: center;
 
   padding:
-    clamp(
-      3px,
-      0.25vh,
-      5px
-    );
+    clamp(3px, 0.25vh, 5px);
 
   min-width: 0;
 
   overflow: hidden;
-
-  color: #fff;
 }
 
 
@@ -1244,25 +962,18 @@ body {
 
   gap: 1px;
 
-  font-size:
-    clamp(
-      9px,
-      0.66vw,
-      17px
-    );
+  font-size: clamp(10px, 0.68vw, 16px);
 
   min-height: 0;
 
   min-width: 0;
 
   overflow: hidden;
-
-  color: #fff;
 }
 
 
 /* =========================================================
-   MONTHLY ROW
+   EACH MONTH ROW
    ========================================================= */
 
 .monthly-row {
@@ -1270,7 +981,6 @@ body {
   display: grid;
 
   grid-template-columns:
-
     2fr
     1.25fr
     1fr
@@ -1283,16 +993,9 @@ body {
 
   align-items: center;
 
-  min-height:
-    clamp(
-      19px,
-      1.9vh,
-      34px
-    );
+  min-height: clamp(19px, 1.9vh, 32px);
 
   overflow: hidden;
-
-  color: #fff;
 }
 
 
@@ -1303,16 +1006,10 @@ body {
 .monthly-row > div {
 
   padding:
-    clamp(
-      2px,
-      0.22vh,
-      5px
-    )
+    clamp(2px, 0.22vh, 5px)
     3px;
 
   background: #1b1b1b;
-
-  color: #fff;
 
   white-space: nowrap;
 
@@ -1340,8 +1037,6 @@ body {
 
   font-weight: 900;
 
-  color: #fff;
-
   text-align: left;
 
   padding-left: 6px;
@@ -1357,8 +1052,6 @@ body {
   text-align: right;
 
   font-weight: 700;
-
-  color: #fff;
 }
 
 
@@ -1380,9 +1073,7 @@ body {
 }
 
 
-/* =========================================================
-   POSITIVE VARIANCE
-   ========================================================= */
+/* Positive */
 
 .monthly-var-positive {
 
@@ -1392,9 +1083,7 @@ body {
 }
 
 
-/* =========================================================
-   NEGATIVE VARIANCE
-   ========================================================= */
+/* Negative */
 
 .monthly-var-negative {
 
@@ -1404,9 +1093,7 @@ body {
 }
 
 
-/* =========================================================
-   ZERO VARIANCE
-   ========================================================= */
+/* Zero */
 
 .monthly-var-zero {
 
@@ -1425,8 +1112,6 @@ body {
   text-align: right;
 
   font-weight: 700;
-
-  color: #fff;
 }
 
 
@@ -1439,8 +1124,6 @@ body {
   border-top: 1px solid #666;
 
   font-weight: 900;
-
-  color: #fff;
 }
 
 
@@ -1449,8 +1132,6 @@ body {
   background: #1a1a1a;
 
   font-weight: 900;
-
-  color: #fff;
 }
 
 
@@ -1459,8 +1140,6 @@ body {
   background: #252525;
 
   font-weight: 900;
-
-  color: #fff;
 }
 
 
@@ -1475,18 +1154,7 @@ body {
   width: 100%;
   max-width: 100%;
 
-  min-width: 0;
-
-  min-height:
-    clamp(
-      40px,
-      5vh,
-      68px
-    );
-
   background: #080808;
-
-  color: #fff;
 
   display: flex;
 
@@ -1496,27 +1164,13 @@ body {
 
   padding:
     0
-    clamp(
-      6px,
-      0.7vw,
-      18px
-    );
+    clamp(6px, 0.7vw, 18px);
 
   border-top: 1px solid #555;
 
-  font-size:
-    clamp(
-      9px,
-      0.63vw,
-      16px
-    );
+  font-size: clamp(10px, 0.65vw, 15px);
 
-  gap:
-    clamp(
-      5px,
-      0.7vw,
-      15px
-    );
+  min-width: 0;
 
   overflow: hidden;
 }
@@ -1530,18 +1184,11 @@ body {
 
   display: flex;
 
-  gap:
-    clamp(
-      5px,
-      0.7vw,
-      15px
-    );
+  gap: clamp(5px, 0.7vw, 15px);
 
   min-width: 0;
 
   flex-shrink: 0;
-
-  overflow: hidden;
 }
 
 
@@ -1564,44 +1211,22 @@ body {
   flex-direction: column;
 
   min-width: 0;
-
-  max-width: 25vw;
-
-  overflow: hidden;
-
-  color: #fff;
 }
 
 
 .f-item span {
 
-  color: #aaa !important;
+  color: #aaa;
 
-  font-size:
-    clamp(
-      8px,
-      0.5vw,
-      13px
-    );
+  font-size: clamp(8px, 0.5vw, 12px);
 
   white-space: nowrap;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
 }
 
 
 .f-item b {
 
-  font-size:
-    clamp(
-      9px,
-      0.65vw,
-      16px
-    );
-
-  color: #fff;
+  font-size: clamp(10px, 0.65vw, 15px);
 
   white-space: nowrap;
 
@@ -1621,17 +1246,13 @@ body {
 
   align-items: center;
 
-  flex: 1 1 auto;
+  flex: 1;
 
   min-width: 0;
 
   margin:
     0
-    clamp(
-      5px,
-      1vw,
-      20px
-    );
+    clamp(5px, 1vw, 20px);
 
   background: #151515;
 
@@ -1639,41 +1260,23 @@ body {
 
   overflow: hidden;
 
-  height:
-    clamp(
-      25px,
-      2.7vh,
-      40px
-    );
+  height: clamp(25px, 2.7vh, 40px);
 }
 
-
-/* =========================================================
-   TICKER LABEL
-   ========================================================= */
 
 .ticker-label {
 
   background: #b00000;
 
-  color: #fff !important;
+  color: #fff;
 
   padding:
     0
-    clamp(
-      6px,
-      0.5vw,
-      12px
-    );
+    clamp(6px, 0.5vw, 12px);
 
   font-weight: 900;
 
-  font-size:
-    clamp(
-      8px,
-      0.6vw,
-      15px
-    );
+  font-size: clamp(9px, 0.6vw, 14px);
 
   height: 100%;
 
@@ -1684,10 +1287,6 @@ body {
   flex-shrink: 0;
 }
 
-
-/* =========================================================
-   TICKER
-   ========================================================= */
 
 .ticker {
 
@@ -1707,22 +1306,13 @@ body {
 
   padding-left: 100%;
 
-  animation:
-    ticker
-    25s
-    linear
-    infinite;
+  animation: ticker 25s linear infinite;
 
-  color: #ffc107 !important;
+  color: #ffc107;
 
   font-weight: 900;
 
-  font-size:
-    clamp(
-      9px,
-      0.68vw,
-      18px
-    );
+  font-size: clamp(10px, 0.7vw, 17px);
 }
 
 
@@ -1732,24 +1322,13 @@ body {
 
 .footer-right {
 
-  color: #aaa !important;
+  color: #aaa;
 
-  font-size:
-    clamp(
-      8px,
-      0.55vw,
-      14px
-    );
+  font-size: clamp(9px, 0.55vw, 13px);
 
   white-space: nowrap;
 
   flex-shrink: 0;
-
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-
-  max-width: 25vw;
 }
 
 
@@ -1803,11 +1382,7 @@ body {
 
   background-size: 200% 100%;
 
-  animation:
-    stoppageSweep
-    2s
-    linear
-    infinite;
+  animation: stoppageSweep 2s linear infinite;
 
   color: #fff !important;
 
@@ -1824,8 +1399,6 @@ body {
   overflow: hidden;
 
   text-overflow: ellipsis;
-
-  white-space: nowrap;
 }
 
 
@@ -1857,10 +1430,6 @@ body {
     opacity 0.8s ease,
     transform 0.8s ease,
     visibility 0.8s ease;
-
-  /*
-     Hidden pages should not create horizontal overflow.
-  */
 
   overflow: hidden;
 }
@@ -1896,28 +1465,13 @@ body {
 
   position: fixed;
 
-  right:
-    clamp(
-      6px,
-      0.5vw,
-      15px
-    );
+  right: 10px;
 
-  bottom:
-    clamp(
-      45px,
-      5vh,
-      75px
-    );
+  bottom: 52px;
 
   display: flex;
 
-  gap:
-    clamp(
-      4px,
-      0.3vw,
-      8px
-    );
+  gap: 6px;
 
   z-index: 9999;
 
@@ -1927,19 +1481,9 @@ body {
 
 .page-indicator-dot {
 
-  width:
-    clamp(
-      5px,
-      0.4vw,
-      10px
-    );
+  width: 7px;
 
-  height:
-    clamp(
-      5px,
-      0.4vw,
-      10px
-    );
+  height: 7px;
 
   border-radius: 50%;
 
@@ -1961,13 +1505,12 @@ body {
   opacity: 1;
 
   box-shadow:
-    0 0 7px
-    rgba(108, 204, 69, 0.9);
+    0 0 7px rgba(108, 204, 69, 0.9);
 }
 
 
 /* =========================================================
-   1920 x 1080 / STANDARD FULL HD TV
+   1920 x 1080 TV OPTIMIZATION
    ========================================================= */
 
 @media screen and
@@ -1979,66 +1522,86 @@ body {
   }
 
 
+  /* Main berth table */
+
   .table-header-bar,
   .berth-row,
   .table-footer-bar {
 
     font-size: 14px;
+
   }
 
 
   .table-header-bar {
 
     font-size: 13px;
+
   }
 
+
+  /* Berth A / F */
 
   .alpha-header-bar,
   .alpha-row {
 
     font-size: 14px;
+
   }
 
 
   .alpha-header-bar {
 
     font-size: 13px;
+
   }
 
+
+  /* Progress */
 
   .progress-wrap span {
 
     font-size: 12px;
+
   }
 
+
+  /* Main row height */
 
   .berth-row {
 
     min-height: 30px;
+
   }
 
 
   .alpha-row {
 
     min-height: 28px;
+
   }
 
+
+  /* Monthly */
 
   .monthly-grid-head {
 
     font-size: 13px;
+
   }
 
 
   .monthly {
 
     font-size: 13px;
+
   }
 
 
   .monthly-row {
 
     min-height: 25px;
+
   }
 
 }
@@ -2048,65 +1611,42 @@ body {
    4K / VERY WIDE TV
    ========================================================= */
 
-@media screen and
-(min-width: 2500px) {
+@media (min-width: 2500px) {
 
   body {
 
-    font-size: 17px;
+    font-size: 18px;
+
   }
 
 
   .title {
 
     font-size: 30px;
+
   }
 
 
   .berth-row,
   .alpha-row {
 
-    min-height: 40px;
-  }
+    min-height: 42px;
 
-
-  .table-header-bar {
-
-    font-size: 16px;
-  }
-
-
-  .alpha-header-bar {
-
-    font-size: 16px;
-  }
-
-
-  .monthly-grid-head,
-  .monthly {
-
-    font-size: 16px;
-  }
-
-
-  .monthly-row {
-
-    min-height: 32px;
   }
 
 }
 
 
 /* =========================================================
-   1366 / 1360 / 1280 DISPLAY
+   1366 / 1360 / 1280 SCREEN
    ========================================================= */
 
-@media screen and
-(max-width: 1400px) {
+@media (max-width: 1400px) {
 
   body {
 
     font-size: 13px;
+
   }
 
 
@@ -2114,12 +1654,14 @@ body {
   .alpha-row {
 
     min-height: 23px;
+
   }
 
 
   .analytics-grid {
 
     gap: 4px;
+
   }
 
 
@@ -2128,6 +1670,7 @@ body {
   .table-footer-bar {
 
     font-size: 11px;
+
   }
 
 
@@ -2135,39 +1678,45 @@ body {
   .alpha-row {
 
     font-size: 11px;
+
   }
 
+
+  /* Monthly */
 
   .monthly-grid-head {
 
     font-size: 11px;
+
   }
 
 
   .monthly {
 
     font-size: 11px;
+
   }
 
 
   .monthly-row {
 
     min-height: 23px;
+
   }
 
 }
 
 
 /* =========================================================
-   SMALLER SCREEN
+   SMALLER LAPTOP
    ========================================================= */
 
-@media screen and
-(max-width: 1100px) {
+@media (max-width: 1100px) {
 
   body {
 
     font-size: 12px;
+
   }
 
 
@@ -2176,6 +1725,7 @@ body {
   .table-footer-bar {
 
     font-size: 10px;
+
   }
 
 
@@ -2183,178 +1733,7 @@ body {
   .alpha-row {
 
     font-size: 10px;
-  }
 
-
-  /*
-     At narrow resolutions the three analytics
-     panels stack vertically.
-  */
-
-  .analytics-grid {
-
-    grid-template-columns:
-      minmax(0, 1fr);
-
-    height: auto;
-  }
-
-}
-
-
-/* =========================================================
-   VERY NARROW DISPLAY
-   ========================================================= */
-
-@media screen and
-(max-width: 700px) {
-
-  .topbar {
-
-    padding:
-      0
-      6px;
-  }
-
-
-  .title {
-
-    font-size: 15px;
-
-    letter-spacing: 0.5px;
-  }
-
-
-  .subtitle {
-
-    font-size: 8px;
-  }
-
-
-  .clock div:last-child {
-
-    font-size: 15px;
-  }
-
-
-  .footer-bar {
-
-    height: auto;
-
-    min-height: 42px;
-
-    padding:
-      4px 6px;
-
-    flex-wrap: wrap;
-
-    overflow: visible;
-  }
-
-
-  .ticker-wrap {
-
-    order: 3;
-
-    width: 100%;
-
-    flex-basis: 100%;
-
-    margin:
-      3px 0;
-  }
-
-}
-
-
-/* =========================================================
-   SHORT SCREEN / 720p HEIGHT
-   ========================================================= */
-
-@media screen and
-(max-height: 700px) {
-
-  .topbar {
-
-    flex-basis: 46px;
-
-    min-height: 46px;
-  }
-
-
-  .main-content {
-
-    padding:
-      3px
-      4px
-      8px;
-
-    gap: 3px;
-  }
-
-
-  .berth-row {
-
-    min-height: 23px;
-  }
-
-
-  .alpha-row {
-
-    min-height: 21px;
-  }
-
-
-  .footer-bar {
-
-    flex-basis: 40px;
-
-    min-height: 40px;
-  }
-
-}
-
-
-/* =========================================================
-   HIGH VERTICAL RESOLUTION
-   ========================================================= */
-
-@media screen and
-(min-height: 1400px) {
-
-  .topbar {
-
-    flex-basis:
-      clamp(
-        60px,
-        5vh,
-        90px
-      );
-
-    min-height:
-      clamp(
-        60px,
-        5vh,
-        90px
-      );
-  }
-
-
-  .footer-bar {
-
-    flex-basis:
-      clamp(
-        50px,
-        5vh,
-        85px
-      );
-
-    min-height:
-      clamp(
-        50px,
-        5vh,
-        85px
-      );
   }
 
 }
@@ -2388,7 +1767,7 @@ body,
 
 
 /* =========================================================
-   HORIZONTAL OVERFLOW
+   ABSOLUTELY PREVENT HORIZONTAL OVERFLOW
    ========================================================= */
 
 html,
@@ -2397,23 +1776,13 @@ body,
 .main-content {
 
   overflow-x: hidden !important;
-}
 
-
-/*
-   IMPORTANT:
-   The page itself controls vertical scrolling.
-*/
-
-html,
-body {
-
-  overflow-y: auto !important;
 }
 
 
 /* =========================================================
-   GRID CHILDREN CANNOT FORCE WIDTH
+   IMPORTANT:
+   CHILDREN MUST NOT FORCE THE GRID WIDER
    ========================================================= */
 
 .table-header-bar *,
@@ -2432,7 +1801,7 @@ body {
 
 
 /* =========================================================
-   LONG TEXT PROTECTION
+   KEEP LONG TEXT INSIDE ITS COLUMN
    ========================================================= */
 
 .berth-row > div,
@@ -2477,504 +1846,270 @@ body {
 
 
 /* =========================================================
-   FORCE NORMAL DASHBOARD TEXT WHITE
+   SHARED PREVIOUS DISPLAY PICKER
    ========================================================= */
 
-/*
-   These selectors prevent inherited browser/default
-   black text from appearing in dashboard cells.
-*/
+.shared-history-picker {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
 
-.berth-row,
-.berth-row > div,
-.berth-row > span,
-.alpha-row,
-.alpha-row > div,
-.alpha-row > span,
-.table-footer-bar,
-.table-footer-bar > div,
-.table-footer-bar > span,
-.production,
-.prod-row,
-.table-mini .tr,
-.monthly,
-.monthly-row,
-.monthly-row > div {
+.shared-history-picker.show {
+  display: flex;
+}
 
+.shared-history-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.78);
+  backdrop-filter: blur(8px);
+}
+
+.shared-history-modal {
+  position: relative;
+  z-index: 2;
+  width: min(560px, 94vw);
+  padding: 24px;
+  border: 1px solid rgba(105,216,255,.25);
+  border-radius: 16px;
+  background:
+    linear-gradient(145deg, #0b1c28, #050b10);
+  box-shadow: 0 30px 100px rgba(0,0,0,.65);
+  color: #edf8ff;
+}
+
+.shared-history-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 22px;
+}
+
+.shared-history-kicker {
+  color: #68d8ff;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .18em;
+}
+
+.shared-history-heading {
+  margin-top: 5px;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: .04em;
+}
+
+.shared-history-close {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #455762;
+  border-radius: 8px;
+  background: #17232b;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.shared-history-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.shared-history-control {
+  position: relative;
+}
+
+.shared-history-control label {
+  display: block;
+  margin-bottom: 7px;
+  color: #8ba5b1;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .15em;
+}
+
+.shared-history-input-button {
+  width: 100%;
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border: 1px solid #405663;
+  border-radius: 9px;
+  background: #111d24;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.shared-history-input-button:hover {
+  border-color: #66d9ff;
+}
+
+.shared-history-control input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shared-history-availability {
+  margin-top: 16px;
+  min-height: 40px;
+  padding: 11px 13px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.035);
+  color: #9fb4be;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.shared-history-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.shared-history-cancel,
+.shared-history-view {
+  padding: 11px 16px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+
+.shared-history-cancel {
+  border: 1px solid #465761;
+  background: #11191f;
+  color: #b7c9d1;
+}
+
+.shared-history-view {
+  border: 1px solid #4fcfff;
+  background: linear-gradient(135deg, #0c6f91, #0a4358);
   color: #fff;
 }
 
+.shared-history-view:hover {
+  filter: brightness(1.15);
+}
 
-/* =========================================================
-   KEEP INTENTIONAL MUTED TEXT
-   ========================================================= */
-
-.subtitle,
-.clock div:first-child,
-.f-item span,
-.footer-right {
-
-  color: #aaa !important;
+@media (max-width: 650px) {
+  .shared-history-controls {
+    grid-template-columns: 1fr;
+  }
 }
 
 
 /* =========================================================
-   KEEP INTENTIONAL COLORED TEXT
+   PREVIOUS DISPLAY — REVIEW TIME
+   Position: immediately LEFT of the CEMENT LOADING header.
+   Format is supplied by JavaScript, e.g.:
+   September 10, 20:00
    ========================================================= */
 
-.monthly-var-positive {
+body.history-viewing #reviewInfo,
+body:has(#headerReturnLiveBtn.show) #reviewInfo {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 
-  color: #65b83f !important;
+  position: fixed !important;
+  top: 8px !important;
+  left: 375px !important;
+
+  z-index: 999999 !important;
+
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 5px !important;
+
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+
+  color: #ffffff !important;
+  white-space: nowrap !important;
+  overflow: visible !important;
+
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+
+  pointer-events: none !important;
 }
 
+body.history-viewing #reviewLabel,
+body:has(#headerReturnLiveBtn.show) #reviewLabel {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 
-.monthly-var-negative {
-
-  color: #ff3030 !important;
+  color: #70ddff !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  white-space: nowrap !important;
 }
 
+body.history-viewing #reviewTimeText,
+body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+  display: inline !important;
+  visibility: visible !important;
+  opacity: 1 !important;
 
-.monthly-var-zero {
-
-  color: #fff !important;
+  color: #ffffff !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
 }
 
-
-.ticker div {
-
-  color: #ffc107 !important;
+/* Hide it during live display */
+body:not(.history-viewing) #reviewInfo {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
 }
 
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-
-  width:
-    clamp(
-      8px,
-      0.55vw,
-      16px
-    );
-}
-
-
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track {
-
-  background: #181818;
-}
-
-
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-
-  background: #666;
-
-  border-radius:
-    clamp(
-      4px,
-      0.3vw,
-      10px
-    );
-
-  border:
-    2px solid #181818;
-}
-
-
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover {
-
-  background: #888;
-}
-
-
-/* =========================================================
-   END
-   ========================================================= */
-
-/* =========================================================
-   TV ONE-SCREEN COMPACT MODE
-   Target: 16:9 Full HD Smart TV (1920x1080)
-   Purpose: remove wasted vertical space and prevent
-   dashboard sections from overlapping/carrying onto
-   another screen.
-   ========================================================= */
-
-@media screen and (min-width: 1600px) and (max-width: 2499px)
-       and (min-height: 800px) and (max-height: 1200px) {
-
-  html,
-  body {
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
-    overflow: hidden !important;
-  }
-
-  body {
-    font-size: 13px;
-    line-height: 1.05;
-  }
-
-  .app {
-    width: 100%;
-    height: 100vh;
-    min-height: 0;
-    max-height: 100vh;
-    overflow: hidden !important;
-  }
-
-  /* ---------- HEADER ---------- */
-
-  .topbar {
-    flex: 0 0 46px;
-    height: 46px;
-    min-height: 46px;
-    padding: 0 8px;
-    gap: 8px;
-  }
-
-  .brand img {
-    max-width: 115px;
-    max-height: 40px;
-  }
-
-  /* Turn the absolute title block into a normal centered item.
-     This prevents it from colliding with the buttons/clock. */
-  .topbar > div:nth-child(2) {
-    position: static !important;
-    left: auto !important;
-    transform: none !important;
-    flex: 0 1 auto;
-    min-width: 0;
-    gap: 7px;
-  }
-
-  .title {
-    font-size: 18px !important;
-    line-height: 1;
-  }
-
-  .subtitle {
-    font-size: 9px !important;
-    line-height: 1;
-  }
-
-  .live-dot {
-    width: 9px;
-    height: 9px;
-    min-width: 9px;
-    min-height: 9px;
-  }
-
-  .dashboard-switcher {
-    margin-right: 8px;
-  }
-
-  .switcher-btn {
-    padding: 4px 8px;
-    font-size: 10px;
-  }
-
-  .clock div:first-child {
-    font-size: 9px;
-  }
-
-  .clock div:last-child {
-    font-size: 17px;
-    line-height: 1;
-  }
-
-  /* ---------- MAIN ---------- */
-
-  .main-content {
-    height: auto;
-    min-height: 0;
-    padding: 2px 4px 3px;
-    gap: 2px;
-    overflow: hidden !important;
-  }
-
-  .table-container {
-    border-width: 1px;
-  }
-
-  /* Empty section labels currently occupy vertical space. */
-  .sub-section-title:empty {
-    display: none !important;
-  }
-
-  /* ---------- MAIN BERTH TABLE ---------- */
-
-  .table-header-bar,
-  .berth-row,
-  .table-footer-bar {
-    padding: 2px 4px;
-    font-size: 13px;
-    line-height: 1;
-  }
-
-  .table-header-bar {
-    min-height: 24px;
-    height: 24px;
-    font-size: 11px;
-  }
-
-  .berth-row {
-    min-height: 28px;
-    height: 28px;
-  }
-
-  .table-footer-bar {
-    min-height: 24px;
-    height: 24px;
-  }
-
-  .progress-wrap {
-    height: 13px;
-  }
-
-  .progress-wrap span {
-    font-size: 10px;
-  }
-
-  /* ---------- BERTH A / F ---------- */
-
-  .alpha-header-bar,
-  .alpha-row {
-    padding: 2px 4px;
-    font-size: 13px;
-    line-height: 1;
-  }
-
-  .alpha-header-bar {
-    min-height: 23px;
-    height: 23px;
-    font-size: 11px;
-  }
-
-  .alpha-row {
-    min-height: 23px;
-    height: 23px;
-  }
-
-  /* ---------- ANALYTICS ---------- */
-
-  .analytics-grid {
-    gap: 4px;
-    margin-top: 0;
-    overflow: hidden;
-  }
-
-  .panel {
-    padding: 2px;
-  }
-
-  .panel-title {
-    padding: 2px 5px;
-    margin-bottom: 2px;
-    min-height: 21px;
-    height: 21px;
-    font-size: 11px;
-    line-height: 17px;
-  }
-
-  .table-mini .tr {
-    padding: 1px 4px;
-    min-height: 22px;
-    height: 22px;
-    font-size: 11px;
-    line-height: 1;
-  }
-
-  .monthly-grid-head {
-    padding: 2px 3px;
-    min-height: 20px;
-    height: 20px;
-    font-size: 11px;
-  }
-
-  .monthly {
-    gap: 0;
-    font-size: 11px;
-  }
-
-  .monthly-row {
-    min-height: 20px;
-    height: 20px;
-  }
-
-  .monthly-row > div {
-    padding: 1px 3px;
-    min-height: 20px;
-    height: 20px;
-    line-height: 18px;
-  }
-
-  .prod-row {
-    padding: 1px 4px;
-    min-height: 22px;
-    height: 22px;
-    font-size: 11px;
-  }
-
-  .prod-row b {
-    font-size: 12px;
-  }
-
-  /* ---------- FOOTER ---------- */
-
-  .footer-bar {
-    flex: 0 0 38px;
-    height: 38px;
-    min-height: 38px;
-    padding: 0 6px;
-    gap: 5px;
-    font-size: 10px;
-  }
-
-  .footer-group {
-    gap: 4px;
-  }
-
-  .f-item {
-    padding: 1px 4px;
-  }
-
-  .f-item span {
-    font-size: 8px;
-    line-height: 1;
-  }
-
-  .f-item b {
-    font-size: 10px;
-    line-height: 1.1;
-  }
-
-  .ticker-wrap {
-    height: 24px;
-    margin: 0 4px;
-  }
-
-  .ticker-label {
-    padding: 0 6px;
-    font-size: 9px;
-  }
-
-  .ticker div {
-    font-size: 10px;
-  }
-
-  .footer-right {
-    font-size: 9px;
-    max-width: 20vw;
+/* 1366px TV layout */
+@media screen and (min-width: 1200px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 375px !important;
+    top: 8px !important;
   }
 }
 
-/* Extra-tight 720p TV mode */
-@media screen and (min-width: 1100px) and (max-width: 1599px)
-       and (min-height: 600px) and (max-height: 800px) {
-
-  html,
-  body {
-    height: 100%;
-    min-height: 100%;
-    overflow: hidden !important;
+/* Smaller screens */
+@media screen and (max-width: 1199px) {
+  body.history-viewing #reviewInfo,
+  body:has(#headerReturnLiveBtn.show) #reviewInfo {
+    left: 250px !important;
+    top: 7px !important;
+    font-size: 11px !important;
   }
 
-  .app {
-    height: 100vh;
-    min-height: 0;
-    max-height: 100vh;
-    overflow: hidden !important;
-  }
-
-  .topbar {
-    flex-basis: 42px;
-    height: 42px;
-    min-height: 42px;
-  }
-
-  .main-content {
-    padding: 2px 3px;
-    gap: 2px;
-    overflow: hidden !important;
-  }
-
-  .sub-section-title:empty {
-    display: none !important;
-  }
-
-  .table-header-bar {
-    min-height: 21px;
-    height: 21px;
-    font-size: 10px;
-    padding: 1px 3px;
-  }
-
-  .berth-row {
-    min-height: 22px;
-    height: 22px;
-    font-size: 10px;
-    padding: 1px 3px;
-  }
-
-  .table-footer-bar {
-    min-height: 21px;
-    height: 21px;
-    font-size: 10px;
-    padding: 1px 3px;
-  }
-
-  .alpha-header-bar {
-    min-height: 20px;
-    height: 20px;
-    font-size: 9px;
-  }
-
-  .alpha-row {
-    min-height: 20px;
-    height: 20px;
-    font-size: 10px;
-  }
-
-  .panel {
-    padding: 2px;
-  }
-
-  .panel-title {
-    min-height: 18px;
-    height: 18px;
-    padding: 1px 4px;
-    margin-bottom: 1px;
-    font-size: 9px;
-    line-height: 16px;
-  }
-
-  .table-mini .tr,
-  .prod-row {
-    min-height: 18px;
-    height: 18px;
-    padding: 1px 3px;
-    font-size: 9px;
-  }
-
-  .monthly-grid-head,
-  .monthly-row,
-  .monthly-row > div {
-    min-height: 17px;
-    height: 17px;
-    font-size: 9px;
-  }
-
-  .footer-bar {
-    flex-basis: 34px;
-    height: 34px;
-    min-height: 34px;
+  body.history-viewing #reviewTimeText,
+  body:has(#headerReturnLiveBtn.show) #reviewTimeText {
+    font-size: 11px !important;
   }
 }
