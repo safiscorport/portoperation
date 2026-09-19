@@ -1,35 +1,35 @@
 {
-  "updated_at": "2026-09-18T15:48:41+08:00",
+  "updated_at": "2026-09-19T08:51:00+08:00",
   "berths": [
     {
       "berth": "Berth 1",
       "vessel": "EFG 7",
       "voyage": 5,
+      "booking": 50000,
+      "dispatch": 0,
+      "loaded": 0,
+      "balance": 50000,
+      "progress": 0,
+      "stockpile": 0,
+      "time": "07:00",
+      "remarks": "AT ANCHORAGE/UNDER REPAIR",
+      "equipment": "0",
+      "activity_time": "00:37"
+    },
+    {
+      "berth": "Berth 2",
+      "vessel": "VACANT",
+      "voyage": "-",
       "booking": 0,
       "dispatch": 0,
       "loaded": 0,
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "AT ANCHORAGE/UNDER REPAIR",
-      "equipment": "0",
-      "activity_time": "00:00"
-    },
-    {
-      "berth": "Berth 2",
-      "vessel": "SF JOURNEY",
-      "voyage": 2,
-      "booking": 60000,
-      "dispatch": 60000,
-      "loaded": 60000,
-      "balance": 0,
-      "progress": 1,
-      "stockpile": 0,
       "time": "14:30",
       "remarks": "LOADING COMPLETE",
-      "equipment": "CRANE 2",
-      "activity_time": "01:18"
+      "equipment": "0",
+      "activity_time": "17:07"
     },
     {
       "berth": "Berth 3",
@@ -51,18 +51,33 @@
       "vessel": "QUEEN CAROLYN",
       "voyage": 8,
       "booking": 40000,
-      "dispatch": 10000,
-      "loaded": 3000,
-      "balance": 37000,
-      "progress": 0.075,
-      "stockpile": 7000,
-      "time": "13:15",
-      "remarks": "CLOSE HATCH / RAIN",
+      "dispatch": 18000,
+      "loaded": 18000,
+      "balance": 22000,
+      "progress": 0.45,
+      "stockpile": 0,
+      "time": "07:00",
+      "remarks": "COASTAL CLEAN UP",
       "equipment": "0",
-      "activity_time": "02:33"
+      "activity_time": "00:37"
     },
     {
       "berth": "Berth 5",
+      "vessel": "EMERALD STAR",
+      "voyage": 10,
+      "booking": 0,
+      "dispatch": 15000,
+      "loaded": 11000,
+      "balance": -11000,
+      "progress": 0,
+      "stockpile": 4000,
+      "time": "07:00",
+      "remarks": "COASTAL CLEAN UP",
+      "equipment": "0",
+      "activity_time": "00:37"
+    },
+    {
+      "berth": "Berth 6",
       "vessel": "VACANT",
       "voyage": "-",
       "booking": 0,
@@ -71,40 +86,25 @@
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "00:00",
-      "remarks": "-",
+      "time": "16:08",
+      "remarks": "LOADING COMPLETE",
       "equipment": "0",
-      "activity_time": "00:00"
-    },
-    {
-      "berth": "Berth 6",
-      "vessel": "STAR ILIGAN",
-      "voyage": 8,
-      "booking": 18000,
-      "dispatch": 19000,
-      "loaded": 17000,
-      "balance": 1000,
-      "progress": 0.9444444444444444,
-      "stockpile": 2000,
-      "time": "13:15",
-      "remarks": "CLOSE HATCH / RAIN",
-      "equipment": "0",
-      "activity_time": "02:33"
+      "activity_time": "15:29"
     },
     {
       "berth": "Berth 7",
       "vessel": "LADY OF COURAGE",
       "voyage": 8,
-      "booking": 24500,
-      "dispatch": 25750,
-      "loaded": 9000,
-      "balance": 15500,
-      "progress": 0.3673469387755102,
-      "stockpile": 16750,
-      "time": "13:15",
-      "remarks": "CLOSE HATCH / RAIN",
+      "booking": 25000,
+      "dispatch": 25000,
+      "loaded": 25000,
+      "balance": 0,
+      "progress": 1,
+      "stockpile": 0,
+      "time": "05:00",
+      "remarks": "LOADING L48 TONNER BAGS",
       "equipment": "CRANE4/FL2",
-      "activity_time": "02:33"
+      "activity_time": "02:37"
     },
     {
       "berth": "Berth 8",
@@ -123,33 +123,33 @@
     },
     {
       "berth": "Berth 9",
-      "vessel": "NIEVES",
-      "voyage": 3,
+      "vessel": "VACANT",
+      "voyage": "-",
       "booking": 0,
       "dispatch": 0,
       "loaded": 0,
       "balance": 0,
       "progress": 0,
       "stockpile": 0,
-      "time": "07:00",
-      "remarks": "NO BOOKING",
+      "time": "00:00",
+      "remarks": "-",
       "equipment": "0",
-      "activity_time": "08:48"
+      "activity_time": "00:00"
     },
     {
       "berth": "Berth 10",
       "vessel": "STAR DINAGAT",
       "voyage": 4,
       "booking": 27000,
-      "dispatch": 20500,
-      "loaded": 2000,
-      "balance": 25000,
-      "progress": 0.07407407407407407,
-      "stockpile": 18500,
-      "time": "14:50",
-      "remarks": "REFUSE TO OPEN HATCH",
+      "dispatch": 25250,
+      "loaded": 18500,
+      "balance": 8500,
+      "progress": 0.6851851851851852,
+      "stockpile": 6750,
+      "time": "07:00",
+      "remarks": "COASTAL CLEAN UP",
       "equipment": "FL 1",
-      "activity_time": "00:58"
+      "activity_time": "00:37"
     },
     {
       "berth": "Jetty",
@@ -168,12 +168,12 @@
     }
   ],
   "total": {
-    "booking": 169500,
-    "dispatch": 135250,
-    "loaded": 91000,
-    "balance": 78500,
-    "progress": 0.4921730914588057,
-    "stockpile": 44250
+    "booking": 142000,
+    "dispatch": 83250,
+    "loaded": 72500,
+    "balance": 69500,
+    "progress": 0.5337962962962963,
+    "stockpile": 10750
   },
   "alpha": [
     {
@@ -183,8 +183,8 @@
       "discharge": "0%",
       "balance": "0%",
       "progress": "0%",
-      "time": "0840H",
-      "remarks": "SECURED @ RAMP",
+      "time": "1600H",
+      "remarks": "SWEEPING",
       "equip": "0",
       "activity_time": "00:00"
     },
@@ -198,18 +198,18 @@
       "time": "00:00",
       "remarks": "0",
       "equip": "0",
-      "activity_time": "15:48"
+      "activity_time": "07:37"
     },
     {
       "berth": "R3",
       "vessel": "POSEIDON 47",
       "materials": "COAL",
       "discharge": "0%",
-      "balance": "0%",
+      "balance": "80%",
       "progress": "0%",
-      "time": "0815H",
-      "remarks": "SECURED @ RAMP",
-      "equip": "0",
+      "time": "1600H",
+      "remarks": "DISCHARING ON PROGRESS",
+      "equip": "FEED TO JBS HOOPER 2 PL UNITS",
       "activity_time": "00:00"
     }
   ],
@@ -229,14 +229,14 @@
     {
       "hauler": "SAFISCOR",
       "august": 1054675,
-      "september": 635500,
-      "daily": 17000
+      "september": 651500,
+      "daily": 35750
     },
     {
       "hauler": "LAPU-LAPU",
       "august": 220240,
-      "september": 111000,
-      "daily": 3000
+      "september": 116000,
+      "daily": 8000
     },
     {
       "hauler": "BADIE",
@@ -247,8 +247,8 @@
     {
       "hauler": "GEO",
       "august": 138080,
-      "september": 71000,
-      "daily": 1000
+      "september": 74000,
+      "daily": 4000
     },
     {
       "hauler": "UCES",
@@ -259,8 +259,8 @@
     {
       "hauler": "APLUS",
       "august": 41000,
-      "september": 33000,
-      "daily": 2000
+      "september": 35000,
+      "daily": 4000
     },
     {
       "hauler": "FULACHE",
@@ -313,7 +313,7 @@
     {
       "month": "September",
       "y2025": 1333325,
-      "y2026": 862500
+      "y2026": 922000
     },
     {
       "month": "October",
@@ -333,26 +333,26 @@
   ],
   "monthly_total": {
     "y2025": 16616958,
-    "y2026": 12698210
+    "y2026": 12757710
   },
   "daily_production": [
     {
       "shift": "1st SHIFT",
-      "qty": 18500
+      "qty": 33500
     },
     {
       "shift": "2ND SHIFT",
-      "qty": 0
+      "qty": 44500
     }
   ],
   "trucking_stockpile": [
     {
       "client": "SAFISCOR",
-      "volume": 36250
+      "volume": 10750
     },
     {
       "client": "LAPU-LAPU",
-      "volume": 3000
+      "volume": "-"
     },
     {
       "client": "BADIE",
@@ -360,7 +360,7 @@
     },
     {
       "client": "GEO",
-      "volume": 2000
+      "volume": "-"
     },
     {
       "client": "UCES",
@@ -368,16 +368,16 @@
     },
     {
       "client": "APLUS",
-      "volume": 2000
+      "volume": "-"
     },
     {
       "client": "FULACHE",
-      "volume": 1000
+      "volume": "-"
     }
   ],
   "status": {
-    "supervisor": "DAY OFF",
-    "checker": "OBIAL,R / CANOY,E / DALUSA,E",
+    "supervisor": "BERNABE,A",
+    "checker": "OBIAL, CANOY, DALUSA",
     "pmc": "JOAN / WILLIAM",
     "cranes": 3,
     "forklifts": 6,
